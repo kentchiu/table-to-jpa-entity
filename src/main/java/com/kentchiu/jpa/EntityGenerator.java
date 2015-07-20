@@ -65,13 +65,6 @@ public class EntityGenerator {
         String folder = StringUtils.replace(pkgName, ".", "/");
         String className = buildClassName(table.getName());
         String name = config.getType().getJavaFileName(className);
-//        if (config.getType() == Type.INPUT) {
-//            name = className + "Input.java";
-//        } else if (config.getType() == Type.UPDATE) {
-//            name = className + "UpdateInput.java";
-//        } else {
-//            name = className + ".java";
-//        }
         Path file = javaSourceHome.resolve(folder).resolve(name);
         try {
             if (!Files.exists(file)) {
@@ -184,7 +177,7 @@ public class EntityGenerator {
 
         Map<String, Object> context = new HashMap<>();
 
-        if (StringUtils.isNotBlank(buildAttributeInfo(column))) {
+        if (StringUtils.isNotBlank(buildOptions(column))) {
             context.put("options", buildOptions(column));
         }
 

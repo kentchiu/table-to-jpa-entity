@@ -151,6 +151,34 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
         assertThat(lines.get(i++), is("    }"));
     }
 
+    @Test
+    public void testProperty_options() throws Exception {
+        Column column = Columns.stringColumn();
+        column.getOptions().put("Y", "foo");
+        column.getOptions().put("N", "bar");
+
+        List<String> lines = generator.buildProperty(column);
+        dump(lines);
+
+        int i = 0;
+        // field
+        assertThat(lines.get(i++), is("    private String column1;"));
+
+        i = 2;
+        // getter
+        assertThat(lines.get(i++), is("    @Option(value = {\"Y\", \"N\"})"));
+        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"column comment\", format = \"Y=foo/N=bar\")"));
+        assertThat(lines.get(i++), is("    public String getColumn1() {"));
+        assertThat(lines.get(i++), is("        return column1;"));
+        assertThat(lines.get(i++), is("    }"));
+
+        i = 8;
+        // setter
+        assertThat(lines.get(i++), is("    public void setColumn1(String column1) {"));
+        assertThat(lines.get(i++), is("        this.column1 = column1;"));
+        assertThat(lines.get(i++), is("    }"));
+    }
+
 
     @Test
     public void testProperty_with_default_value() throws Exception {

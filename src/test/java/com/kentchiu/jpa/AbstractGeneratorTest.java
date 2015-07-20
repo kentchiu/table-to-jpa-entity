@@ -56,5 +56,4 @@ public abstract class AbstractGeneratorTest {
         column.getOptions().put("N", "bar");
         assertThat(generator.buildOptions(column), is("@Option(value = {\"Y\", \"N\"})"));
     }
-
 }
