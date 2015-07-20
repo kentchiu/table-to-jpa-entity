@@ -8,6 +8,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.kentchiu.jpa.domain.Column;
@@ -101,7 +102,9 @@ public class EntityGenerator {
             context.put("packageName", packageName);
         }
 
-        context.put("imports", buildImports());
+        List<Map<String, String>> imports = buildImports().stream().map(i -> ImmutableMap.of("import", i)).collect(Collectors.toList());
+
+        context.put("imports", imports);
         context.put("table", table);
         context.put("class", buildClassName(table.getName()));
         if (!Objects.equals(Object.class, config.getBaseClass())) {
@@ -138,8 +141,9 @@ public class EntityGenerator {
 
     List<String> buildImports() {
         List<String> results = new ArrayList<>();
-        if (config.getBaseClass() != null) {
-            results.add(config.getBaseClass().getName());
+        Class<?> baseClass = config.getBaseClass();
+        if (!Objects.equals(Object.class, baseClass)) {
+            results.add(baseClass.getName());
         }
         tableNameMapper.values().forEach(p -> results.add(p));
         return results;

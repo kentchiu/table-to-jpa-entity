@@ -271,7 +271,7 @@ public class InputGeneratorTest extends AbstractGeneratorTest {
         assertThat(lines, hasItem("import java.util.Date;"));
         assertThat(lines, hasItem("import java.math.BigDecimal;"));
 
-        int i = 14;
+        int i = 13;
         assertThat(lines.get(i++), is("/*"));
         assertThat(lines.get(i++), is(" * a table comment"));
         assertThat(lines.get(i++), is(" */"));
