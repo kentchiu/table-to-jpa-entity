@@ -1,7 +1,5 @@
-package com.kentchiu.jpa;
+package com.kentchiu.jpa.domain;
 
-import com.kentchiu.jpa.domain.Column;
-import com.kentchiu.jpa.domain.Table;
 import oracle.sql.TIMESTAMP;
 
 import java.util.ArrayList;

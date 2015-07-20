@@ -60,12 +60,12 @@ public class EntityGenerator {
 
     public void export(Path javaSourceHome, Table table, List<String> ignoreColumns) {
         List<String> lines = exportTable(table, ignoreColumns);
-        String pkgName = toPackageName(table.getName());
+        String pkgName = buildPackageName(table.getName());
         if (config.getType() != Type.JPA) {
             pkgName = pkgName.replaceAll("domain", "web.dto");
         }
         String folder = StringUtils.replace(pkgName, ".", "/");
-        String className = toClassName(table.getName());
+        String className = buildClassName(table.getName());
         String name;
         if (config.getType() == Type.INPUT) {
             name = className + "Input.java";
@@ -97,7 +97,7 @@ public class EntityGenerator {
 
     protected List<String> exportTable(Table table, List<String> ignoreColumns) {
 
-        String packageName = toPackageName(table.getName());
+        String packageName = buildPackageName(table.getName());
 
 
         HashMap<Object, Object> context = Maps.newHashMap();
@@ -107,7 +107,7 @@ public class EntityGenerator {
 
         context.put("imports", buildImports());
         context.put("table", table);
-        context.put("class", toClassName(table.getName()));
+        context.put("class", buildClassName(table.getName()));
         if (!Objects.equals(Object.class, config.getBaseClass())) {
             context.put("extend", "extends " + config.getBaseClass().getSimpleName());
         } else {
@@ -134,7 +134,7 @@ public class EntityGenerator {
     private String buildProperties(Table table, List<String> ignoreColumns) {
         List<String> lines = new ArrayList<>();
         table.getColumns().stream().filter(column -> !ignoreColumns.contains(column.getName())).forEach(column -> {
-            lines.addAll(buildProperty(table, column));
+            lines.addAll(buildProperty(column));
         });
 
         return Joiner.on('\n').join(lines);
@@ -164,12 +164,11 @@ public class EntityGenerator {
         }
     }
 
-    String toPackageName(String tableName) {
+    String buildPackageName(String tableName) {
         if (tableNameMapper.containsKey(tableName)) {
             String qualifier = tableNameMapper.getOrDefault(tableName, "");
             String pkgName = StringUtils.substringBeforeLast(qualifier, ".");
             logger.debug("{}  -> {}", tableName, pkgName);
-            //return "package " + pkgName + ";";
             return pkgName;
         } else {
             return "";
@@ -177,16 +176,15 @@ public class EntityGenerator {
     }
 
 
-    List<String> buildProperty(Table table, Column column) {
+    List<String> buildProperty(Column column) {
         Property p = new Property(column);
         p.setMapper(columnMapper);
         Property property = p.invoke(config.getType());
 
         Map<String, Object> context = new HashMap<>();
 
-
-        if (StringUtils.isNotBlank(attributeInfo(column))) {
-            context.put("options", options(column));
+        if (StringUtils.isNotBlank(buildAttributeInfo(column))) {
+            context.put("options", buildOptions(column));
         }
 
         if (Type.INPUT == config.getType() || Type.UPDATE == config.getType()) {
@@ -197,8 +195,8 @@ public class EntityGenerator {
 
         }
 
-        if (StringUtils.isNotBlank(attributeInfo(column))) {
-            context.put("attributeInfo", attributeInfo(column));
+        if (StringUtils.isNotBlank(buildAttributeInfo(column))) {
+            context.put("attributeInfo", buildAttributeInfo(column));
         }
 
         if (!column.isNullable()) {
@@ -238,7 +236,7 @@ public class EntityGenerator {
     }
 
 
-    String attributeInfo(Column column) {
+    String buildAttributeInfo(Column column) {
         StringBuffer sb = new StringBuffer();
         sb.append("@AttributeInfo(");
         if (StringUtils.isNotBlank(column.getDescription())) {
@@ -270,7 +268,7 @@ public class EntityGenerator {
         return sb.toString();
     }
 
-    String options(Column c) {
+    String buildOptions(Column c) {
         if (!c.getOptions().isEmpty()) {
             StringBuilder s = new StringBuilder();
             s.append("@Option(value = {");
@@ -283,29 +281,7 @@ public class EntityGenerator {
     }
 
 
-    List<String> buildClass(Table table) {
-        String tableName = table.getName();
-        String extend = "";
-        if (config.getBaseClass() != null) {
-            extend = " extends " + config.getBaseClass().getSimpleName();
-        }
-        List<String> results = new ArrayList<>();
-        if (config.getType() == Type.JPA) {
-            results.add("@Entity");
-            results.add(String.format("@Table(name = \"%s\")", tableName));
-            results.add("public class " + toClassName(tableName) + extend + " {");
-        } else if (config.getType() == Type.UPDATE) {
-            results.add("public class " + toClassName(tableName) + "UpdateInput" + extend + " {");
-        } else {
-            results.add("public class " + toClassName(tableName) + "Input" + extend + " {");
-        }
-        return results;
-
-
-    }
-
-
-    private String toClassName(String tableName) {
+    private String buildClassName(String tableName) {
         String className;
         if (tableNameMapper.containsKey(tableName)) {
             String qualifier = tableNameMapper.getOrDefault(tableName, "");
@@ -375,11 +351,11 @@ public class EntityGenerator {
                         logger.info("map {} -> {}", column.getReferenceTable(), mapName);
                     }
 
-                    propertyName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, toClassName(mapName)) + "Uuid";
-                    methodName = toClassName(mapName) + "Uuid";
+                    propertyName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, buildClassName(mapName)) + "Uuid";
+                    methodName = buildClassName(mapName) + "Uuid";
                 } else {
                     String referenceTable = column.getReferenceTable();
-                    typeName = toClassName(referenceTable);
+                    typeName = buildClassName(referenceTable);
                     String mapName = columnMapper.getOrDefault(column.getName(), referenceTable);
                     if (columnMapper.containsKey(column.getName())) {
                         logger.info("map {} -> {}", referenceTable, mapName);
@@ -389,7 +365,7 @@ public class EntityGenerator {
                         methodName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, mapName);
                     } else {
                         propertyName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, typeName);
-                        methodName = toClassName(mapName);
+                        methodName = buildClassName(mapName);
                     }
                 }
             }
@@ -405,7 +381,5 @@ public class EntityGenerator {
             this.mapper = mapper;
         }
     }
-
-
 }
 

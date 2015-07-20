@@ -2,6 +2,7 @@ package com.kentchiu.jpa;
 
 import com.google.common.collect.ImmutableMap;
 import com.kentchiu.jpa.domain.Column;
+import com.kentchiu.jpa.domain.Tables;
 import org.junit.Test;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public abstract class AbstractGeneratorTest {
 
     @Test
     public void testPackage() throws Exception {
-        assertThat(generator.toPackageName(Tables.table1().getName()), is(""));
+        assertThat(generator.buildPackageName(Tables.table1().getName()), is(""));
     }
 
 
@@ -38,7 +39,7 @@ public abstract class AbstractGeneratorTest {
     public void testAttributeInfo() throws Exception {
         Column comment = new Column();
         comment.setDescription("column comment");
-        assertThat(generator.attributeInfo(comment), is("@AttributeInfo(description = \"column comment\")"));
+        assertThat(generator.buildAttributeInfo(comment), is("@AttributeInfo(description = \"column comment\")"));
     }
 
     @Test
@@ -51,7 +52,7 @@ public abstract class AbstractGeneratorTest {
         options.put("3", "补件");
         options.put("4", "其他");
 
-        assertThat(generator.attributeInfo(comment), is("@AttributeInfo(description = \"产品类型\", format = \"1=套件/2=包件/3=补件/4=其他\")"));
+        assertThat(generator.buildAttributeInfo(comment), is("@AttributeInfo(description = \"产品类型\", format = \"1=套件/2=包件/3=补件/4=其他\")"));
     }
 
     @Test
@@ -59,7 +60,7 @@ public abstract class AbstractGeneratorTest {
         Column column = new Column();
         column.getOptions().put("Y", "foo");
         column.getOptions().put("N", "bar");
-        assertThat(generator.options(column), is("@Option(value = {\"Y\", \"N\"})"));
+        assertThat(generator.buildOptions(column), is("@Option(value = {\"Y\", \"N\"})"));
     }
 
 }

@@ -5,6 +5,9 @@
     @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "{{column.name}}")
 {{/manyToOne}}
+{{#id}}
+    @Id
+{{/id}}
 {{#nullability}}
     {{nullability}}
 {{/nullability}}

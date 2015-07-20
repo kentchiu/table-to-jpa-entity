@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.kentchiu.jpa.domain.Column;
 import com.kentchiu.jpa.domain.Columns;
-import com.kentchiu.jpa.domain.Table;
+import com.kentchiu.jpa.domain.Tables;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -53,7 +53,7 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
 
         Column column = Columns.createStringColumn("prop", "comment", true);
         column.setReferenceTable("MY_TABLE");
-        List<String> lines = generator.buildProperty(Tables.table1(), column);
+        List<String> lines = generator.buildProperty(column);
 
         dump(lines);
 
@@ -74,17 +74,8 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
 
 
     @Test
-    public void testDomainClass() throws Exception {
-        Table table = Tables.table1();
-        assertThat(generator.buildClass(table), not(hasItem("@Entity")));
-        assertThat(generator.buildClass(table), not(hasItem("@Table(name = \"MY_TABLE_1\")")));
-        assertThat(generator.buildClass(table), hasItem("public class MyTable1UpdateInput extends Object {"));
-    }
-
-
-    @Test
     public void testProperty_BigDecimal() throws Exception {
-        List<String> lines = generator.buildProperty(Tables.table1(), Columns.bigDecimalColumn());
+        List<String> lines = generator.buildProperty(Columns.bigDecimalColumn());
         dump(lines);
 
         int i = 0;
@@ -108,7 +99,7 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
 
     @Test
     public void testProperty_date() throws Exception {
-        List<String> lines = generator.buildProperty(Tables.table1(), Columns.dateColumn());
+        List<String> lines = generator.buildProperty(Columns.dateColumn());
         dump(lines);
 
         int i = 0;
@@ -132,7 +123,7 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
 
     @Test
     public void testProperty_string() throws Exception {
-        List<String> lines = generator.buildProperty(Tables.table1(), Columns.stringColumn());
+        List<String> lines = generator.buildProperty(Columns.stringColumn());
         dump(lines);
 
         int i = 0;
@@ -158,7 +149,7 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
     public void testProperty_with_default_value() throws Exception {
         Column column = Columns.stringColumn();
         column.setComment("column comment(default=foo)");
-        List<String> lines = generator.buildProperty(Tables.table1(), column);
+        List<String> lines = generator.buildProperty(column);
         dump(lines);
 
         int i = 0;
@@ -181,12 +172,10 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
 
     @Test
     public void testProperty_ManyToOne() throws Exception {
-        Table table = Tables.table1();
-
         Column column = Columns.stringColumn();
         column.setNullable(true);
         column.setReferenceTable("OTHER_TABLE");
-        List<String> lines = generator.buildProperty(table, column);
+        List<String> lines = generator.buildProperty(column);
 
         dump(lines);
         int i = 0;
@@ -210,7 +199,7 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
 
     @Test
     public void testProperty_boolean() throws Exception {
-        List<String> lines = generator.buildProperty(Tables.table1(), Columns.booleanColumn());
+        List<String> lines = generator.buildProperty(Columns.booleanColumn());
         dump(lines);
 
         int i = 0;
@@ -234,7 +223,7 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
 
     @Test
     public void testProperty_string_not_null() throws Exception {
-        List<String> lines = generator.buildProperty(Tables.table1(), Columns.createStringColumn("FOO_BAR", "The foo bar comment", false));
+        List<String> lines = generator.buildProperty(Columns.createStringColumn("FOO_BAR", "The foo bar comment", false));
         dump(lines);
 
         // field
@@ -288,7 +277,7 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
     public void testProperty_substitute() throws Exception {
         Column column = Columns.createStringColumn("FOO_QTY_AND_AMT_PROP", "column comment", true);
         generator.setColumnMapper(ImmutableMap.of("QTY", "QUALITY", "AMT", "AMOUNT"));
-        List<String> lines = generator.buildProperty(Tables.table1(), column);
+        List<String> lines = generator.buildProperty(column);
         dump(lines);
 
         int i = 0;
@@ -312,13 +301,11 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
 
     @Test
     public void testProperty_ManyToOne_name_conflict() throws Exception {
-        Table table = Tables.table1();
-
         Column column = Columns.stringColumn();
         column.setNullable(true);
         column.setReferenceTable("OTHER_TABLE");
         generator.getColumnMapper().put("column1", "FOO_BAR");
-        List<String> lines = generator.buildProperty(table, column);
+        List<String> lines = generator.buildProperty(column);
 
         dump(lines);
         int i = 0;
@@ -349,6 +336,6 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
         options.put("Y", "允许");
         options.put("N", "不允许");
 
-        assertThat(generator.attributeInfo(column), is("@AttributeInfo(description = \"是否允许定制颜色\", format = \"Y=允许/N=不允许\")"));
+        assertThat(generator.buildAttributeInfo(column), is("@AttributeInfo(description = \"是否允许定制颜色\", format = \"Y=允许/N=不允许\")"));
     }
 }
