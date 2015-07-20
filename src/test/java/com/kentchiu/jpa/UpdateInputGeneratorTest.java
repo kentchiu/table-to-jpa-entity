@@ -65,18 +65,18 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
         dump(lines);
 
         int i = 0;
-        assertThat(lines.get(i++), is("    private String fooBarUuid;"));
+        assertThat(lines.get(i++), is("//    private String fooBarUuid;"));
 
         i = 2;
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"comment\")"));
-        assertThat(lines.get(i++), is("    public String getFooBarUuid() {"));
-        assertThat(lines.get(i++), is("        return fooBarUuid;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"comment\")"));
+        assertThat(lines.get(i++), is("//    public String getFooBarUuid() {"));
+        assertThat(lines.get(i++), is("//        return fooBarUuid;"));
+        assertThat(lines.get(i++), is("//    }"));
 
         i = 7;
-        assertThat(lines.get(i++), is("    public void setFooBarUuid(String fooBarUuid) {"));
-        assertThat(lines.get(i++), is("        this.fooBarUuid = fooBarUuid;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    public void setFooBarUuid(String fooBarUuid) {"));
+        assertThat(lines.get(i++), is("//        this.fooBarUuid = fooBarUuid;"));
+        assertThat(lines.get(i++), is("//    }"));
     }
 
 
@@ -87,20 +87,20 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
 
         int i = 0;
         // field
-        assertThat(lines.get(i++), is("    private BigDecimal bigDecimalProperty;"));
+        assertThat(lines.get(i++), is("//    private BigDecimal bigDecimalProperty;"));
 
         i = 2;
         // getter
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"this is a big decimal property\")"));
-        assertThat(lines.get(i++), is("    public BigDecimal getBigDecimalProperty() {"));
-        assertThat(lines.get(i++), is("        return bigDecimalProperty;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"this is a big decimal property\")"));
+        assertThat(lines.get(i++), is("//    public BigDecimal getBigDecimalProperty() {"));
+        assertThat(lines.get(i++), is("//        return bigDecimalProperty;"));
+        assertThat(lines.get(i++), is("//    }"));
 
         i = 7;
         // setter
-        assertThat(lines.get(i++), is("    public void setBigDecimalProperty(BigDecimal bigDecimalProperty) {"));
-        assertThat(lines.get(i++), is("        this.bigDecimalProperty = bigDecimalProperty;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    public void setBigDecimalProperty(BigDecimal bigDecimalProperty) {"));
+        assertThat(lines.get(i++), is("//        this.bigDecimalProperty = bigDecimalProperty;"));
+        assertThat(lines.get(i++), is("//    }"));
     }
 
 
@@ -111,21 +111,21 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
 
         int i = 0;
         // field
-        assertThat(lines.get(i++), is("    private Date dateProperty;"));
+        assertThat(lines.get(i++), is("//    private Date dateProperty;"));
 
         i = 2;
         // getter
-        assertThat(lines.get(i++), is("    @DateTimeFormat(pattern = \"yyyy-MM-dd\")"));
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"this is a date property\", format = \"yyyy-MM-dd\")"));
-        assertThat(lines.get(i++), is("    public Date getDateProperty() {"));
-        assertThat(lines.get(i++), is("        return dateProperty;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    @DateTimeFormat(pattern = \"yyyy-MM-dd\")"));
+        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"this is a date property\", format = \"yyyy-MM-dd\")"));
+        assertThat(lines.get(i++), is("//    public Date getDateProperty() {"));
+        assertThat(lines.get(i++), is("//        return dateProperty;"));
+        assertThat(lines.get(i++), is("//    }"));
 
         i = 8;
         // setter
-        assertThat(lines.get(i++), is("    public void setDateProperty(Date dateProperty) {"));
-        assertThat(lines.get(i++), is("        this.dateProperty = dateProperty;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    public void setDateProperty(Date dateProperty) {"));
+        assertThat(lines.get(i++), is("//        this.dateProperty = dateProperty;"));
+        assertThat(lines.get(i++), is("//    }"));
     }
 
     @Test
@@ -135,20 +135,20 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
 
         int i = 0;
         // field
-        assertThat(lines.get(i++), is("    private String column1;"));
+        assertThat(lines.get(i++), is("//    private String column1;"));
 
         i = 2;
         // getter
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"column comment\")"));
-        assertThat(lines.get(i++), is("    public String getColumn1() {"));
-        assertThat(lines.get(i++), is("        return column1;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"column comment\")"));
+        assertThat(lines.get(i++), is("//    public String getColumn1() {"));
+        assertThat(lines.get(i++), is("//        return column1;"));
+        assertThat(lines.get(i++), is("//    }"));
 
         i = 7;
         // setter
-        assertThat(lines.get(i++), is("    public void setColumn1(String column1) {"));
-        assertThat(lines.get(i++), is("        this.column1 = column1;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    public void setColumn1(String column1) {"));
+        assertThat(lines.get(i++), is("//        this.column1 = column1;"));
+        assertThat(lines.get(i++), is("//    }"));
     }
 
     @Test
@@ -162,21 +162,21 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
 
         int i = 0;
         // field
-        assertThat(lines.get(i++), is("    private String column1;"));
+        assertThat(lines.get(i++), is("//    private String column1;"));
 
         i = 2;
         // getter
-        assertThat(lines.get(i++), is("    @Option(value = {\"Y\", \"N\"})"));
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"column comment\", format = \"Y=foo/N=bar\")"));
-        assertThat(lines.get(i++), is("    public String getColumn1() {"));
-        assertThat(lines.get(i++), is("        return column1;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    @Option(value = {\"Y\", \"N\"})"));
+        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"column comment\", format = \"Y=foo/N=bar\")"));
+        assertThat(lines.get(i++), is("//    public String getColumn1() {"));
+        assertThat(lines.get(i++), is("//        return column1;"));
+        assertThat(lines.get(i++), is("//    }"));
 
         i = 8;
         // setter
-        assertThat(lines.get(i++), is("    public void setColumn1(String column1) {"));
-        assertThat(lines.get(i++), is("        this.column1 = column1;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    public void setColumn1(String column1) {"));
+        assertThat(lines.get(i++), is("//        this.column1 = column1;"));
+        assertThat(lines.get(i++), is("//    }"));
     }
 
 
@@ -189,20 +189,20 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
 
         int i = 0;
         // field
-        assertThat(lines.get(i++), is("    private String column1;"));
+        assertThat(lines.get(i++), is("//    private String column1;"));
 
         i = 2;
         // getter
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"column comment\")"));
-        assertThat(lines.get(i++), is("    public String getColumn1() {"));
-        assertThat(lines.get(i++), is("        return column1;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"column comment\")"));
+        assertThat(lines.get(i++), is("//    public String getColumn1() {"));
+        assertThat(lines.get(i++), is("//        return column1;"));
+        assertThat(lines.get(i++), is("//    }"));
 
         i = 7;
         // setter
-        assertThat(lines.get(i++), is("    public void setColumn1(String column1) {"));
-        assertThat(lines.get(i++), is("        this.column1 = column1;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    public void setColumn1(String column1) {"));
+        assertThat(lines.get(i++), is("//        this.column1 = column1;"));
+        assertThat(lines.get(i++), is("//    }"));
     }
 
     @Test
@@ -215,20 +215,20 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
         dump(lines);
         int i = 0;
         // field
-        assertThat(lines.get(i++), is("    private String otherTableUuid;"));
+        assertThat(lines.get(i++), is("//    private String otherTableUuid;"));
 
         i = 2;
         // getter
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"column comment\")"));
-        assertThat(lines.get(i++), is("    public String getOtherTableUuid() {"));
-        assertThat(lines.get(i++), is("        return otherTableUuid;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"column comment\")"));
+        assertThat(lines.get(i++), is("//    public String getOtherTableUuid() {"));
+        assertThat(lines.get(i++), is("//        return otherTableUuid;"));
+        assertThat(lines.get(i++), is("//    }"));
 
         i = 7;
         // setter
-        assertThat(lines.get(i++), is("    public void setOtherTableUuid(String otherTableUuid) {"));
-        assertThat(lines.get(i++), is("        this.otherTableUuid = otherTableUuid;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    public void setOtherTableUuid(String otherTableUuid) {"));
+        assertThat(lines.get(i++), is("//        this.otherTableUuid = otherTableUuid;"));
+        assertThat(lines.get(i++), is("//    }"));
     }
 
 
@@ -239,20 +239,20 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
 
         int i = 0;
         // field
-        assertThat(lines.get(i++), is("    private Boolean boolProperty;"));
+        assertThat(lines.get(i++), is("//    private Boolean boolProperty;"));
 
         i = 2;
         // getter
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"this is a boolean property\")"));
-        assertThat(lines.get(i++), is("    public Boolean getBoolProperty() {"));
-        assertThat(lines.get(i++), is("        return boolProperty;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"this is a boolean property\")"));
+        assertThat(lines.get(i++), is("//    public Boolean getBoolProperty() {"));
+        assertThat(lines.get(i++), is("//        return boolProperty;"));
+        assertThat(lines.get(i++), is("//    }"));
 
         i = 7;
         // setter
-        assertThat(lines.get(i++), is("    public void setBoolProperty(Boolean boolProperty) {"));
-        assertThat(lines.get(i++), is("        this.boolProperty = boolProperty;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    public void setBoolProperty(Boolean boolProperty) {"));
+        assertThat(lines.get(i++), is("//        this.boolProperty = boolProperty;"));
+        assertThat(lines.get(i++), is("//    }"));
     }
 
 
@@ -262,20 +262,20 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
         dump(lines);
 
         // field
-        assertThat(lines.get(0), is("    private String fooBar;"));
+        assertThat(lines.get(0), is("//    private String fooBar;"));
 
         // getter
         int i = 2;
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"The foo bar comment\")"));
-        assertThat(lines.get(i++), is("    public String getFooBar() {"));
-        assertThat(lines.get(i++), is("        return fooBar;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"The foo bar comment\")"));
+        assertThat(lines.get(i++), is("//    public String getFooBar() {"));
+        assertThat(lines.get(i++), is("//        return fooBar;"));
+        assertThat(lines.get(i++), is("//    }"));
 
         // setter
         i = 7;
-        assertThat(lines.get(i++), is("    public void setFooBar(String fooBar) {"));
-        assertThat(lines.get(i++), is("        this.fooBar = fooBar;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    public void setFooBar(String fooBar) {"));
+        assertThat(lines.get(i++), is("//        this.fooBar = fooBar;"));
+        assertThat(lines.get(i++), is("//    }"));
     }
 
     @Test
@@ -317,20 +317,20 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
 
         int i = 0;
         // field
-        assertThat(lines.get(i++), is("    private String fooQualityAndAmountProp;"));
+        assertThat(lines.get(i++), is("//    private String fooQualityAndAmountProp;"));
 
         i = 2;
         // getter
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"column comment\")"));
-        assertThat(lines.get(i++), is("    public String getFooQualityAndAmountProp() {"));
-        assertThat(lines.get(i++), is("        return fooQualityAndAmountProp;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"column comment\")"));
+        assertThat(lines.get(i++), is("//    public String getFooQualityAndAmountProp() {"));
+        assertThat(lines.get(i++), is("//        return fooQualityAndAmountProp;"));
+        assertThat(lines.get(i++), is("//    }"));
 
         i = 7;
         // setter
-        assertThat(lines.get(i++), is("    public void setFooQualityAndAmountProp(String fooQualityAndAmountProp) {"));
-        assertThat(lines.get(i++), is("        this.fooQualityAndAmountProp = fooQualityAndAmountProp;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    public void setFooQualityAndAmountProp(String fooQualityAndAmountProp) {"));
+        assertThat(lines.get(i++), is("//        this.fooQualityAndAmountProp = fooQualityAndAmountProp;"));
+        assertThat(lines.get(i++), is("//    }"));
     }
 
 
@@ -346,19 +346,19 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
         int i = 0;
         // field
 
-        assertThat(lines.get(i++), is("    private String fooBarUuid;"));
+        assertThat(lines.get(i++), is("//    private String fooBarUuid;"));
         i = 2;
         // getter
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"column comment\")"));
-        assertThat(lines.get(i++), is("    public String getFooBarUuid() {"));
-        assertThat(lines.get(i++), is("        return fooBarUuid;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"column comment\")"));
+        assertThat(lines.get(i++), is("//    public String getFooBarUuid() {"));
+        assertThat(lines.get(i++), is("//        return fooBarUuid;"));
+        assertThat(lines.get(i++), is("//    }"));
 
         i = 7;
         // setter
-        assertThat(lines.get(i++), is("    public void setFooBarUuid(String fooBarUuid) {"));
-        assertThat(lines.get(i++), is("        this.fooBarUuid = fooBarUuid;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is("//    public void setFooBarUuid(String fooBarUuid) {"));
+        assertThat(lines.get(i++), is("//        this.fooBarUuid = fooBarUuid;"));
+        assertThat(lines.get(i++), is("//    }"));
     }
 
 
