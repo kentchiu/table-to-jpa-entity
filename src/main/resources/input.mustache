@@ -1,0 +1,60 @@
+packacge com.kentchiu.jpa;
+
+import com.kentchiu.spring.attribute.AttributeInfo;
+import com.kentchiu.spring.base.domain.Option;
+import org.hibernate.validator.constraints.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import java.util.Date;
+import java.math.BigDecimal;
+
+/*
+* a table comment
+*/
+@Entity
+@Table(name = "MY_TABLE_1")
+public class MyTable1 {
+
+private String myColumn11;
+
+@Id
+@GeneratedValue(generator = "system-uuid")
+@GenericGenerator(name = "system-uuid", strategy = "uuid2")
+@AttributeInfo(description = "my column 1-1 comment")
+public String getMyColumn11() {
+return myColumn11;
+}
+
+public void setMyColumn11(String myColumn11) {
+this.myColumn11 = myColumn11;
+}
+private String myColumn12;
+
+@NotBlank
+@Column(name = "MY_COLUMN_12")
+@AttributeInfo(description = "my column 1-2 comment")
+public String getMyColumn12() {
+return myColumn12;
+}
+
+public void setMyColumn12(String myColumn12) {
+this.myColumn12 = myColumn12;
+}
+private Date myColumn13;
+
+@NotNull
+@Column(name = "MY_COLUMN_13")
+@AttributeInfo(description = "my column 1-3 comment")
+public Date getMyColumn13() {
+return myColumn13;
+}
+
+public void setMyColumn13(Date myColumn13) {
+this.myColumn13 = myColumn13;
+}
+}
+
+

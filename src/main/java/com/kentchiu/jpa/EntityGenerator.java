@@ -1,9 +1,14 @@
 package com.kentchiu.jpa;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.kentchiu.jpa.domain.Column;
@@ -14,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -112,7 +118,22 @@ public class EntityGenerator {
         });
         lines.add("}");
         lines.add("");
-        return lines;
+        //return lines;
+
+        MustacheFactory mf = new DefaultMustacheFactory();
+        Mustache mustache = mf.compile("input_all.mustache");
+        try {
+            StringWriter stringWriter = new StringWriter();
+
+            mustache.execute(stringWriter, ImmutableMap.of("content", Joiner.on('\n').join(lines))).flush();
+            String content = stringWriter.toString();
+            Iterable<String> split = Splitter.on('\n').split(content);
+            return Lists.newArrayList(split);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Lists.newArrayList();
+        }
+
     }
 
     List<String> buildImports() {
