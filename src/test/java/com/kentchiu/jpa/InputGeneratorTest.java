@@ -41,7 +41,7 @@ public class InputGeneratorTest extends AbstractGeneratorTest {
         assertThat(lines, hasItem("/*"));
         assertThat(lines, hasItem(" * a table comment"));
         assertThat(lines, hasItem(" */"));
-        assertThat(lines, hasItem("public class FooBarInput extends Object {"));
+        assertThat(lines, hasItem("public class FooBarInput {"));
     }
 
     @Test
@@ -275,7 +275,7 @@ public class InputGeneratorTest extends AbstractGeneratorTest {
         assertThat(lines.get(i++), is("/*"));
         assertThat(lines.get(i++), is(" * a table comment"));
         assertThat(lines.get(i++), is(" */"));
-        assertThat(lines.get(i++), is("public class MyTable1Input extends Object {"));
+        assertThat(lines.get(i++), is("public class MyTable1Input {"));
 
         String content = Joiner.on('\n').join(lines);
 

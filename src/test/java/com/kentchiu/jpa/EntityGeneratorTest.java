@@ -44,15 +44,17 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
         assertThat(lines, hasItem("/*"));
         assertThat(lines, hasItem(" * a table comment"));
         assertThat(lines, hasItem(" */"));
-        assertThat(lines, hasItem("public class FooBar extends Object {"));
+        assertThat(lines, hasItem("public class FooBar {"));
     }
 
     @Test
     public void testDomainClass() throws Exception {
         Table table = Tables.table1();
-        assertThat(generator.exportTable(table), hasItem("@Entity"));
-        assertThat(generator.exportTable(table), hasItem("@Table(name = \"MY_TABLE_1\")"));
-        assertThat(generator.exportTable(table), hasItem("public class MyTable1 extends Object {"));
+        List<String> strings = generator.exportTable(table);
+        dump(strings);
+        assertThat(strings, hasItem("@Entity"));
+        assertThat(strings, hasItem("@Table(name = \"MY_TABLE_1\")"));
+        assertThat(strings, hasItem("public class MyTable1 {"));
     }
 
 

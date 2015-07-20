@@ -21,10 +21,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EntityGenerator {
@@ -99,7 +96,6 @@ public class EntityGenerator {
     }
 
     protected List<String> exportTable(Table table, List<String> ignoreColumns) {
-        List<String> lines = new ArrayList<>();
 
         String packageName = toPackageName(table.getName());
 
@@ -109,32 +105,21 @@ public class EntityGenerator {
             context.put("packageName", packageName);
         }
 
-        context.put("className", table.getComment());
-
-        context.put("content", Joiner.on('\n').join(lines));
-
         context.put("imports", buildImports());
-
         context.put("table", table);
         context.put("class", toClassName(table.getName()));
-        context.put("baseClass", config.getBaseClass().getSimpleName());
-
-
-        table.getColumns().stream().filter(column -> !ignoreColumns.contains(column.getName())).forEach(column -> {
-            lines.addAll(buildProperty(table, column));
-        });
-
-        context.put("properties", Joiner.on('\n').join(lines));
+        if (!Objects.equals(Object.class, config.getBaseClass())) {
+            context.put("extend", "extends " + config.getBaseClass().getSimpleName());
+        } else {
+            context.put("extend", "");
+        }
+        context.put("properties", buildProperties(table, ignoreColumns));
 
         MustacheFactory mf = new DefaultMustacheFactory();
-
-        String templateName;
-        templateName = config.getType().getTemplateName();
-
+        String templateName = config.getType().getTemplateName();
         Mustache mustache = mf.compile(templateName + ".mustache");
         try {
             StringWriter stringWriter = new StringWriter();
-
             mustache.execute(stringWriter, context).flush();
             String content = stringWriter.toString();
             Iterable<String> split = Splitter.on('\n').split(content);
@@ -144,6 +129,15 @@ public class EntityGenerator {
             return Lists.newArrayList();
         }
 
+    }
+
+    private String buildProperties(Table table, List<String> ignoreColumns) {
+        List<String> lines = new ArrayList<>();
+        table.getColumns().stream().filter(column -> !ignoreColumns.contains(column.getName())).forEach(column -> {
+            lines.addAll(buildProperty(table, column));
+        });
+
+        return Joiner.on('\n').join(lines);
     }
 
     List<String> buildImports() {
@@ -182,22 +176,6 @@ public class EntityGenerator {
         }
     }
 
-    List<String> buildPropertyOld(Table table, Column column) {
-        List<String> lines = new ArrayList<>();
-        Property p = new Property(column);
-        p.setMapper(columnMapper);
-        Property property = p.invoke(config.getType());
-
-        lines.addAll(fieldName(property, column));
-        lines.add("");
-        lines.addAll(fieldAnnotation(table, column, property));
-        //lines.addAll(options(column));
-        //lines.addAll(attributeInfo(column));
-        lines.addAll(appendGetter(property));
-        lines.add("");
-        lines.addAll(appendSetter(property));
-        return lines;
-    }
 
     List<String> buildProperty(Table table, Column column) {
         Property p = new Property(column);
@@ -242,12 +220,6 @@ public class EntityGenerator {
         }
 
 
-        List<String> fieldAnnotation = fieldAnnotation(table, column, property);
-//        if (!fieldAnnotation.isEmpty()) {
-//            context.put("fieldAnnotation", fieldAnnotation);
-//        }
-
-
         context.put("property", property);
         context.put("column", column);
 
@@ -265,117 +237,6 @@ public class EntityGenerator {
         return convert("property_" + config.getType().getTemplateName() + ".mustache", context);
     }
 
-
-    @Deprecated
-    private List<String> fieldAnnotation(Table table, Column column, Property property) {
-        List<String> results = Lists.newArrayList();
-        if (config.getType() != Type.JPA) {
-            // pk
-            if (StringUtils.equals(table.getPrimaryKey(), column.getName())) {
-                results.addAll(appendId());
-            } else {
-                results.addAll(appendNotNullOrNotBlank(column, property.getTypeName()));
-            }
-            if (property.isDateType() && StringUtils.contains(column.getComment(), "(format")) {
-                results.add("    @DateTimeFormat(pattern = \"" + StringUtils.substringBetween(column.getComment(), "=", ")") + "\")");
-            }
-        } else {
-            if (StringUtils.isNotBlank(column.getReferenceTable())) {
-                results.addAll(appendManyToOne(column));
-            } else {
-                // pk
-                if (StringUtils.equals(table.getPrimaryKey(), column.getName())) {
-                    results.addAll(appendId());
-                } else {
-                    results.addAll(appendNotNullOrNotBlank(column, property.getTypeName()));
-                    if (column.isUnique()) {
-                        results.add(String.format("    @Column(name = \"%s\", unique = true)", column.getName()));
-                    } else {
-                        results.add(String.format("    @Column(name = \"%s\")", column.getName()));
-                    }
-                }
-            }
-        }
-        return results;
-    }
-
-    @Deprecated
-    private List<String> fieldName(Property property, Column column) {
-        List<String> results = new ArrayList<>();
-        if (StringUtils.isBlank(column.getDefaultValue())) {
-            results.add(String.format("    private %s %s;", property.getTypeName(), property.getPropertyName()));
-        } else {
-            if (StringUtils.equals("java.lang.String", column.getJavaType())) {
-                if (config.getType() != Type.UPDATE) {
-                    results.add(String.format("    private %s %s = \"%s\";", property.getTypeName(), property.getPropertyName(), column.getDefaultValue()));
-                } else {
-                    results.add(String.format("    private %s %s;", property.getTypeName(), property.getPropertyName()));
-                }
-            } else {
-                if (config.getType() != Type.UPDATE) {
-                    results.add(String.format("    private %s %s = %s;", property.getTypeName(), property.getPropertyName(), column.getDefaultValue()));
-                } else {
-                    results.add(String.format("    private %s %s;", property.getTypeName(), property.getPropertyName()));
-
-                }
-            }
-        }
-        return results;
-    }
-
-    @Deprecated
-    private List<String> appendSetter(Property property) {
-        List<String> results = new ArrayList<>();
-        results.add(String.format("    public void set%s(%s %s) {", property.getMethodName(), property.getTypeName(), property.getPropertyName()));
-        results.add(String.format("        this.%s = %s;", property.getPropertyName(), property.getPropertyName()));
-        results.add("    }");
-        return results;
-    }
-
-    @Deprecated
-    private List<String> appendGetter(Property property) {
-        List<String> results = new ArrayList<>();
-        if (StringUtils.equals("Boolean", property.getTypeName())) {
-            results.add(String.format("    public %s is%s() {", property.getTypeName(), property.getMethodName()));
-        } else if (property.isDateType()) {
-            results.add(String.format("    public Date get%s() {", property.getMethodName()));
-        } else {
-            results.add(String.format("    public %s get%s() {", property.getTypeName(), property.getMethodName()));
-        }
-        results.add("        return " + property.getPropertyName() + ";");
-        results.add("    }");
-        return results;
-    }
-
-    @Deprecated
-    List<String> appendManyToOne(Column column) {
-        List<String> results = new ArrayList<>();
-        results.add("    @ManyToOne");
-        results.add("    @NotFound(action = NotFoundAction.IGNORE)");
-        results.add(String.format("    @JoinColumn(name = \"%s\")", column.getName()));
-        return results;
-    }
-
-    @Deprecated
-    List<String> appendId() {
-        List<String> results = new ArrayList<>();
-        results.add("    @Id");
-        results.add("    @GeneratedValue(generator = \"system-uuid\")");
-        results.add("    @GenericGenerator(name = \"system-uuid\", strategy = \"uuid2\")");
-        return results;
-    }
-
-    List<String> appendNotNullOrNotBlank(Column column, String typeName) {
-        List<String> lines = new ArrayList<>();
-        if (!column.isNullable() && config.getType() != Type.UPDATE) {
-            if (StringUtils.equals("String", typeName)) {
-                lines.add("    @NotBlank");
-            } else {
-                lines.add("    @NotNull");
-            }
-        }
-        return lines;
-    }
 
     String attributeInfo(Column column) {
         StringBuffer sb = new StringBuffer();
