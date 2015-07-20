@@ -348,8 +348,6 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
         options.put("Y", "允许");
         options.put("N", "不允许");
 
-        List<String> lines = generator.attributeInfo(column);
-        assertThat(lines.size(), is(1));
-        assertThat(lines.get(0), is("    @AttributeInfo(description = \"是否允许定制颜色\", format = \"Y=允许/N=不允许\")"));
+        assertThat(generator.attributeInfo(column), is("    @AttributeInfo(description = \"是否允许定制颜色\", format = \"Y=允许/N=不允许\")"));
     }
 }

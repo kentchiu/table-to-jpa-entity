@@ -48,43 +48,13 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
     }
 
     @Test
-    public void testColumnMapping() throws Exception {
-        Map<String, String> mapper = new HashMap<>();
-        mapper.put("MY_TABLE", "com.kentchiu.jpa.FooBar");
-        generator.setTableNameMapper(mapper);
-
-        Column column = Columns.createStringColumn("prop", "comment", true);
-        column.setReferenceTable("MY_TABLE");
-        List<String> lines = generator.buildProperty(Tables.table1(), column);
-
-        dump(lines);
-
-        int i = 0;
-        assertThat(lines.get(i++), is("    private FooBar fooBar;"));
-
-        i = 2;
-        assertThat(lines.get(i++), is("    @ManyToOne"));
-        assertThat(lines.get(i++), is("    @NotFound(action = NotFoundAction.IGNORE)"));
-        assertThat(lines.get(i++), is("    @JoinColumn(name = \"prop\")"));
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"comment\")"));
-        assertThat(lines.get(i++), is("    public FooBar getFooBar() {"));
-        assertThat(lines.get(i++), is("        return fooBar;"));
-        assertThat(lines.get(i++), is("    }"));
-
-        i = 10;
-        assertThat(lines.get(i++), is("    public void setFooBar(FooBar fooBar) {"));
-        assertThat(lines.get(i++), is("        this.fooBar = fooBar;"));
-        assertThat(lines.get(i++), is("    }"));
-    }
-
-
-    @Test
     public void testDomainClass() throws Exception {
         Table table = Tables.table1();
         assertThat(generator.exportTable(table), hasItem("@Entity"));
         assertThat(generator.exportTable(table), hasItem("@Table(name = \"MY_TABLE_1\")"));
         assertThat(generator.exportTable(table), hasItem("public class MyTable1 extends Object {"));
     }
+
 
     @Test
     public void testProperty_BigDecimal() throws Exception {
@@ -136,6 +106,55 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
         assertThat(lines.get(i++), is("    }"));
     }
 
+
+    @Test
+    public void testProperty_boolean() throws Exception {
+        List<String> lines = generator.buildProperty(Tables.table1(), Columns.booleanColumn());
+        dump(lines);
+
+        int i = 0;
+        // field
+        assertThat(lines.get(i++), is("    private Boolean boolProperty;"));
+
+        i = 2;
+        // getter
+        assertThat(lines.get(i++), is("    @Column(name = \"BOOL_PROPERTY\")"));
+        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"this is a boolean property\")"));
+        assertThat(lines.get(i++), is("    public Boolean getBoolProperty() {"));
+        assertThat(lines.get(i++), is("        return boolProperty;"));
+        assertThat(lines.get(i++), is("    }"));
+
+        i = 8;
+        // setter
+        assertThat(lines.get(i++), is("    public void setBoolProperty(Boolean boolProperty) {"));
+        assertThat(lines.get(i++), is("        this.boolProperty = boolProperty;"));
+        assertThat(lines.get(i++), is("    }"));
+    }
+
+
+    @Test
+    public void testProperty_string_not_null() throws Exception {
+        List<String> lines = generator.buildProperty(Tables.table1(), Columns.createStringColumn("FOO_BAR", "The foo bar comment", false));
+        dump(lines);
+
+        // field
+        assertThat(lines.get(0), is("    private String fooBar;"));
+
+        // getter
+        int i = 2;
+        assertThat(lines.get(i++), is("    @NotBlank"));
+        assertThat(lines.get(i++), is("    @Column(name = \"FOO_BAR\")"));
+        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"The foo bar comment\")"));
+        assertThat(lines.get(i++), is("    public String getFooBar() {"));
+        assertThat(lines.get(i++), is("        return fooBar;"));
+        assertThat(lines.get(i++), is("    }"));
+
+        // setter
+        i = 9;
+        assertThat(lines.get(i++), is("    public void setFooBar(String fooBar) {"));
+        assertThat(lines.get(i++), is("        this.fooBar = fooBar;"));
+        assertThat(lines.get(i++), is("    }"));
+    }
 
     @Test
     public void testProperty_with_default_value() throws Exception {
@@ -226,53 +245,35 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
 
 
     @Test
-    public void testProperty_boolean() throws Exception {
-        List<String> lines = generator.buildProperty(Tables.table1(), Columns.booleanColumn());
+    public void testColumnMapping() throws Exception {
+        Map<String, String> mapper = new HashMap<>();
+        mapper.put("MY_TABLE", "com.kentchiu.jpa.FooBar");
+        generator.setTableNameMapper(mapper);
+
+        Column column = Columns.createStringColumn("prop", "comment", true);
+        column.setReferenceTable("MY_TABLE");
+        List<String> lines = generator.buildProperty(Tables.table1(), column);
+
         dump(lines);
 
         int i = 0;
-        // field
-        assertThat(lines.get(i++), is("    private Boolean boolProperty;"));
+        assertThat(lines.get(i++), is("    private FooBar fooBar;"));
 
         i = 2;
-        // getter
-        assertThat(lines.get(i++), is("    @Column(name = \"BOOL_PROPERTY\")"));
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"this is a boolean property\")"));
-        assertThat(lines.get(i++), is("    public Boolean isBoolProperty() {"));
-        assertThat(lines.get(i++), is("        return boolProperty;"));
-        assertThat(lines.get(i++), is("    }"));
-
-        i = 8;
-        // setter
-        assertThat(lines.get(i++), is("    public void setBoolProperty(Boolean boolProperty) {"));
-        assertThat(lines.get(i++), is("        this.boolProperty = boolProperty;"));
-        assertThat(lines.get(i++), is("    }"));
-    }
-
-
-    @Test
-    public void testProperty_string_not_null() throws Exception {
-        List<String> lines = generator.buildProperty(Tables.table1(), Columns.createStringColumn("FOO_BAR", "The foo bar comment", false));
-        dump(lines);
-
-        // field
-        assertThat(lines.get(0), is("    private String fooBar;"));
-
-        // getter
-        int i = 2;
-        assertThat(lines.get(i++), is("    @NotBlank"));
-        assertThat(lines.get(i++), is("    @Column(name = \"FOO_BAR\")"));
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"The foo bar comment\")"));
-        assertThat(lines.get(i++), is("    public String getFooBar() {"));
+        assertThat(lines.get(i++), is("    @ManyToOne"));
+        assertThat(lines.get(i++), is("    @NotFound(action = NotFoundAction.IGNORE)"));
+        assertThat(lines.get(i++), is("    @JoinColumn(name = \"prop\")"));
+        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"comment\")"));
+        assertThat(lines.get(i++), is("    public FooBar getFooBar() {"));
         assertThat(lines.get(i++), is("        return fooBar;"));
         assertThat(lines.get(i++), is("    }"));
 
-        // setter
-        i = 9;
-        assertThat(lines.get(i++), is("    public void setFooBar(String fooBar) {"));
+        i = 10;
+        assertThat(lines.get(i++), is("    public void setFooBar(FooBar fooBar) {"));
         assertThat(lines.get(i++), is("        this.fooBar = fooBar;"));
         assertThat(lines.get(i++), is("    }"));
     }
+
 
 //    @Test
 //    public void testExportTable() throws Exception {
@@ -382,8 +383,6 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
         options.put("Y", "允许");
         options.put("N", "不允许");
 
-        List<String> lines = generator.attributeInfo(column);
-        assertThat(lines.size(), is(1));
-        assertThat(lines.get(0), is("    @AttributeInfo(description = \"是否允许定制颜色\", format = \"Y=允许/N=不允许\", defaultValue = \"'Y'\")"));
+        assertThat(generator.attributeInfo(column), is("@AttributeInfo(description = \"是否允许定制颜色\", format = \"Y=允许/N=不允许\", defaultValue = \"'Y'\")"));
     }
 }

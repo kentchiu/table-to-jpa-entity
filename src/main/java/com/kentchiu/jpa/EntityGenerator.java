@@ -120,13 +120,10 @@ public class EntityGenerator {
         context.put("baseClass", config.getBaseClass().getSimpleName());
 
 
-        lines.addAll(buildClass(table));
-        lines.add("");
+        //lines.addAll(buildClass(table));
         table.getColumns().stream().filter(column -> !ignoreColumns.contains(column.getName())).forEach(column -> {
             lines.addAll(buildProperty(table, column));
         });
-        lines.add("}");
-        lines.add("");
         //return lines;
 
         MustacheFactory mf = new DefaultMustacheFactory();
@@ -158,7 +155,7 @@ public class EntityGenerator {
         return results;
     }
 
-    private List<String> convert(String template, HashMap<Object, Object> context) {
+    private List<String> convert(String template, Map<String, Object> context) {
         try {
             MustacheFactory mf = new DefaultMustacheFactory();
             Mustache mustache = mf.compile(template);
@@ -185,7 +182,7 @@ public class EntityGenerator {
         }
     }
 
-    List<String> buildProperty(Table table, Column column) {
+    List<String> buildPropertyOld(Table table, Column column) {
         List<String> lines = new ArrayList<>();
         Property p = new Property(column);
         p.setMapper(columnMapper);
@@ -194,14 +191,73 @@ public class EntityGenerator {
         lines.addAll(fieldName(property, column));
         lines.add("");
         lines.addAll(fieldAnnotation(table, column, property));
-        lines.addAll(options(column));
-        lines.addAll(attributeInfo(column));
+        //lines.addAll(options(column));
+        //lines.addAll(attributeInfo(column));
         lines.addAll(appendGetter(property));
         lines.add("");
         lines.addAll(appendSetter(property));
         return lines;
     }
 
+    List<String> buildProperty(Table table, Column column) {
+        Property p = new Property(column);
+        p.setMapper(columnMapper);
+        Property property = p.invoke(config.getType());
+
+        Map<String, Object> context = new HashMap<>();
+
+
+        if (StringUtils.isNotBlank(attributeInfo(column))) {
+            context.put("options", options(column));
+        }
+        if (StringUtils.isNotBlank(attributeInfo(column))) {
+            context.put("attributeInfo", attributeInfo(column));
+        }
+
+        if (!column.isNullable()) {
+            if (StringUtils.equals("String", p.getTypeName())) {
+                context.put("nullability", "@NotBlank");
+            } else {
+                context.put("nullability", "@NotNull");
+            }
+        }
+
+        if (StringUtils.isNotBlank(column.getReferenceTable())) {
+            context.put("manyToOne", column.getReferenceTable());
+        }
+
+        if (column.isUnique()) {
+            context.put("columnAnnotation", (String.format("@Column(name = \"%s\", unique = true)", column.getName())));
+        } else {
+            context.put("columnAnnotation", (String.format("@Column(name = \"%s\")", column.getName())));
+        }
+
+
+        List<String> fieldAnnotation = fieldAnnotation(table, column, property);
+//        if (!fieldAnnotation.isEmpty()) {
+//            context.put("fieldAnnotation", fieldAnnotation);
+//        }
+
+
+        context.put("property", property);
+        context.put("column", column);
+
+
+        if (StringUtils.isNotBlank(column.getDefaultValue())) {
+            if (StringUtils.equals("BigDecimal.ZERO", column.getDefaultValue())) {
+                context.put("defaultValue", (" = BigDecimal.ZERO"));
+            } else {
+                context.put("defaultValue", " = \"" + column.getDefaultValue() + "\"");
+            }
+        }
+
+
+        System.out.println("context : " + context);
+        return convert("property_basic.mustache", context);
+    }
+
+
+    @Deprecated
     private List<String> fieldAnnotation(Table table, Column column, Property property) {
         List<String> results = Lists.newArrayList();
         if (config.getType() != Type.JPA) {
@@ -234,6 +290,7 @@ public class EntityGenerator {
         return results;
     }
 
+    @Deprecated
     private List<String> fieldName(Property property, Column column) {
         List<String> results = new ArrayList<>();
         if (StringUtils.isBlank(column.getDefaultValue())) {
@@ -257,6 +314,7 @@ public class EntityGenerator {
         return results;
     }
 
+    @Deprecated
     private List<String> appendSetter(Property property) {
         List<String> results = new ArrayList<>();
         results.add(String.format("    public void set%s(%s %s) {", property.getMethodName(), property.getTypeName(), property.getPropertyName()));
@@ -265,6 +323,7 @@ public class EntityGenerator {
         return results;
     }
 
+    @Deprecated
     private List<String> appendGetter(Property property) {
         List<String> results = new ArrayList<>();
         if (StringUtils.equals("Boolean", property.getTypeName())) {
@@ -279,6 +338,7 @@ public class EntityGenerator {
         return results;
     }
 
+    @Deprecated
     List<String> appendManyToOne(Column column) {
         List<String> results = new ArrayList<>();
         results.add("    @ManyToOne");
@@ -287,6 +347,7 @@ public class EntityGenerator {
         return results;
     }
 
+    @Deprecated
     List<String> appendId() {
         List<String> results = new ArrayList<>();
         results.add("    @Id");
@@ -307,10 +368,9 @@ public class EntityGenerator {
         return lines;
     }
 
-    List<String> attributeInfo(Column column) {
-        List<String> lines = new ArrayList<>();
+    String attributeInfo(Column column) {
         StringBuffer sb = new StringBuffer();
-        sb.append("    @AttributeInfo(");
+        sb.append("@AttributeInfo(");
         if (StringUtils.isNotBlank(column.getDescription())) {
             sb.append("description = \"").append(column.getDescription()).append("\"");
         }
@@ -336,21 +396,20 @@ public class EntityGenerator {
             }
         }
         sb.append(")");
-        lines.add(sb.toString());
-        return lines;
+
+        return sb.toString();
     }
 
-    List<String> options(Column c) {
-        List<String> results = new ArrayList<>();
+    String options(Column c) {
         if (!c.getOptions().isEmpty()) {
             StringBuilder s = new StringBuilder();
-            s.append("    @Option(value = {");
+            s.append("@Option(value = {");
             List<String> keys = c.getOptions().keySet().stream().map(k -> "\"" + k + "\"").collect(Collectors.toList());
             s.append(Joiner.on(", ").join(keys));
             s.append("})").toString();
-            results.add(s.toString());
+            return s.toString();
         }
-        return results;
+        return "";
     }
 
 

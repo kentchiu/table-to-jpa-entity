@@ -38,9 +38,7 @@ public abstract class AbstractGeneratorTest {
     public void testAttributeInfo() throws Exception {
         Column comment = new Column();
         comment.setDescription("column comment");
-        List<String> lines = generator.attributeInfo(comment);
-        assertThat(lines.size(), is(1));
-        assertThat(lines.get(0), is("    @AttributeInfo(description = \"column comment\")"));
+        assertThat(generator.attributeInfo(comment), is("@AttributeInfo(description = \"column comment\")"));
     }
 
     @Test
@@ -53,9 +51,7 @@ public abstract class AbstractGeneratorTest {
         options.put("3", "补件");
         options.put("4", "其他");
 
-        List<String> lines = generator.attributeInfo(comment);
-        assertThat(lines.size(), is(1));
-        assertThat(lines.get(0), is("    @AttributeInfo(description = \"产品类型\", format = \"1=套件/2=包件/3=补件/4=其他\")"));
+        assertThat(generator.attributeInfo(comment), is("@AttributeInfo(description = \"产品类型\", format = \"1=套件/2=包件/3=补件/4=其他\")"));
     }
 
     @Test
@@ -63,9 +59,7 @@ public abstract class AbstractGeneratorTest {
         Column column = new Column();
         column.getOptions().put("Y", "foo");
         column.getOptions().put("N", "bar");
-        List<String> lines = generator.options(column);
-        assertThat(lines.size(), is(1));
-        assertThat(lines.get(0), is("    @Option(value = {\"Y\", \"N\"})"));
+        assertThat(generator.options(column), is("@Option(value = {\"Y\", \"N\"})"));
     }
 
 }
