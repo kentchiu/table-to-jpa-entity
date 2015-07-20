@@ -23,11 +23,24 @@ public enum Type {
         Preconditions.checkState(StringUtils.isNoneBlank(className));
         switch (this) {
             case JPA:
-                return className;
+                return className + ".java";
             case INPUT:
-                return className + "Input";
+                return className + "Input.java";
             case UPDATE:
-                return className + "UpdateInput";
+                return className + "UpdateInput.java";
+            default:
+                throw new IllegalStateException("Unknown type :" + this);
+        }
+    }
+
+    public String getPackage() {
+        switch (this) {
+            case JPA:
+                return "domain";
+            case INPUT:
+                return "web.dto";
+            case UPDATE:
+                return "web.dto";
             default:
                 throw new IllegalStateException("Unknown type :" + this);
         }

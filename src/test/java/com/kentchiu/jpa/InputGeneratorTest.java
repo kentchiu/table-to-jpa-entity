@@ -27,18 +27,24 @@ public class InputGeneratorTest extends AbstractGeneratorTest {
     }
 
     @Test
+    public void testPackage() throws Exception {
+        generator.setTableNameMapper(ImmutableMap.of(Tables.table1().getName(), "com.kentchiu.jpa.domain.MyTable1"));
+        assertThat(generator.buildPackageName(Tables.table1().getName()), is("com.kentchiu.jpa.web.dto"));
+    }
+
+    @Test
     public void testGenerate() throws Exception {
-        generator.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.foobar.MyTest"));
+        generator.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.foobar.domain.MyTest"));
         Path javaSourceHome = Files.createTempDirectory("java");
         generator.export(javaSourceHome, Tables.all(), ImmutableList.of());
-        assertThat(Files.exists(javaSourceHome.resolve("com/foobar/MyTestInput.java")), is(true));
+        assertThat(Files.exists(javaSourceHome.resolve("com/foobar/web/dto/MyTestInput.java")), is(true));
     }
 
     @Test
     public void testTableMapping() throws Exception {
-        generator.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.kentchiu.jpa.FooBar"));
+        generator.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.kentchiu.jpa.domain.FooBar"));
         List<String> lines = generator.exportTable(Tables.table1());
-        assertThat(lines, hasItem("package com.kentchiu.jpa;"));
+        assertThat(lines, hasItem("package com.kentchiu.jpa.web.dto;"));
         assertThat(lines, hasItem("/*"));
         assertThat(lines, hasItem(" * a table comment"));
         assertThat(lines, hasItem(" */"));

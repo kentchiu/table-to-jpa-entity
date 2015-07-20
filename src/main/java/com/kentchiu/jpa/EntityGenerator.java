@@ -61,19 +61,16 @@ public class EntityGenerator {
     public void export(Path javaSourceHome, Table table, List<String> ignoreColumns) {
         List<String> lines = exportTable(table, ignoreColumns);
         String pkgName = buildPackageName(table.getName());
-        if (config.getType() != Type.JPA) {
-            pkgName = pkgName.replaceAll("domain", "web.dto");
-        }
         String folder = StringUtils.replace(pkgName, ".", "/");
         String className = buildClassName(table.getName());
-        String name;
-        if (config.getType() == Type.INPUT) {
-            name = className + "Input.java";
-        } else if (config.getType() == Type.UPDATE) {
-            name = className + "UpdateInput.java";
-        } else {
-            name = className + ".java";
-        }
+        String name = config.getType().getJavaFileName(className);
+//        if (config.getType() == Type.INPUT) {
+//            name = className + "Input.java";
+//        } else if (config.getType() == Type.UPDATE) {
+//            name = className + "UpdateInput.java";
+//        } else {
+//            name = className + ".java";
+//        }
         Path file = javaSourceHome.resolve(folder).resolve(name);
         try {
             if (!Files.exists(file)) {
@@ -98,7 +95,6 @@ public class EntityGenerator {
     protected List<String> exportTable(Table table, List<String> ignoreColumns) {
 
         String packageName = buildPackageName(table.getName());
-
 
         HashMap<Object, Object> context = Maps.newHashMap();
         if (!StringUtils.isBlank(packageName)) {
@@ -169,7 +165,8 @@ public class EntityGenerator {
             String qualifier = tableNameMapper.getOrDefault(tableName, "");
             String pkgName = StringUtils.substringBeforeLast(qualifier, ".");
             logger.debug("{}  -> {}", tableName, pkgName);
-            return pkgName;
+            String topPackage = StringUtils.substringBeforeLast(pkgName, ".");
+            return topPackage + "." + config.getType().getPackage();
         } else {
             return "";
         }

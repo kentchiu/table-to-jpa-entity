@@ -2,7 +2,6 @@ package com.kentchiu.jpa;
 
 import com.google.common.collect.ImmutableMap;
 import com.kentchiu.jpa.domain.Column;
-import com.kentchiu.jpa.domain.Tables;
 import org.junit.Test;
 
 import java.util.List;
@@ -19,11 +18,6 @@ public abstract class AbstractGeneratorTest {
 
     void dump(List<String> lines) {
         lines.stream().forEach(System.out::println);
-    }
-
-    @Test
-    public void testPackage() throws Exception {
-        assertThat(generator.buildPackageName(Tables.table1().getName()), is(""));
     }
 
 
