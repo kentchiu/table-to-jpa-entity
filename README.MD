@@ -24,4 +24,9 @@
 - DONE: Master-Detail ? (rejected 儘量減少對master-detail的依賴)
 - TODO: fetch ignore columns from base class 
 - TODO: input to dto package (可自行選擇，export config?)
-
+- TODO: options -> constants
+- TODO: comment all fields
+- TODO: dto package
+- TODO: Query Object
+- TODO: fix double extend abbr : ex : product -> prodproduct, address -> addraddress
+- TODO: DomainFactory
