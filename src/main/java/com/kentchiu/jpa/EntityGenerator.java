@@ -1,9 +1,14 @@
 package com.kentchiu.jpa;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.kentchiu.jpa.domain.Column;
@@ -14,12 +19,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EntityGenerator {
@@ -58,20 +61,10 @@ public class EntityGenerator {
 
     public void export(Path javaSourceHome, Table table, List<String> ignoreColumns) {
         List<String> lines = exportTable(table, ignoreColumns);
-        String pkgName = toPackageName(table.getName());
-        if (config.getType() != Type.JPA) {
-            pkgName = pkgName.replaceAll("domain", "web.dto");
-        }
+        String pkgName = buildPackageName(table.getName());
         String folder = StringUtils.replace(pkgName, ".", "/");
-        String className = toClassName(table.getName());
-        String name;
-        if (config.getType() == Type.INPUT) {
-            name = className + "Input.java";
-        } else if (config.getType() == Type.UPDATE) {
-            name = className + "UpdateInput.java";
-        } else {
-            name = className + ".java";
-        }
+        String className = buildClassName(table.getName());
+        String name = config.getType().getJavaFileName(className);
         Path file = javaSourceHome.resolve(folder).resolve(name);
         try {
             if (!Files.exists(file)) {
@@ -94,185 +87,149 @@ public class EntityGenerator {
     }
 
     protected List<String> exportTable(Table table, List<String> ignoreColumns) {
-        List<String> lines = new ArrayList<>();
 
-        String packageName = toPackageName(table.getName());
+        String packageName = buildPackageName(table.getName());
 
+        HashMap<Object, Object> context = Maps.newHashMap();
         if (!StringUtils.isBlank(packageName)) {
-            lines.add("package " + packageName + ";");
+            context.put("packageName", packageName);
         }
-        // buildImports
-        lines.add("");
-        lines.addAll(buildImports());
-        lines.add("");
-        lines.addAll(buildClass(table));
-        lines.add("");
+
+        List<Map<String, String>> imports = buildImports().stream().map(i -> ImmutableMap.of("import", i)).collect(Collectors.toList());
+
+        context.put("imports", imports);
+        context.put("table", table);
+        context.put("class", buildClassName(table.getName()));
+        if (!Objects.equals(Object.class, config.getBaseClass())) {
+            context.put("extend", "extends " + config.getBaseClass().getSimpleName());
+        } else {
+            context.put("extend", "");
+        }
+        context.put("properties", buildProperties(table, ignoreColumns));
+
+        MustacheFactory mf = new DefaultMustacheFactory();
+        String templateName = config.getType().getTemplateName();
+        Mustache mustache = mf.compile(templateName + ".mustache");
+        try {
+            StringWriter stringWriter = new StringWriter();
+            mustache.execute(stringWriter, context).flush();
+            String content = stringWriter.toString();
+            Iterable<String> split = Splitter.on('\n').split(content);
+            return Lists.newArrayList(split);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Lists.newArrayList();
+        }
+
+    }
+
+    private String buildProperties(Table table, List<String> ignoreColumns) {
+        List<String> lines = new ArrayList<>();
         table.getColumns().stream().filter(column -> !ignoreColumns.contains(column.getName())).forEach(column -> {
-            lines.addAll(buildProperty(table, column));
+            lines.addAll(buildProperty(column));
         });
-        lines.add("}");
-        lines.add("");
-        return lines;
+
+        return Joiner.on('\n').join(lines);
     }
 
     List<String> buildImports() {
         List<String> results = new ArrayList<>();
-        if (config.getBaseClass() != null) {
-            results.add("import " + config.getBaseClass().getName() + ";");
+        Class<?> baseClass = config.getBaseClass();
+        if (!Objects.equals(Object.class, baseClass)) {
+            results.add(baseClass.getName());
         }
-        results.add("import com.kentchiu.spring.attribute.AttributeInfo;");
-        results.add("import com.kentchiu.spring.base.domain.Option;");
-        results.add("import org.hibernate.validator.constraints.*;");
-        results.add("import org.hibernate.annotations.GenericGenerator;");
-        results.add("import org.hibernate.annotations.NotFound;");
-        results.add("import org.hibernate.annotations.NotFoundAction;");
-        results.add("import javax.persistence.*;");
-        results.add("import javax.validation.constraints.*;");
-        results.add("import java.util.Date;");
-        results.add("import java.math.BigDecimal;");
-
-        tableNameMapper.values().forEach(p -> results.add("import " + p + ";"));
+        tableNameMapper.values().forEach(p -> results.add(p));
         return results;
     }
 
-    String toPackageName(String tableName) {
+    private List<String> convert(String template, Map<String, Object> context) {
+        try {
+            MustacheFactory mf = new DefaultMustacheFactory();
+            Mustache mustache = mf.compile(template);
+            StringWriter stringWriter = new StringWriter();
+            mustache.execute(stringWriter, context).flush();
+            String content = stringWriter.toString();
+            Iterable<String> split = Splitter.on('\n').split(content);
+            return Lists.newArrayList(split);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Lists.newArrayList();
+        }
+    }
+
+    String buildPackageName(String tableName) {
         if (tableNameMapper.containsKey(tableName)) {
             String qualifier = tableNameMapper.getOrDefault(tableName, "");
             String pkgName = StringUtils.substringBeforeLast(qualifier, ".");
             logger.debug("{}  -> {}", tableName, pkgName);
-            //return "package " + pkgName + ";";
-            return pkgName;
+            String topPackage = StringUtils.substringBeforeLast(pkgName, ".");
+            return topPackage + "." + config.getType().getPackage();
         } else {
             return "";
         }
     }
 
-    List<String> buildProperty(Table table, Column column) {
-        List<String> lines = new ArrayList<>();
+
+    List<String> buildProperty(Column column) {
         Property p = new Property(column);
         p.setMapper(columnMapper);
         Property property = p.invoke(config.getType());
 
-        lines.addAll(fieldName(property, column));
-        lines.add("");
-        lines.addAll(fieldAnnotation(table, column, property));
-        lines.addAll(options(column));
-        lines.addAll(attributeInfo(column));
-        lines.addAll(appendGetter(property));
-        lines.add("");
-        lines.addAll(appendSetter(property));
-        return lines;
-    }
+        Map<String, Object> context = new HashMap<>();
 
-    private List<String> fieldAnnotation(Table table, Column column, Property property) {
-        List<String> results = Lists.newArrayList();
-        if (config.getType() != Type.JPA) {
-            // pk
-            if (StringUtils.equals(table.getPrimaryKey(), column.getName())) {
-                results.addAll(appendId());
-            } else {
-                results.addAll(appendNotNullOrNotBlank(column, property.getTypeName()));
-            }
+        if (StringUtils.isNotBlank(buildOptions(column))) {
+            context.put("options", buildOptions(column));
+        }
+
+        if (Type.INPUT == config.getType() || Type.UPDATE == config.getType()) {
             if (property.isDateType() && StringUtils.contains(column.getComment(), "(format")) {
-                results.add("    @DateTimeFormat(pattern = \"" + StringUtils.substringBetween(column.getComment(), "=", ")") + "\")");
+                String value = "@DateTimeFormat(pattern = \"" + StringUtils.substringBetween(column.getComment(), "=", ")") + "\")";
+                context.put("dateTimeFormat", value);
             }
-        } else {
-            if (StringUtils.isNotBlank(column.getReferenceTable())) {
-                results.addAll(appendManyToOne(column));
+
+        }
+
+        if (StringUtils.isNotBlank(buildAttributeInfo(column))) {
+            context.put("attributeInfo", buildAttributeInfo(column));
+        }
+
+        if (!column.isNullable()) {
+            if (StringUtils.equals("String", p.getTypeName())) {
+                context.put("nullability", "@NotBlank");
             } else {
-                // pk
-                if (StringUtils.equals(table.getPrimaryKey(), column.getName())) {
-                    results.addAll(appendId());
-                } else {
-                    results.addAll(appendNotNullOrNotBlank(column, property.getTypeName()));
-                    if (column.isUnique()) {
-                        results.add(String.format("    @Column(name = \"%s\", unique = true)", column.getName()));
-                    } else {
-                        results.add(String.format("    @Column(name = \"%s\")", column.getName()));
-                    }
-                }
+                context.put("nullability", "@NotNull");
             }
         }
-        return results;
-    }
 
-    private List<String> fieldName(Property property, Column column) {
-        List<String> results = new ArrayList<>();
-        if (StringUtils.isBlank(column.getDefaultValue())) {
-            results.add(String.format("    private %s %s;", property.getTypeName(), property.getPropertyName()));
+        if (StringUtils.isNotBlank(column.getReferenceTable())) {
+            context.put("manyToOne", column.getReferenceTable());
+        }
+
+        if (column.isUnique()) {
+            context.put("columnAnnotation", (String.format("@Column(name = \"%s\", unique = true)", column.getName())));
         } else {
-            if (StringUtils.equals("java.lang.String", column.getJavaType())) {
-                if (config.getType() != Type.UPDATE) {
-                    results.add(String.format("    private %s %s = \"%s\";", property.getTypeName(), property.getPropertyName(), column.getDefaultValue()));
-                } else {
-                    results.add(String.format("    private %s %s;", property.getTypeName(), property.getPropertyName()));
-                }
-            } else {
-                if (config.getType() != Type.UPDATE) {
-                    results.add(String.format("    private %s %s = %s;", property.getTypeName(), property.getPropertyName(), column.getDefaultValue()));
-                } else {
-                    results.add(String.format("    private %s %s;", property.getTypeName(), property.getPropertyName()));
+            context.put("columnAnnotation", (String.format("@Column(name = \"%s\")", column.getName())));
+        }
 
-                }
+
+        context.put("property", property);
+        context.put("column", column);
+
+
+        if (StringUtils.isNotBlank(column.getDefaultValue())) {
+            if (StringUtils.equals("BigDecimal.ZERO", column.getDefaultValue())) {
+                context.put("defaultValue", (" = BigDecimal.ZERO"));
+            } else {
+                context.put("defaultValue", " = \"" + column.getDefaultValue() + "\"");
             }
         }
-        return results;
+        return convert("property_" + config.getType().getTemplateName() + ".mustache", context);
     }
 
-    private List<String> appendSetter(Property property) {
-        List<String> results = new ArrayList<>();
-        results.add(String.format("    public void set%s(%s %s) {", property.getMethodName(), property.getTypeName(), property.getPropertyName()));
-        results.add(String.format("        this.%s = %s;", property.getPropertyName(), property.getPropertyName()));
-        results.add("    }");
-        return results;
-    }
 
-    private List<String> appendGetter(Property property) {
-        List<String> results = new ArrayList<>();
-        if (StringUtils.equals("Boolean", property.getTypeName())) {
-            results.add(String.format("    public %s is%s() {", property.getTypeName(), property.getMethodName()));
-        } else if (property.isDateType()) {
-            results.add(String.format("    public Date get%s() {", property.getMethodName()));
-        } else {
-            results.add(String.format("    public %s get%s() {", property.getTypeName(), property.getMethodName()));
-        }
-        results.add("        return " + property.getPropertyName() + ";");
-        results.add("    }");
-        return results;
-    }
-
-    List<String> appendManyToOne(Column column) {
-        List<String> results = new ArrayList<>();
-        results.add("    @ManyToOne");
-        results.add("    @NotFound(action = NotFoundAction.IGNORE)");
-        results.add(String.format("    @JoinColumn(name = \"%s\")", column.getName()));
-        return results;
-    }
-
-    List<String> appendId() {
-        List<String> results = new ArrayList<>();
-        results.add("    @Id");
-        results.add("    @GeneratedValue(generator = \"system-uuid\")");
-        results.add("    @GenericGenerator(name = \"system-uuid\", strategy = \"uuid2\")");
-        return results;
-    }
-
-    List<String> appendNotNullOrNotBlank(Column column, String typeName) {
-        List<String> lines = new ArrayList<>();
-        if (!column.isNullable() && config.getType() != Type.UPDATE) {
-            if (StringUtils.equals("String", typeName)) {
-                lines.add("    @NotBlank");
-            } else {
-                lines.add("    @NotNull");
-            }
-        }
-        return lines;
-    }
-
-    List<String> attributeInfo(Column column) {
-        List<String> lines = new ArrayList<>();
+    String buildAttributeInfo(Column column) {
         StringBuffer sb = new StringBuffer();
-        sb.append("    @AttributeInfo(");
+        sb.append("@AttributeInfo(");
         if (StringUtils.isNotBlank(column.getDescription())) {
             sb.append("description = \"").append(column.getDescription()).append("\"");
         }
@@ -298,48 +255,24 @@ public class EntityGenerator {
             }
         }
         sb.append(")");
-        lines.add(sb.toString());
-        return lines;
+
+        return sb.toString();
     }
 
-    List<String> options(Column c) {
-        List<String> results = new ArrayList<>();
+    String buildOptions(Column c) {
         if (!c.getOptions().isEmpty()) {
             StringBuilder s = new StringBuilder();
-            s.append("    @Option(value = {");
+            s.append("@Option(value = {");
             List<String> keys = c.getOptions().keySet().stream().map(k -> "\"" + k + "\"").collect(Collectors.toList());
             s.append(Joiner.on(", ").join(keys));
             s.append("})").toString();
-            results.add(s.toString());
+            return s.toString();
         }
-        return results;
+        return "";
     }
 
 
-    List<String> buildClass(Table table) {
-        String tableName = table.getName();
-        String extend = "";
-        if (config.getBaseClass() != null) {
-            extend = " extends " + config.getBaseClass().getSimpleName();
-        }
-        List<String> results = new ArrayList<>();
-        results.add("/*");
-        results.add(" * " + table.getComment());
-        results.add(" */");
-        if (config.getType() == Type.JPA) {
-            results.add("@Entity");
-            results.add(String.format("@Table(name = \"%s\")", tableName));
-            results.add("public class " + toClassName(tableName) + extend + " {");
-        } else if (config.getType() == Type.UPDATE) {
-            results.add("public class " + toClassName(tableName) + "UpdateInput" + extend + " {");
-        } else {
-            results.add("public class " + toClassName(tableName) + "Input" + extend + " {");
-        }
-        return results;
-    }
-
-
-    private String toClassName(String tableName) {
+    private String buildClassName(String tableName) {
         String className;
         if (tableNameMapper.containsKey(tableName)) {
             String qualifier = tableNameMapper.getOrDefault(tableName, "");
@@ -409,11 +342,11 @@ public class EntityGenerator {
                         logger.info("map {} -> {}", column.getReferenceTable(), mapName);
                     }
 
-                    propertyName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, toClassName(mapName)) + "Uuid";
-                    methodName = toClassName(mapName) + "Uuid";
+                    propertyName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, buildClassName(mapName)) + "Uuid";
+                    methodName = buildClassName(mapName) + "Uuid";
                 } else {
                     String referenceTable = column.getReferenceTable();
-                    typeName = toClassName(referenceTable);
+                    typeName = buildClassName(referenceTable);
                     String mapName = columnMapper.getOrDefault(column.getName(), referenceTable);
                     if (columnMapper.containsKey(column.getName())) {
                         logger.info("map {} -> {}", referenceTable, mapName);
@@ -423,7 +356,7 @@ public class EntityGenerator {
                         methodName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, mapName);
                     } else {
                         propertyName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, typeName);
-                        methodName = toClassName(mapName);
+                        methodName = buildClassName(mapName);
                     }
                 }
             }
@@ -439,7 +372,5 @@ public class EntityGenerator {
             this.mapper = mapper;
         }
     }
-
-
 }
 

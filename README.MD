@@ -22,11 +22,17 @@
 - DONE: add @NotNull to reference field (rejected : @NotNull跟@ManyToOne混用 會引起validate 時奇怪的問題)
 - DONE: 日期改成用 Date, @DateTimeFormat(pattern = "yyyy-MM-dd")
 - DONE: Master-Detail ? (rejected 儘量減少對master-detail的依賴)
+- DONE: input to dto package (可自行選擇，export config?)
 - TODO: fetch ignore columns from base class 
-- TODO: input to dto package (可自行選擇，export config?)
-- TODO: options -> constants
-- TODO: comment all fields
-- TODO: dto package
+- TODO: json config
 - TODO: Query Object
-- TODO: fix double extend abbr : ex : product -> prodproduct, address -> addraddress
+- TODO: Repository
+- TODO: Service
 - TODO: DomainFactory
+- TODO: Controller
+- TODO: ControllerTest
+- TODO: Master-Detail Controller
+- TODO: Master-Detail ControllerTest 
+- TODO: Master-Detail-Extend Controller
+- TODO: Master-Detail-Extend ControllerTest
+

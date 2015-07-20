@@ -6,6 +6,7 @@ import com.google.common.collect.ImmutableMap;
 import com.kentchiu.jpa.domain.Column;
 import com.kentchiu.jpa.domain.Columns;
 import com.kentchiu.jpa.domain.Table;
+import com.kentchiu.jpa.domain.Tables;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -27,19 +28,26 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
     }
 
     @Test
+    public void testPackage() throws Exception {
+        generator.setTableNameMapper(ImmutableMap.of(Tables.table1().getName(), "com.kentchiu.jpa.domain.MyTable1"));
+        assertThat(generator.buildPackageName(Tables.table1().getName()), is("com.kentchiu.jpa.domain"));
+    }
+
+    @Test
     public void testGenerate() throws Exception {
-        generator.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.foobar.MyTest"));
+        generator.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.foobar.domain.MyTest"));
         Path javaSourceHome = Files.createTempDirectory("java");
         generator.export(javaSourceHome, Tables.all(), ImmutableList.of());
-        assertThat(Files.exists(javaSourceHome.resolve("com/foobar/MyTest.java")), is(true));
+        assertThat(Files.exists(javaSourceHome.resolve("com/foobar/domain/MyTest.java")), is(true));
     }
 
 
     @Test
     public void testTableMapping() throws Exception {
-        generator.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.kentchiu.jpa.FooBar"));
+        generator.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.kentchiu.jpa.domain.FooBar"));
         List<String> lines = generator.exportTable(Tables.table1());
-        assertThat(lines, hasItem("package com.kentchiu.jpa;"));
+        dump(lines);
+        assertThat(lines, hasItem("package com.kentchiu.jpa.domain;"));
         assertThat(lines, hasItem("/*"));
         assertThat(lines, hasItem(" * a table comment"));
         assertThat(lines, hasItem(" */"));
@@ -47,47 +55,18 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
     }
 
     @Test
-    public void testColumnMapping() throws Exception {
-        Map<String, String> mapper = new HashMap<>();
-        mapper.put("MY_TABLE", "com.kentchiu.jpa.FooBar");
-        generator.setTableNameMapper(mapper);
-
-        Column column = Columns.createStringColumn("prop", "comment", true);
-        column.setReferenceTable("MY_TABLE");
-        List<String> lines = generator.buildProperty(Tables.table1(), column);
-
-        dump(lines);
-
-        int i = 0;
-        assertThat(lines.get(i++), is("    private FooBar fooBar;"));
-
-        i = 2;
-        assertThat(lines.get(i++), is("    @ManyToOne"));
-        assertThat(lines.get(i++), is("    @NotFound(action = NotFoundAction.IGNORE)"));
-        assertThat(lines.get(i++), is("    @JoinColumn(name = \"prop\")"));
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"comment\")"));
-        assertThat(lines.get(i++), is("    public FooBar getFooBar() {"));
-        assertThat(lines.get(i++), is("        return fooBar;"));
-        assertThat(lines.get(i++), is("    }"));
-
-        i = 10;
-        assertThat(lines.get(i++), is("    public void setFooBar(FooBar fooBar) {"));
-        assertThat(lines.get(i++), is("        this.fooBar = fooBar;"));
-        assertThat(lines.get(i++), is("    }"));
-    }
-
-
-    @Test
     public void testDomainClass() throws Exception {
         Table table = Tables.table1();
-        assertThat(generator.buildClass(table), hasItem("@Entity"));
-        assertThat(generator.buildClass(table), hasItem("@Table(name = \"MY_TABLE_1\")"));
-        assertThat(generator.buildClass(table), hasItem("public class MyTable1 {"));
+        List<String> strings = generator.exportTable(table);
+        assertThat(strings, hasItem("@Entity"));
+        assertThat(strings, hasItem("@Table(name = \"MY_TABLE_1\")"));
+        assertThat(strings, hasItem("public class MyTable1 {"));
     }
+
 
     @Test
     public void testProperty_BigDecimal() throws Exception {
-        List<String> lines = generator.buildProperty(Tables.table1(), Columns.bigDecimalColumn());
+        List<String> lines = generator.buildProperty(Columns.bigDecimalColumn());
         dump(lines);
 
         int i = 0;
@@ -110,10 +89,39 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
     }
 
 
+    @Test
+    public void testProperty_options() throws Exception {
+        Column column = Columns.stringColumn();
+        column.getOptions().put("Y", "foo");
+        column.getOptions().put("N", "bar");
+
+        List<String> lines = generator.buildProperty(column);
+        dump(lines);
+
+        int i = 0;
+        // field
+        assertThat(lines.get(i++), is("    private String column1;"));
+
+        i = 2;
+        // getter
+        assertThat(lines.get(i++), is("    @Column(name = \"column1\")"));
+        assertThat(lines.get(i++), is("    @Option(value = {\"Y\", \"N\"})"));
+        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"column comment\", format = \"Y=foo/N=bar\")"));
+        assertThat(lines.get(i++), is("    public String getColumn1() {"));
+        assertThat(lines.get(i++), is("        return column1;"));
+        assertThat(lines.get(i++), is("    }"));
+
+        i = 9;
+        // setter
+        assertThat(lines.get(i++), is("    public void setColumn1(String column1) {"));
+        assertThat(lines.get(i++), is("        this.column1 = column1;"));
+        assertThat(lines.get(i++), is("    }"));
+    }
+
 
     @Test
     public void testProperty_string() throws Exception {
-        List<String> lines = generator.buildProperty(Tables.table1(), Columns.stringColumn());
+        List<String> lines = generator.buildProperty(Columns.stringColumn());
         dump(lines);
 
         int i = 0;
@@ -137,10 +145,83 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
 
 
     @Test
+    public void testProperty_boolean() throws Exception {
+        List<String> lines = generator.buildProperty(Columns.booleanColumn());
+        dump(lines);
+
+        int i = 0;
+        // field
+        assertThat(lines.get(i++), is("    private Boolean boolProperty;"));
+
+        i = 2;
+        // getter
+        assertThat(lines.get(i++), is("    @Column(name = \"BOOL_PROPERTY\")"));
+        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"this is a boolean property\")"));
+        assertThat(lines.get(i++), is("    public Boolean getBoolProperty() {"));
+        assertThat(lines.get(i++), is("        return boolProperty;"));
+        assertThat(lines.get(i++), is("    }"));
+
+        i = 8;
+        // setter
+        assertThat(lines.get(i++), is("    public void setBoolProperty(Boolean boolProperty) {"));
+        assertThat(lines.get(i++), is("        this.boolProperty = boolProperty;"));
+        assertThat(lines.get(i++), is("    }"));
+    }
+
+
+    public void testProperty_Date() throws Exception {
+        List<String> lines = generator.buildProperty(Columns.dateColumn());
+        dump(lines);
+
+        int i = 0;
+        // field
+        assertThat(lines.get(i++), is("    private Date column1;"));
+
+        i = 2;
+        // getter
+        assertThat(lines.get(i++), is("    @Column(name = \"column1\")"));
+        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"column comment\")"));
+        assertThat(lines.get(i++), is("    public Date getColumn1() {"));
+        assertThat(lines.get(i++), is("        return column1;"));
+        assertThat(lines.get(i++), is("    }"));
+
+        i = 8;
+        // setter
+        assertThat(lines.get(i++), is("    public void setColumn1(Date column1) {"));
+        assertThat(lines.get(i++), is("        this.column1 = column1;"));
+        assertThat(lines.get(i++), is("    }"));
+    }
+
+
+    @Test
+    public void testProperty_string_not_null() throws Exception {
+        List<String> lines = generator.buildProperty(Columns.createStringColumn("FOO_BAR", "The foo bar comment", false));
+        dump(lines);
+
+        // field
+        assertThat(lines.get(0), is("    private String fooBar;"));
+
+        // getter
+        int i = 2;
+        assertThat(lines.get(i++), is("    @NotBlank"));
+        assertThat(lines.get(i++), is("    @Column(name = \"FOO_BAR\")"));
+        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"The foo bar comment\")"));
+        assertThat(lines.get(i++), is("    public String getFooBar() {"));
+        assertThat(lines.get(i++), is("        return fooBar;"));
+        assertThat(lines.get(i++), is("    }"));
+
+        // setter
+        i = 9;
+        assertThat(lines.get(i++), is("    public void setFooBar(String fooBar) {"));
+        assertThat(lines.get(i++), is("        this.fooBar = fooBar;"));
+        assertThat(lines.get(i++), is("    }"));
+    }
+
+    @Test
     public void testProperty_with_default_value() throws Exception {
         Column column = Columns.stringColumn();
         column.setDefaultValue("foo");
-        List<String> lines = generator.buildProperty(Tables.table1(), column);
+        List<String> lines = generator.buildProperty(column);
         dump(lines);
 
         int i = 0;
@@ -169,7 +250,7 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
         Column column = Columns.stringColumn();
         column.setDefaultValue("foo");
         column.setUnique(true);
-        List<String> lines = generator.buildProperty(Tables.table1(), column);
+        List<String> lines = generator.buildProperty(column);
         dump(lines);
 
         int i = 0;
@@ -193,13 +274,11 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
 
     @Test
     public void testProperty_ManyToOne() throws Exception {
-        Table table = Tables.table1();
-
         Column column = Columns.stringColumn();
         column.setNullable(true);
         column.setReferenceTable("OTHER_TABLE");
         generator.getColumnMapper().put("OTHER_TABLE", "xxx");
-        List<String> lines = generator.buildProperty(table, column);
+        List<String> lines = generator.buildProperty(column);
 
         dump(lines);
         int i = 0;
@@ -225,74 +304,69 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
 
 
     @Test
-    public void testProperty_boolean() throws Exception {
-        List<String> lines = generator.buildProperty(Tables.table1(), Columns.booleanColumn());
-        dump(lines);
+    public void testProperty_ManyToOne_Not_Null() throws Exception {
+        Column column = Columns.stringColumn();
+        column.setNullable(false);
+        column.setReferenceTable("OTHER_TABLE");
+        generator.getColumnMapper().put("OTHER_TABLE", "xxx");
+        List<String> lines = generator.buildProperty(column);
 
+        dump(lines);
         int i = 0;
         // field
-        assertThat(lines.get(i++), is("    private Boolean boolProperty;"));
-
-        i = 2;
-        // getter
-        assertThat(lines.get(i++), is("    @Column(name = \"BOOL_PROPERTY\")"));
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"this is a boolean property\")"));
-        assertThat(lines.get(i++), is("    public Boolean isBoolProperty() {"));
-        assertThat(lines.get(i++), is("        return boolProperty;"));
-        assertThat(lines.get(i++), is("    }"));
-
-        i = 8;
-        // setter
-        assertThat(lines.get(i++), is("    public void setBoolProperty(Boolean boolProperty) {"));
-        assertThat(lines.get(i++), is("        this.boolProperty = boolProperty;"));
-        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines, not(hasItem("    @NotNull")));
+        assertThat(lines, not(hasItem("    @NotBlank")));
     }
 
 
     @Test
-    public void testProperty_string_not_null() throws Exception {
-        List<String> lines = generator.buildProperty(Tables.table1(), Columns.createStringColumn("FOO_BAR", "The foo bar comment", false));
+    public void testColumnMapping() throws Exception {
+        Map<String, String> mapper = new HashMap<>();
+        mapper.put("MY_TABLE", "com.kentchiu.jpa.FooBar");
+        generator.setTableNameMapper(mapper);
+
+        Column column = Columns.createStringColumn("prop", "comment", true);
+        column.setReferenceTable("MY_TABLE");
+        List<String> lines = generator.buildProperty(column);
+
         dump(lines);
 
-        // field
-        assertThat(lines.get(0), is("    private String fooBar;"));
+        int i = 0;
+        assertThat(lines.get(i++), is("    private FooBar fooBar;"));
 
-        // getter
-        int i = 2;
-        assertThat(lines.get(i++), is("    @NotBlank"));
-        assertThat(lines.get(i++), is("    @Column(name = \"FOO_BAR\")"));
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"The foo bar comment\")"));
-        assertThat(lines.get(i++), is("    public String getFooBar() {"));
+        i = 2;
+        assertThat(lines.get(i++), is("    @ManyToOne"));
+        assertThat(lines.get(i++), is("    @NotFound(action = NotFoundAction.IGNORE)"));
+        assertThat(lines.get(i++), is("    @JoinColumn(name = \"prop\")"));
+        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"comment\")"));
+        assertThat(lines.get(i++), is("    public FooBar getFooBar() {"));
         assertThat(lines.get(i++), is("        return fooBar;"));
         assertThat(lines.get(i++), is("    }"));
 
-        // setter
-        i = 9;
-        assertThat(lines.get(i++), is("    public void setFooBar(String fooBar) {"));
+        i = 10;
+        assertThat(lines.get(i++), is("    public void setFooBar(FooBar fooBar) {"));
         assertThat(lines.get(i++), is("        this.fooBar = fooBar;"));
         assertThat(lines.get(i++), is("    }"));
     }
 
+
     @Test
     public void testExportTable() throws Exception {
         List<String> lines = generator.exportTable(Tables.table1());
-        int i = 0;
-
         dump(lines);
 
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("import com.kentchiu.spring.attribute.AttributeInfo;"));
-        assertThat(lines.get(i++), is("import com.kentchiu.spring.base.domain.Option;"));
-        assertThat(lines.get(i++), is("import org.hibernate.validator.constraints.*;"));
-        assertThat(lines.get(i++), is("import org.hibernate.annotations.GenericGenerator;"));
-        assertThat(lines.get(i++), is("import org.hibernate.annotations.NotFound;"));
-        assertThat(lines.get(i++), is("import org.hibernate.annotations.NotFoundAction;"));
-        assertThat(lines.get(i++), is("import javax.persistence.*;"));
-        assertThat(lines.get(i++), is("import javax.validation.constraints.*;"));
-        assertThat(lines.get(i++), is("import java.util.Date;"));
-        assertThat(lines.get(i++), is("import java.math.BigDecimal;"));
+        assertThat(lines, hasItem("import com.kentchiu.spring.attribute.AttributeInfo;"));
+        assertThat(lines, hasItem("import com.kentchiu.spring.base.domain.Option;"));
+        assertThat(lines, hasItem("import org.hibernate.validator.constraints.*;"));
+        assertThat(lines, hasItem("import org.hibernate.annotations.GenericGenerator;"));
+        assertThat(lines, hasItem("import org.hibernate.annotations.NotFound;"));
+        assertThat(lines, hasItem("import org.hibernate.annotations.NotFoundAction;"));
+        assertThat(lines, hasItem("import javax.persistence.*;"));
+        assertThat(lines, hasItem("import javax.validation.constraints.*;"));
+        assertThat(lines, hasItem("import java.util.Date;"));
+        assertThat(lines, hasItem("import java.math.BigDecimal;"));
 
-        assertThat(lines.get(i++), is(""));
+        int i = 13;
         assertThat(lines.get(i++), is("/*"));
         assertThat(lines.get(i++), is(" * a table comment"));
         assertThat(lines.get(i++), is(" */"));
@@ -306,18 +380,14 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
         assertThat(content, containsString("    private String myColumn12;"));
         assertThat(content, containsString("    private Date myColumn13;"));
         assertThat(content, containsString("    @NotNull"));
-        // PK
-        assertThat(content, containsString("    @Id"));
-        assertThat(content, containsString("@AttributeInfo(description = \"my column 1-3 comment\")"));
     }
-
 
 
     @Test
     public void testProperty_substitute() throws Exception {
         Column column = Columns.createStringColumn("FOO_QTY_AND_AMT_PROP", "column comment", true);
         generator.setColumnMapper(ImmutableMap.of("QTY", "QUALITY", "AMT", "AMOUNT"));
-        List<String> lines = generator.buildProperty(Tables.table1(), column);
+        List<String> lines = generator.buildProperty(column);
         dump(lines);
 
         int i = 0;
@@ -342,13 +412,11 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
 
     @Test
     public void testProperty_ManyToOne_name_conflict() throws Exception {
-        Table table = Tables.table1();
-
         Column column = Columns.stringColumn();
         column.setNullable(true);
         column.setReferenceTable("OTHER_TABLE");
         generator.getColumnMapper().put("column1", "FOO_BAR");
-        List<String> lines = generator.buildProperty(table, column);
+        List<String> lines = generator.buildProperty(column);
 
         dump(lines);
         int i = 0;
@@ -382,8 +450,6 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
         options.put("Y", "允许");
         options.put("N", "不允许");
 
-        List<String> lines = generator.attributeInfo(column);
-        assertThat(lines.size(), is(1));
-        assertThat(lines.get(0), is("    @AttributeInfo(description = \"是否允许定制颜色\", format = \"Y=允许/N=不允许\", defaultValue = \"'Y'\")"));
+        assertThat(generator.buildAttributeInfo(column), is("@AttributeInfo(description = \"是否允许定制颜色\", format = \"Y=允许/N=不允许\", defaultValue = \"'Y'\")"));
     }
 }

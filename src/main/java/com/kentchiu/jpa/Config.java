@@ -2,7 +2,7 @@ package com.kentchiu.jpa;
 
 public class Config {
 
-    private Class<?> baseClass;
+    private Class<?> baseClass = Object.class;
     private Type type = Type.JPA;
 
     public Config(Type type, Class<?> baseClass) {

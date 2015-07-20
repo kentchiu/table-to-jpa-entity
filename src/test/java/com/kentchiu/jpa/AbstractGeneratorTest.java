@@ -20,39 +20,20 @@ public abstract class AbstractGeneratorTest {
         lines.stream().forEach(System.out::println);
     }
 
-    @Test
-    public void testPackage() throws Exception {
-        assertThat(generator.toPackageName(Tables.table1().getName()), is(""));
-    }
-
-    @Test
-    public void testImports() throws Exception {
-        assertThat(generator.buildImports(), hasItem("import com.kentchiu.spring.attribute.AttributeInfo;"));
-        assertThat(generator.buildImports(), hasItem("import com.kentchiu.spring.base.domain.Option;"));
-        assertThat(generator.buildImports(), hasItem("import org.hibernate.validator.constraints.*;"));
-        assertThat(generator.buildImports(), hasItem("import org.hibernate.annotations.GenericGenerator;"));
-        assertThat(generator.buildImports(), hasItem("import org.hibernate.annotations.NotFound;"));
-        assertThat(generator.buildImports(), hasItem("import org.hibernate.annotations.NotFoundAction;"));
-        assertThat(generator.buildImports(), hasItem("import javax.persistence.*;"));
-        assertThat(generator.buildImports(), hasItem("import javax.validation.constraints.*;"));
-        assertThat(generator.buildImports(), hasItem("import java.util.Date;"));
-        assertThat(generator.buildImports(), hasItem("import java.math.BigDecimal;"));
-    }
 
     @Test
     public void testImports_reference_tables() throws Exception {
         generator.setTableNameMapper(ImmutableMap.of("MY_TABLE", "com.foo.bar.Foo", "MY_TABLE_2", "com.foo.bar.Boo"));
-        assertThat(generator.buildImports(), hasItem("import com.foo.bar.Foo;"));
-        assertThat(generator.buildImports(), hasItem("import com.foo.bar.Boo;"));
+        List<String> imports = generator.buildImports();
+        assertThat(imports, hasItem("com.foo.bar.Foo"));
+        assertThat(imports, hasItem("com.foo.bar.Boo"));
     }
 
     @Test
     public void testAttributeInfo() throws Exception {
         Column comment = new Column();
         comment.setDescription("column comment");
-        List<String> lines = generator.attributeInfo(comment);
-        assertThat(lines.size(), is(1));
-        assertThat(lines.get(0), is("    @AttributeInfo(description = \"column comment\")"));
+        assertThat(generator.buildAttributeInfo(comment), is("@AttributeInfo(description = \"column comment\")"));
     }
 
     @Test
@@ -65,9 +46,7 @@ public abstract class AbstractGeneratorTest {
         options.put("3", "补件");
         options.put("4", "其他");
 
-        List<String> lines = generator.attributeInfo(comment);
-        assertThat(lines.size(), is(1));
-        assertThat(lines.get(0), is("    @AttributeInfo(description = \"产品类型\", format = \"1=套件/2=包件/3=补件/4=其他\")"));
+        assertThat(generator.buildAttributeInfo(comment), is("@AttributeInfo(description = \"产品类型\", format = \"1=套件/2=包件/3=补件/4=其他\")"));
     }
 
     @Test
@@ -75,9 +54,6 @@ public abstract class AbstractGeneratorTest {
         Column column = new Column();
         column.getOptions().put("Y", "foo");
         column.getOptions().put("N", "bar");
-        List<String> lines = generator.options(column);
-        assertThat(lines.size(), is(1));
-        assertThat(lines.get(0), is("    @Option(value = {\"Y\", \"N\"})"));
+        assertThat(generator.buildOptions(column), is("@Option(value = {\"Y\", \"N\"})"));
     }
-
 }
