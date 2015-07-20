@@ -5,12 +5,11 @@
     @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "{{column.name}}")
 {{/manyToOne}}
-{{#id}}
-    @Id
-{{/id}}
+{{^manyToOne}}
 {{#nullability}}
     {{nullability}}
 {{/nullability}}
+{{/manyToOne}}
 {{^manyToOne}}
     {{{columnAnnotation}}}
 {{/manyToOne}}

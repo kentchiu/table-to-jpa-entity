@@ -270,8 +270,6 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
 
     @Test
     public void testProperty_ManyToOne() throws Exception {
-        Table table = Tables.table1();
-
         Column column = Columns.stringColumn();
         column.setNullable(true);
         column.setReferenceTable("OTHER_TABLE");
@@ -298,6 +296,22 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
         assertThat(lines.get(i++), is("    public void setOtherTable(OtherTable otherTable) {"));
         assertThat(lines.get(i++), is("        this.otherTable = otherTable;"));
         assertThat(lines.get(i++), is("    }"));
+    }
+
+
+    @Test
+    public void testProperty_ManyToOne_Not_Null() throws Exception {
+        Column column = Columns.stringColumn();
+        column.setNullable(false);
+        column.setReferenceTable("OTHER_TABLE");
+        generator.getColumnMapper().put("OTHER_TABLE", "xxx");
+        List<String> lines = generator.buildProperty(column);
+
+        dump(lines);
+        int i = 0;
+        // field
+        assertThat(lines, not(hasItem("    @NotNull")));
+        assertThat(lines, not(hasItem("    @NotBlank")));
     }
 
 
@@ -363,7 +377,6 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
         assertThat(content, containsString("    private Date myColumn13;"));
         assertThat(content, containsString("    @NotNull"));
     }
-
 
 
     @Test

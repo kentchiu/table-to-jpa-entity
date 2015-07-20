@@ -230,9 +230,6 @@ public class EntityGenerator {
                 context.put("defaultValue", " = \"" + column.getDefaultValue() + "\"");
             }
         }
-
-
-        System.out.println("context : " + context);
         return convert("property_" + config.getType().getTemplateName() + ".mustache", context);
     }
 
