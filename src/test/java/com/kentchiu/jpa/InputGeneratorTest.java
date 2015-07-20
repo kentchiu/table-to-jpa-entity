@@ -41,7 +41,7 @@ public class InputGeneratorTest extends AbstractGeneratorTest {
         assertThat(lines, hasItem("/*"));
         assertThat(lines, hasItem(" * a table comment"));
         assertThat(lines, hasItem(" */"));
-        assertThat(lines, hasItem("public class FooBarInput {"));
+        assertThat(lines, hasItem("public class FooBarInput extends Object {"));
     }
 
     @Test
@@ -262,18 +262,18 @@ public class InputGeneratorTest extends AbstractGeneratorTest {
 
         dump(lines);
 
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("import com.kentchiu.spring.attribute.AttributeInfo;"));
-        assertThat(lines.get(i++), is("import com.kentchiu.spring.base.domain.Option;"));
-        assertThat(lines.get(i++), is("import org.hibernate.validator.constraints.*;"));
-        assertThat(lines.get(i++), is("import org.hibernate.annotations.GenericGenerator;"));
-        assertThat(lines.get(i++), is("import org.hibernate.annotations.NotFound;"));
-        assertThat(lines.get(i++), is("import org.hibernate.annotations.NotFoundAction;"));
-        assertThat(lines.get(i++), is("import javax.persistence.*;"));
-        assertThat(lines.get(i++), is("import javax.validation.constraints.*;"));
-        assertThat(lines.get(i++), is("import java.util.Date;"));
-        assertThat(lines.get(i++), is("import java.math.BigDecimal;"));
-        assertThat(lines.get(i++), is(""));
+        assertThat(lines, hasItem("import com.kentchiu.spring.attribute.AttributeInfo;"));
+        assertThat(lines, hasItem("import com.kentchiu.spring.base.domain.Option;"));
+        assertThat(lines, hasItem("import org.hibernate.validator.constraints.*;"));
+        assertThat(lines, hasItem("import org.hibernate.annotations.GenericGenerator;"));
+        assertThat(lines, hasItem("import org.hibernate.annotations.NotFound;"));
+        assertThat(lines, hasItem("import org.hibernate.annotations.NotFoundAction;"));
+        assertThat(lines, hasItem("import javax.persistence.*;"));
+        assertThat(lines, hasItem("import javax.validation.constraints.*;"));
+        assertThat(lines, hasItem("import java.util.Date;"));
+        assertThat(lines, hasItem("import java.math.BigDecimal;"));
+
+        i = 15;
         assertThat(lines.get(i++), is("/*"));
         assertThat(lines.get(i++), is(" * a table comment"));
         assertThat(lines.get(i++), is(" */"));

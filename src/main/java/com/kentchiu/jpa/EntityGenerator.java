@@ -8,7 +8,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.kentchiu.jpa.domain.Column;
@@ -104,13 +103,23 @@ public class EntityGenerator {
 
         String packageName = toPackageName(table.getName());
 
+
+        HashMap<Object, Object> context = Maps.newHashMap();
         if (!StringUtils.isBlank(packageName)) {
-            lines.add("package " + packageName + ";");
+            context.put("packageName", packageName);
         }
-        // buildImports
-        lines.add("");
-        lines.addAll(buildImports());
-        lines.add("");
+
+        context.put("className", table.getComment());
+
+        context.put("content", Joiner.on('\n').join(lines));
+
+        context.put("imports", buildImports());
+
+        context.put("table", table);
+        context.put("class", toClassName(table.getName()));
+        context.put("baseClass", config.getBaseClass().getSimpleName());
+
+
         lines.addAll(buildClass(table));
         lines.add("");
         table.getColumns().stream().filter(column -> !ignoreColumns.contains(column.getName())).forEach(column -> {
@@ -121,11 +130,15 @@ public class EntityGenerator {
         //return lines;
 
         MustacheFactory mf = new DefaultMustacheFactory();
-        Mustache mustache = mf.compile("input_all.mustache");
+
+        String templateName;
+        templateName = config.getType().getTemplateName();
+
+        Mustache mustache = mf.compile("entity" + ".mustache");
         try {
             StringWriter stringWriter = new StringWriter();
 
-            mustache.execute(stringWriter, ImmutableMap.of("content", Joiner.on('\n').join(lines))).flush();
+            mustache.execute(stringWriter, context).flush();
             String content = stringWriter.toString();
             Iterable<String> split = Splitter.on('\n').split(content);
             return Lists.newArrayList(split);
@@ -139,21 +152,25 @@ public class EntityGenerator {
     List<String> buildImports() {
         List<String> results = new ArrayList<>();
         if (config.getBaseClass() != null) {
-            results.add("import " + config.getBaseClass().getName() + ";");
+            results.add(config.getBaseClass().getName());
         }
-        results.add("import com.kentchiu.spring.attribute.AttributeInfo;");
-        results.add("import com.kentchiu.spring.base.domain.Option;");
-        results.add("import org.hibernate.validator.constraints.*;");
-        results.add("import org.hibernate.annotations.GenericGenerator;");
-        results.add("import org.hibernate.annotations.NotFound;");
-        results.add("import org.hibernate.annotations.NotFoundAction;");
-        results.add("import javax.persistence.*;");
-        results.add("import javax.validation.constraints.*;");
-        results.add("import java.util.Date;");
-        results.add("import java.math.BigDecimal;");
-
-        tableNameMapper.values().forEach(p -> results.add("import " + p + ";"));
+        tableNameMapper.values().forEach(p -> results.add(p));
         return results;
+    }
+
+    private List<String> convert(String template, HashMap<Object, Object> context) {
+        try {
+            MustacheFactory mf = new DefaultMustacheFactory();
+            Mustache mustache = mf.compile(template);
+            StringWriter stringWriter = new StringWriter();
+            mustache.execute(stringWriter, context).flush();
+            String content = stringWriter.toString();
+            Iterable<String> split = Splitter.on('\n').split(content);
+            return Lists.newArrayList(split);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Lists.newArrayList();
+        }
     }
 
     String toPackageName(String tableName) {
@@ -344,9 +361,6 @@ public class EntityGenerator {
             extend = " extends " + config.getBaseClass().getSimpleName();
         }
         List<String> results = new ArrayList<>();
-        results.add("/*");
-        results.add(" * " + table.getComment());
-        results.add(" */");
         if (config.getType() == Type.JPA) {
             results.add("@Entity");
             results.add(String.format("@Table(name = \"%s\")", tableName));
@@ -357,6 +371,8 @@ public class EntityGenerator {
             results.add("public class " + toClassName(tableName) + "Input" + extend + " {");
         }
         return results;
+
+
     }
 
 

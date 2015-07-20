@@ -256,22 +256,20 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
     @Test
     public void testExportTable() throws Exception {
         List<String> lines = generator.exportTable(Tables.table1());
-        int i = 0;
-
         dump(lines);
 
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("import com.kentchiu.spring.attribute.AttributeInfo;"));
-        assertThat(lines.get(i++), is("import com.kentchiu.spring.base.domain.Option;"));
-        assertThat(lines.get(i++), is("import org.hibernate.validator.constraints.*;"));
-        assertThat(lines.get(i++), is("import org.hibernate.annotations.GenericGenerator;"));
-        assertThat(lines.get(i++), is("import org.hibernate.annotations.NotFound;"));
-        assertThat(lines.get(i++), is("import org.hibernate.annotations.NotFoundAction;"));
-        assertThat(lines.get(i++), is("import javax.persistence.*;"));
-        assertThat(lines.get(i++), is("import javax.validation.constraints.*;"));
-        assertThat(lines.get(i++), is("import java.util.Date;"));
-        assertThat(lines.get(i++), is("import java.math.BigDecimal;"));
-        assertThat(lines.get(i++), is(""));
+        assertThat(lines, hasItem("import com.kentchiu.spring.attribute.AttributeInfo;"));
+        assertThat(lines, hasItem("import com.kentchiu.spring.base.domain.Option;"));
+        assertThat(lines, hasItem("import org.hibernate.validator.constraints.*;"));
+        assertThat(lines, hasItem("import org.hibernate.annotations.GenericGenerator;"));
+        assertThat(lines, hasItem("import org.hibernate.annotations.NotFound;"));
+        assertThat(lines, hasItem("import org.hibernate.annotations.NotFoundAction;"));
+        assertThat(lines, hasItem("import javax.persistence.*;"));
+        assertThat(lines, hasItem("import javax.validation.constraints.*;"));
+        assertThat(lines, hasItem("import java.util.Date;"));
+        assertThat(lines, hasItem("import java.math.BigDecimal;"));
+
+        int i = 15;
         assertThat(lines.get(i++), is("/*"));
         assertThat(lines.get(i++), is(" * a table comment"));
         assertThat(lines.get(i++), is(" */"));

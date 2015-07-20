@@ -28,16 +28,7 @@ public class BaseClassTest extends AbstractGeneratorTest {
 
     @Test
     public void testImports_base_class() throws Exception {
-        assertThat(generator.buildImports(), hasItem("import java.lang.Object;"));
-        assertThat(generator.buildImports(), hasItem("import com.kentchiu.spring.attribute.AttributeInfo;"));
-        assertThat(generator.buildImports(), hasItem("import com.kentchiu.spring.base.domain.Option;"));
-        assertThat(generator.buildImports(), hasItem("import org.hibernate.validator.constraints.*;"));
-        assertThat(generator.buildImports(), hasItem("import org.hibernate.annotations.GenericGenerator;"));
-        assertThat(generator.buildImports(), hasItem("import org.hibernate.annotations.NotFound;"));
-        assertThat(generator.buildImports(), hasItem("import org.hibernate.annotations.NotFoundAction;"));
-        assertThat(generator.buildImports(), hasItem("import javax.persistence.*;"));
-        assertThat(generator.buildImports(), hasItem("import javax.validation.constraints.*;"));
-        assertThat(generator.buildImports(), hasItem("import java.util.Date;"));
-        assertThat(generator.buildImports(), hasItem("import java.math.BigDecimal;"));
+        List<String> actual = generator.buildImports();
+        assertThat(actual, hasItem("java.lang.Object"));
     }
 }

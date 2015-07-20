@@ -25,25 +25,13 @@ public abstract class AbstractGeneratorTest {
         assertThat(generator.toPackageName(Tables.table1().getName()), is(""));
     }
 
-    @Test
-    public void testImports() throws Exception {
-        assertThat(generator.buildImports(), hasItem("import com.kentchiu.spring.attribute.AttributeInfo;"));
-        assertThat(generator.buildImports(), hasItem("import com.kentchiu.spring.base.domain.Option;"));
-        assertThat(generator.buildImports(), hasItem("import org.hibernate.validator.constraints.*;"));
-        assertThat(generator.buildImports(), hasItem("import org.hibernate.annotations.GenericGenerator;"));
-        assertThat(generator.buildImports(), hasItem("import org.hibernate.annotations.NotFound;"));
-        assertThat(generator.buildImports(), hasItem("import org.hibernate.annotations.NotFoundAction;"));
-        assertThat(generator.buildImports(), hasItem("import javax.persistence.*;"));
-        assertThat(generator.buildImports(), hasItem("import javax.validation.constraints.*;"));
-        assertThat(generator.buildImports(), hasItem("import java.util.Date;"));
-        assertThat(generator.buildImports(), hasItem("import java.math.BigDecimal;"));
-    }
 
     @Test
     public void testImports_reference_tables() throws Exception {
         generator.setTableNameMapper(ImmutableMap.of("MY_TABLE", "com.foo.bar.Foo", "MY_TABLE_2", "com.foo.bar.Boo"));
-        assertThat(generator.buildImports(), hasItem("import com.foo.bar.Foo;"));
-        assertThat(generator.buildImports(), hasItem("import com.foo.bar.Boo;"));
+        List<String> imports = generator.buildImports();
+        assertThat(imports, hasItem("com.foo.bar.Foo"));
+        assertThat(imports, hasItem("com.foo.bar.Boo"));
     }
 
     @Test

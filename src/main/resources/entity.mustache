@@ -16,11 +16,12 @@ import java.math.BigDecimal;
 import {{import}};
 {{/imports}}
 
-{{#classComment}}
+
 /*
-* {{classComment}}
-*/
-{{/classComment}}
-public class {{class}} {
+ * {{table.comment}}
+ */
+@Entity
+@Table(name = "{{table.name}}")
+public class {{class}} extends {{baseClass}} {
 {{{content}}}
 }
