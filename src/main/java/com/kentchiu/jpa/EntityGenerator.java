@@ -120,18 +120,18 @@ public class EntityGenerator {
         context.put("baseClass", config.getBaseClass().getSimpleName());
 
 
-        //lines.addAll(buildClass(table));
         table.getColumns().stream().filter(column -> !ignoreColumns.contains(column.getName())).forEach(column -> {
             lines.addAll(buildProperty(table, column));
         });
-        //return lines;
+
+        context.put("properties", Joiner.on('\n').join(lines));
 
         MustacheFactory mf = new DefaultMustacheFactory();
 
         String templateName;
         templateName = config.getType().getTemplateName();
 
-        Mustache mustache = mf.compile("entity" + ".mustache");
+        Mustache mustache = mf.compile(templateName + ".mustache");
         try {
             StringWriter stringWriter = new StringWriter();
 
@@ -210,6 +210,15 @@ public class EntityGenerator {
         if (StringUtils.isNotBlank(attributeInfo(column))) {
             context.put("options", options(column));
         }
+
+        if (Type.INPUT == config.getType() || Type.UPDATE == config.getType()) {
+            if (property.isDateType() && StringUtils.contains(column.getComment(), "(format")) {
+                String value = "@DateTimeFormat(pattern = \"" + StringUtils.substringBetween(column.getComment(), "=", ")") + "\")";
+                context.put("dateTimeFormat", value);
+            }
+
+        }
+
         if (StringUtils.isNotBlank(attributeInfo(column))) {
             context.put("attributeInfo", attributeInfo(column));
         }
@@ -253,7 +262,7 @@ public class EntityGenerator {
 
 
         System.out.println("context : " + context);
-        return convert("property_basic.mustache", context);
+        return convert("property_" + config.getType().getTemplateName() + ".mustache", context);
     }
 
 

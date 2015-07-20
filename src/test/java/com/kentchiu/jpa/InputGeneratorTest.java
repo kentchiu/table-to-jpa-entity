@@ -77,7 +77,7 @@ public class InputGeneratorTest extends AbstractGeneratorTest {
         Table table = Tables.table1();
         assertThat(generator.buildClass(table), not(hasItem("@Entity")));
         assertThat(generator.buildClass(table), not(hasItem("@Table(name = \"MY_TABLE_1\")")));
-        assertThat(generator.buildClass(table), hasItem("public class MyTable1Input {"));
+        assertThat(generator.buildClass(table), hasItem("public class MyTable1Input extends Object {"));
     }
 
 
@@ -220,7 +220,7 @@ public class InputGeneratorTest extends AbstractGeneratorTest {
         i = 2;
         // getter
         assertThat(lines.get(i++), is("    @AttributeInfo(description = \"this is a boolean property\")"));
-        assertThat(lines.get(i++), is("    public Boolean isBoolProperty() {"));
+        assertThat(lines.get(i++), is("    public Boolean getBoolProperty() {"));
         assertThat(lines.get(i++), is("        return boolProperty;"));
         assertThat(lines.get(i++), is("    }"));
 
@@ -258,8 +258,6 @@ public class InputGeneratorTest extends AbstractGeneratorTest {
     @Test
     public void testExportTable() throws Exception {
         List<String> lines = generator.exportTable(Tables.table1());
-        int i = 0;
-
         dump(lines);
 
         assertThat(lines, hasItem("import com.kentchiu.spring.attribute.AttributeInfo;"));
@@ -273,11 +271,11 @@ public class InputGeneratorTest extends AbstractGeneratorTest {
         assertThat(lines, hasItem("import java.util.Date;"));
         assertThat(lines, hasItem("import java.math.BigDecimal;"));
 
-        i = 15;
+        int i = 14;
         assertThat(lines.get(i++), is("/*"));
         assertThat(lines.get(i++), is(" * a table comment"));
         assertThat(lines.get(i++), is(" */"));
-        assertThat(lines.get(i++), is("public class MyTable1Input {"));
+        assertThat(lines.get(i++), is("public class MyTable1Input extends Object {"));
 
         String content = Joiner.on('\n').join(lines);
 
@@ -352,6 +350,6 @@ public class InputGeneratorTest extends AbstractGeneratorTest {
         options.put("Y", "允许");
         options.put("N", "不允许");
 
-        assertThat(generator.attributeInfo(column), is("    @AttributeInfo(description = \"是否允许定制颜色\", format = \"Y=允许/N=不允许\", defaultValue = \"'Y'\")"));
+        assertThat(generator.attributeInfo(column), is("@AttributeInfo(description = \"是否允许定制颜色\", format = \"Y=允许/N=不允许\", defaultValue = \"'Y'\")"));
     }
 }

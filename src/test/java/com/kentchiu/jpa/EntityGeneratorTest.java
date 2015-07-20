@@ -132,6 +132,30 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
     }
 
 
+    public void testProperty_Date() throws Exception {
+        List<String> lines = generator.buildProperty(Tables.table1(), Columns.dateColumn());
+        dump(lines);
+
+        int i = 0;
+        // field
+        assertThat(lines.get(i++), is("    private Date column1;"));
+
+        i = 2;
+        // getter
+        assertThat(lines.get(i++), is("    @Column(name = \"column1\")"));
+        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"column comment\")"));
+        assertThat(lines.get(i++), is("    public Date getColumn1() {"));
+        assertThat(lines.get(i++), is("        return column1;"));
+        assertThat(lines.get(i++), is("    }"));
+
+        i = 8;
+        // setter
+        assertThat(lines.get(i++), is("    public void setColumn1(Date column1) {"));
+        assertThat(lines.get(i++), is("        this.column1 = column1;"));
+        assertThat(lines.get(i++), is("    }"));
+    }
+
+
     @Test
     public void testProperty_string_not_null() throws Exception {
         List<String> lines = generator.buildProperty(Tables.table1(), Columns.createStringColumn("FOO_BAR", "The foo bar comment", false));

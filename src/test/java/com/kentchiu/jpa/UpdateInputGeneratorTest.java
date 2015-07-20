@@ -37,11 +37,12 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
     public void testTableMapping() throws Exception {
         generator.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.kentchiu.jpa.FooBar"));
         List<String> lines = generator.exportTable(Tables.table1());
+        dump(lines);
         assertThat(lines, hasItem("package com.kentchiu.jpa;"));
         assertThat(lines, hasItem("/*"));
         assertThat(lines, hasItem(" * a table comment"));
         assertThat(lines, hasItem(" */"));
-        assertThat(lines, hasItem("public class FooBarUpdateInput {"));
+        assertThat(lines, hasItem("public class FooBarUpdateInput extends Object {"));
     }
 
     @Test
@@ -77,7 +78,7 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
         Table table = Tables.table1();
         assertThat(generator.buildClass(table), not(hasItem("@Entity")));
         assertThat(generator.buildClass(table), not(hasItem("@Table(name = \"MY_TABLE_1\")")));
-        assertThat(generator.buildClass(table), hasItem("public class MyTable1UpdateInput {"));
+        assertThat(generator.buildClass(table), hasItem("public class MyTable1UpdateInput extends Object {"));
     }
 
 
@@ -219,7 +220,7 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
         i = 2;
         // getter
         assertThat(lines.get(i++), is("    @AttributeInfo(description = \"this is a boolean property\")"));
-        assertThat(lines.get(i++), is("    public Boolean isBoolProperty() {"));
+        assertThat(lines.get(i++), is("    public Boolean getBoolProperty() {"));
         assertThat(lines.get(i++), is("        return boolProperty;"));
         assertThat(lines.get(i++), is("    }"));
 
@@ -269,11 +270,11 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
         assertThat(lines, hasItem("import java.util.Date;"));
         assertThat(lines, hasItem("import java.math.BigDecimal;"));
 
-        int i = 15;
+        int i = 14;
         assertThat(lines.get(i++), is("/*"));
         assertThat(lines.get(i++), is(" * a table comment"));
         assertThat(lines.get(i++), is(" */"));
-        assertThat(lines.get(i++), is("public class MyTable1UpdateInput {"));
+        assertThat(lines.get(i++), is("public class MyTable1UpdateInput extends Object {"));
 
         String content = Joiner.on('\n').join(lines);
 
@@ -348,6 +349,6 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
         options.put("Y", "允许");
         options.put("N", "不允许");
 
-        assertThat(generator.attributeInfo(column), is("    @AttributeInfo(description = \"是否允许定制颜色\", format = \"Y=允许/N=不允许\")"));
+        assertThat(generator.attributeInfo(column), is("@AttributeInfo(description = \"是否允许定制颜色\", format = \"Y=允许/N=不允许\")"));
     }
 }

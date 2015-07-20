@@ -1,0 +1,14 @@
+    private {{property.typeName}} {{property.propertyName}};
+
+{{#dateTimeFormat}}
+    {{{dateTimeFormat}}}
+{{/dateTimeFormat}}
+    {{{attributeInfo}}}
+    public {{property.typeName}} get{{property.methodName}}() {
+        return {{property.propertyName}};
+    }
+
+    public void set{{property.methodName}}({{property.typeName}} {{property.propertyName}}) {
+        this.{{property.propertyName}} = {{property.propertyName}};
+    }
+

@@ -1,16 +1,11 @@
     private {{property.typeName}} {{property.propertyName}}{{{defaultValue}}};
 
-{{#manyToOne}}
-    @ManyToOne
-    @NotFound(action = NotFoundAction.IGNORE)
-    @JoinColumn(name = "{{column.name}}")
-{{/manyToOne}}
 {{#nullability}}
     {{nullability}}
 {{/nullability}}
-{{^manyToOne}}
-    {{{columnAnnotation}}}
-{{/manyToOne}}
+{{#dateTimeFormat}}
+    {{{dateTimeFormat}}}
+{{/dateTimeFormat}}
     {{{attributeInfo}}}
     public {{property.typeName}} get{{property.methodName}}() {
         return {{property.propertyName}};
