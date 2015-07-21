@@ -1,0 +1,47 @@
+{{#packageName}}
+package {{packageName}};
+{{/packageName}}
+
+import com.kentchiu.spring.attribute.AttributeInfo;
+import com.kentchiu.spring.base.domain.Option;
+import org.hibernate.validator.constraints.*;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import java.util.Date;
+import java.math.BigDecimal;
+import org.torpedoquery.jpa.OnGoingLogicalCondition;
+import org.torpedoquery.jpa.Query;
+import static org.torpedoquery.jpa.Torpedo.*;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.commons.lang3.StringUtils;
+import com.bq.i1.base.serivce.query.PageableQuery;
+{{#imports}}
+import {{import}};
+{{/imports}}
+
+
+/*
+ * {{table.comment}}
+ */
+public class {{class}}Query {{{extend}}}{
+{{{properties}}}
+
+    public Query<{{class}}> buildQuery() {
+        {{class}} from = from({{class}}.class);
+        List<OnGoingLogicalCondition> conditions = new ArrayList<>();
+
+//        if (StringUtils.isNotBlank(__ref__Uuid)) {
+//            conditions.add(condition(from.get__Ref__().getUuid()).eq(__ref__Uuid));
+//        }
+
+        if (!conditions.isEmpty()) {
+            where(and(conditions));
+        }
+        return select(from);
+    }
+
+}

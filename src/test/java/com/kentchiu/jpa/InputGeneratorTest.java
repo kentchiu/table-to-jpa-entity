@@ -291,15 +291,11 @@ public class InputGeneratorTest extends AbstractGeneratorTest {
         assertThat(lines, hasItem("import com.kentchiu.spring.attribute.AttributeInfo;"));
         assertThat(lines, hasItem("import com.kentchiu.spring.base.domain.Option;"));
         assertThat(lines, hasItem("import org.hibernate.validator.constraints.*;"));
-        assertThat(lines, hasItem("import org.hibernate.annotations.GenericGenerator;"));
-        assertThat(lines, hasItem("import org.hibernate.annotations.NotFound;"));
-        assertThat(lines, hasItem("import org.hibernate.annotations.NotFoundAction;"));
-        assertThat(lines, hasItem("import javax.persistence.*;"));
         assertThat(lines, hasItem("import javax.validation.constraints.*;"));
         assertThat(lines, hasItem("import java.util.Date;"));
         assertThat(lines, hasItem("import java.math.BigDecimal;"));
 
-        int i = 13;
+        int i = 9;
         assertThat(lines.get(i++), is("/*"));
         assertThat(lines.get(i++), is(" * a table comment"));
         assertThat(lines.get(i++), is(" */"));

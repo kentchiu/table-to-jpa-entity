@@ -97,13 +97,18 @@ public class EntityGenerator {
 
         List<Map<String, String>> imports = buildImports().stream().map(i -> ImmutableMap.of("import", i)).collect(Collectors.toList());
 
+        String className = buildClassName(table.getName());
         context.put("imports", imports);
         context.put("table", table);
-        context.put("class", buildClassName(table.getName()));
-        if (!Objects.equals(Object.class, config.getBaseClass())) {
-            context.put("extend", "extends " + config.getBaseClass().getSimpleName());
+        context.put("class", className);
+        if (Type.QUERY == config.getType()) {
+            context.put("extend", "extends PageableQuery<" + className + "> ");
         } else {
-            context.put("extend", "");
+            if (!Objects.equals(Object.class, config.getBaseClass())) {
+                context.put("extend", "extends " + config.getBaseClass().getSimpleName());
+            } else {
+                context.put("extend", "");
+            }
         }
         context.put("properties", buildProperties(table, ignoreColumns));
 
@@ -181,7 +186,7 @@ public class EntityGenerator {
             context.put("options", buildOptions(column));
         }
 
-        if (Type.INPUT == config.getType() || Type.UPDATE == config.getType()) {
+        if (Type.INPUT == config.getType() || Type.UPDATE == config.getType() || Type.QUERY == config.getType()) {
             if (property.isDateType() && StringUtils.contains(column.getComment(), "(format")) {
                 String value = "@DateTimeFormat(pattern = \"" + StringUtils.substringBetween(column.getComment(), "=", ")") + "\")";
                 context.put("dateTimeFormat", value);
@@ -247,11 +252,13 @@ public class EntityGenerator {
             sb.append("\"");
         }
 
-        if (StringUtils.isNotBlank(column.getDefaultValue()) && config.getType() != Type.UPDATE) {
-            if (StringUtils.equals("BigDecimal.ZERO", column.getDefaultValue())) {
-                sb.append(", ").append("defaultValue = \"0\"");
-            } else {
-                sb.append(", ").append("defaultValue = \"").append(column.getDefaultValue()).append("\"");
+        if (StringUtils.isNotBlank(column.getDefaultValue())) {
+            if (config.getType() != Type.UPDATE && config.getType() != Type.QUERY) {
+                if (StringUtils.equals("BigDecimal.ZERO", column.getDefaultValue())) {
+                    sb.append(", ").append("defaultValue = \"0\"");
+                } else {
+                    sb.append(", ").append("defaultValue = \"").append(column.getDefaultValue()).append("\"");
+                }
             }
         }
         sb.append(")");

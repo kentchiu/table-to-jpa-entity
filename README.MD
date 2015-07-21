@@ -25,7 +25,7 @@
 - DONE: input to dto package (可自行選擇，export config?)
 - TODO: fetch ignore columns from base class 
 - TODO: json config
-- TODO: Query Object
+- DONE: Query Object
 - TODO: Repository
 - TODO: Service
 - TODO: DomainFactory
