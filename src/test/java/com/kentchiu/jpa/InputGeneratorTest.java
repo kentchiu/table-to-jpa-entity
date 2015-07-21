@@ -27,12 +27,6 @@ public class InputGeneratorTest extends AbstractGeneratorTest {
     }
 
     @Test
-    public void testPackage() throws Exception {
-        generator.setTableNameMapper(ImmutableMap.of(Tables.table1().getName(), "com.kentchiu.jpa.domain.MyTable1"));
-        assertThat(generator.buildPackageName(Tables.table1().getName()), is("com.kentchiu.jpa.web.dto"));
-    }
-
-    @Test
     public void testGenerate() throws Exception {
         generator.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.foobar.domain.MyTest"));
         Path javaSourceHome = Files.createTempDirectory("java");
@@ -77,8 +71,6 @@ public class InputGeneratorTest extends AbstractGeneratorTest {
         assertThat(lines.get(i++), is("        this.fooBarUuid = fooBarUuid;"));
         assertThat(lines.get(i++), is("    }"));
     }
-
-
 
 
     @Test
@@ -340,7 +332,7 @@ public class InputGeneratorTest extends AbstractGeneratorTest {
         Column column = Columns.stringColumn();
         column.setNullable(true);
         column.setReferenceTable("OTHER_TABLE");
-        generator.getColumnMapper().put("column1", "FOO_BAR");
+        generator.setColumnMapper(ImmutableMap.of("column1", "FOO_BAR"));
         List<String> lines = generator.buildProperty(column);
 
         dump(lines);

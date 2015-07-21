@@ -21,16 +21,9 @@ import static org.hamcrest.Matchers.*;
 
 public class EntityGeneratorTest extends AbstractGeneratorTest {
 
-
     @Before
     public void setUp() throws Exception {
         generator = new EntityGenerator(new Config(Type.JPA));
-    }
-
-    @Test
-    public void testPackage() throws Exception {
-        generator.setTableNameMapper(ImmutableMap.of(Tables.table1().getName(), "com.kentchiu.jpa.domain.MyTable1"));
-        assertThat(generator.buildPackageName(Tables.table1().getName()), is("com.kentchiu.jpa.domain"));
     }
 
     @Test
@@ -277,7 +270,7 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
         Column column = Columns.stringColumn();
         column.setNullable(true);
         column.setReferenceTable("OTHER_TABLE");
-        generator.getColumnMapper().put("OTHER_TABLE", "xxx");
+        generator.setColumnMapper(ImmutableMap.of("OTHER_TABLE", "xxx"));
         List<String> lines = generator.buildProperty(column);
 
         dump(lines);
@@ -308,7 +301,7 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
         Column column = Columns.stringColumn();
         column.setNullable(false);
         column.setReferenceTable("OTHER_TABLE");
-        generator.getColumnMapper().put("OTHER_TABLE", "xxx");
+        generator.setColumnMapper(ImmutableMap.of("OTHER_TABLE", "xxx"));
         List<String> lines = generator.buildProperty(column);
 
         dump(lines);
@@ -415,7 +408,7 @@ public class EntityGeneratorTest extends AbstractGeneratorTest {
         Column column = Columns.stringColumn();
         column.setNullable(true);
         column.setReferenceTable("OTHER_TABLE");
-        generator.getColumnMapper().put("column1", "FOO_BAR");
+        generator.setColumnMapper(ImmutableMap.of("column1", "FOO_BAR"));
         List<String> lines = generator.buildProperty(column);
 
         dump(lines);

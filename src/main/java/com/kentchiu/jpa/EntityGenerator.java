@@ -3,7 +3,6 @@ package com.kentchiu.jpa;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
@@ -13,7 +12,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.kentchiu.jpa.domain.Column;
 import com.kentchiu.jpa.domain.Table;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,31 +23,17 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 public class EntityGenerator {
 
     private Config config;
-
+    private Transformer transformer;
     private Logger logger = LoggerFactory.getLogger(EntityGenerator.class);
-    /**
-     * table name -> java fully qualified name
-     */
-    private Map<String, String> tableNameMapper = new HashMap<>();
-    /**
-     * abbreviate name -> full name, and foreign key name -> property name
-     */
-    private Map<String, String> columnMapper = new HashMap<>();
 
 
     public EntityGenerator(Config config) {
         this.config = config;
-    }
-
-    public Map<String, String> getColumnMapper() {
-        return columnMapper;
-    }
-
-    public void setColumnMapper(Map<String, String> columnMapper) {
-        this.columnMapper = columnMapper;
+        transformer = new Transformer();
     }
 
 
@@ -61,9 +45,9 @@ public class EntityGenerator {
 
     public void export(Path javaSourceHome, Table table, List<String> ignoreColumns) {
         List<String> lines = exportTable(table, ignoreColumns);
-        String pkgName = buildPackageName(table.getName());
+        String pkgName = transformer.buildPackageName(table.getName(), config.getType());
+        String className = transformer.buildClassName(table.getName());
         String folder = StringUtils.replace(pkgName, ".", "/");
-        String className = buildClassName(table.getName());
         String name = config.getType().getJavaFileName(className);
         Path file = javaSourceHome.resolve(folder).resolve(name);
         try {
@@ -87,9 +71,7 @@ public class EntityGenerator {
     }
 
     protected List<String> exportTable(Table table, List<String> ignoreColumns) {
-
-        String packageName = buildPackageName(table.getName());
-
+        String packageName = transformer.buildPackageName(table.getName(), config.getType());
         HashMap<Object, Object> context = Maps.newHashMap();
         if (!StringUtils.isBlank(packageName)) {
             context.put("packageName", packageName);
@@ -97,7 +79,7 @@ public class EntityGenerator {
 
         List<Map<String, String>> imports = buildImports().stream().map(i -> ImmutableMap.of("import", i)).collect(Collectors.toList());
 
-        String className = buildClassName(table.getName());
+        String className = transformer.buildClassName(table.getName());
         context.put("imports", imports);
         context.put("table", table);
         context.put("class", className);
@@ -143,7 +125,7 @@ public class EntityGenerator {
         if (!Objects.equals(Object.class, baseClass)) {
             results.add(baseClass.getName());
         }
-        tableNameMapper.values().forEach(p -> results.add(p));
+        transformer.getTableNameMapper().values().forEach(p -> results.add(p));
         return results;
     }
 
@@ -162,29 +144,17 @@ public class EntityGenerator {
         }
     }
 
-    String buildPackageName(String tableName) {
-        if (tableNameMapper.containsKey(tableName)) {
-            String qualifier = tableNameMapper.getOrDefault(tableName, "");
-            String pkgName = StringUtils.substringBeforeLast(qualifier, ".");
-            logger.debug("{}  -> {}", tableName, pkgName);
-            String topPackage = StringUtils.substringBeforeLast(pkgName, ".");
-            return topPackage + "." + config.getType().getPackage();
-        } else {
-            return "";
-        }
-    }
-
 
     List<String> buildProperty(Column column) {
-        Property p = new Property(column);
-        p.setMapper(columnMapper);
-        Property property = p.invoke(config.getType());
+
+        Transformer.Property property = transformer.getProperty(column, config.getType());
 
         Map<String, Object> context = new HashMap<>();
 
         if (StringUtils.isNotBlank(buildOptions(column))) {
             context.put("options", buildOptions(column));
         }
+
 
         if (Type.INPUT == config.getType() || Type.UPDATE == config.getType() || Type.QUERY == config.getType()) {
             if (property.isDateType() && StringUtils.contains(column.getComment(), "(format")) {
@@ -199,7 +169,7 @@ public class EntityGenerator {
         }
 
         if (!column.isNullable()) {
-            if (StringUtils.equals("String", p.getTypeName())) {
+            if (StringUtils.equals("String", property.getTypeName())) {
                 context.put("nullability", "@NotBlank");
             } else {
                 context.put("nullability", "@NotNull");
@@ -279,105 +249,12 @@ public class EntityGenerator {
     }
 
 
-    private String buildClassName(String tableName) {
-        String className;
-        if (tableNameMapper.containsKey(tableName)) {
-            String qualifier = tableNameMapper.getOrDefault(tableName, "");
-            className = StringUtils.substringAfterLast(qualifier, ".");
-            Preconditions.checkState(StringUtils.isNotBlank(className), "class name should not empty");
-        } else {
-            className = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName);
-        }
-        logger.debug("{}  -> {}", tableName, className);
-        return className;
-    }
-
     public void setTableNameMapper(Map<String, String> tableNameMapper) {
-        this.tableNameMapper = tableNameMapper;
+        transformer.setTableNameMapper(tableNameMapper);
     }
 
-
-    class Property {
-        private Column column;
-        private String propertyName;
-        private String methodName;
-        private String typeName;
-        private Map<String, String> mapper = Maps.newHashMap();
-
-        public Property(Column column) {
-            this.column = column;
-        }
-
-        public String getPropertyName() {
-            return propertyName;
-        }
-
-        public String getMethodName() {
-            return methodName;
-        }
-
-        public String getTypeName() {
-            return typeName;
-        }
-
-        public Property invoke(Type type) {
-
-            String[] searchList = mapper.keySet().toArray(new String[mapper.size()]);
-            String[] replacementList = mapper.values().toArray(new String[mapper.size()]);
-            String name = StringUtils.replaceEach(column.getName(), searchList, replacementList);
-
-
-            if (StringUtils.isBlank(column.getReferenceTable())) {
-                if (type != Type.JPA && isDateType()) {
-                    if (isDateType()) {
-                        typeName = "Date";
-                    } else {
-                        typeName = "String";
-                    }
-                    propertyName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name);
-                    methodName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name);
-                } else {
-                    typeName = column.getSimpleJavaType();
-                    propertyName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name);
-                    methodName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name);
-                }
-            } else {
-                if (config.getType() != Type.JPA) {
-                    typeName = column.getSimpleJavaType();
-                    String mapName = columnMapper.getOrDefault(column.getName(), column.getReferenceTable());
-                    if (columnMapper.containsKey(column.getName())) {
-                        logger.info("map {} -> {}", column.getReferenceTable(), mapName);
-                    }
-
-                    propertyName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, buildClassName(mapName)) + "Uuid";
-                    methodName = buildClassName(mapName) + "Uuid";
-                } else {
-                    String referenceTable = column.getReferenceTable();
-                    typeName = buildClassName(referenceTable);
-                    String mapName = columnMapper.getOrDefault(column.getName(), referenceTable);
-                    if (columnMapper.containsKey(column.getName())) {
-                        logger.info("map {} -> {}", referenceTable, mapName);
-                    }
-                    if (columnMapper.containsKey(column.getName())) {
-                        propertyName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, mapName);
-                        methodName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, mapName);
-                    } else {
-                        propertyName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, typeName);
-                        methodName = buildClassName(mapName);
-                    }
-                }
-            }
-            logger.debug("property:{}, method:{}, type:{}", propertyName, methodName, typeName);
-            return this;
-        }
-
-        private boolean isDateType() {
-            return ArrayUtils.contains(new String[]{"java.util.Date", "java.sql.Date", "java.sql.Time", "java.sql.Timestamp"}, column.getJavaType());
-        }
-
-        public void setMapper(Map<String, String> mapper) {
-            this.mapper = mapper;
-        }
+    public void setColumnMapper(Map<String, String> columnMapper) {
+        transformer.setColumnMapper(columnMapper);
     }
 }
 
