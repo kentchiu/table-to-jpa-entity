@@ -24,32 +24,27 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-public class EntityGenerator {
+public class EntityGenerator extends AbstractGenerator {
 
-    private Config config;
-    private Transformer transformer;
     private Logger logger = LoggerFactory.getLogger(EntityGenerator.class);
 
-
     public EntityGenerator(Config config) {
-        this.config = config;
-        transformer = new Transformer();
+        super(config);
     }
 
-
-    public void export(Path javaSourceHome, List<Table> tables, List<String> ignoreColumns) {
+    public void export(List<Table> tables, List<String> ignoreColumns) {
         for (Table table : tables) {
-            export(javaSourceHome, table, ignoreColumns);
+            export(table, ignoreColumns);
         }
     }
 
-    public void export(Path javaSourceHome, Table table, List<String> ignoreColumns) {
+    public void export(Table table, List<String> ignoreColumns) {
         List<String> lines = exportTable(table, ignoreColumns);
         String pkgName = transformer.getPackage(table.getName(), config.getType());
         String className = transformer.buildClassName(table.getName());
-        String folder = StringUtils.replace(pkgName, ".", "/");
         String name = config.getType().getJavaFileName(className);
-        Path file = javaSourceHome.resolve(folder).resolve(name);
+        String folder = StringUtils.replace(pkgName, ".", "/");
+        Path file = getJavaSourceHome().resolve(folder).resolve(name);
         try {
             if (!Files.exists(file)) {
                 if (Files.exists(file.getParent())) {
@@ -249,12 +244,5 @@ public class EntityGenerator {
     }
 
 
-    public void setTableNameMapper(Map<String, String> tableNameMapper) {
-        transformer.setTableNameMapper(tableNameMapper);
-    }
-
-    public void setColumnMapper(Map<String, String> columnMapper) {
-        transformer.setColumnMapper(columnMapper);
-    }
 }
 

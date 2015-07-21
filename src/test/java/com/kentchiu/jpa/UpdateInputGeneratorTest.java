@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,15 +22,15 @@ public class UpdateInputGeneratorTest extends AbstractGeneratorTest {
     @Before
     public void setUp() throws Exception {
         generator = new EntityGenerator(new Config(Type.UPDATE));
+        generator.setProjectHome(Files.createTempDirectory("java"));
     }
 
 
     @Test
     public void testGenerate() throws Exception {
         generator.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.foobar.domain.MyTest"));
-        Path javaSourceHome = Files.createTempDirectory("java");
-        generator.export(javaSourceHome, Tables.all(), ImmutableList.of());
-        assertThat(Files.exists(javaSourceHome.resolve("com/foobar/web/dto/MyTestUpdateInput.java")), is(true));
+        generator.export(Tables.all(), ImmutableList.of());
+        assertThat(Files.exists(generator.getJavaSourceHome().resolve("com/foobar/web/dto/MyTestUpdateInput.java")), is(true));
     }
 
     @Test
