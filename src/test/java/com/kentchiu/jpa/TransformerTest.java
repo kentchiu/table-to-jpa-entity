@@ -14,10 +14,10 @@ public class TransformerTest {
     @Test
     public void testPackage() throws Exception {
         transformer.setTableNameMapper(ImmutableMap.of(Tables.table1().getName(), "com.kentchiu.jpa.domain.MyTable1"));
-        assertThat(transformer.buildPackageName(Tables.table1().getName(), Type.JPA), is("com.kentchiu.jpa.domain"));
-        assertThat(transformer.buildPackageName(Tables.table1().getName(), Type.INPUT), is("com.kentchiu.jpa.web.dto"));
-        assertThat(transformer.buildPackageName(Tables.table1().getName(), Type.UPDATE), is("com.kentchiu.jpa.web.dto"));
-        assertThat(transformer.buildPackageName(Tables.table1().getName(), Type.QUERY), is("com.kentchiu.jpa.service.query"));
+        assertThat(transformer.getPackage(Tables.table1().getName(), Type.JPA), is("com.kentchiu.jpa.domain"));
+        assertThat(transformer.getPackage(Tables.table1().getName(), Type.INPUT), is("com.kentchiu.jpa.web.dto"));
+        assertThat(transformer.getPackage(Tables.table1().getName(), Type.UPDATE), is("com.kentchiu.jpa.web.dto"));
+        assertThat(transformer.getPackage(Tables.table1().getName(), Type.QUERY), is("com.kentchiu.jpa.service.query"));
 
     }
 

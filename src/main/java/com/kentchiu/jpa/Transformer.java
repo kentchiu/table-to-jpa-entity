@@ -43,18 +43,24 @@ public class Transformer {
         this.tableNameMapper = tableNameMapper;
     }
 
-    String buildPackageName(String tableName, Type type) {
+    String getPackage(String tableName, Type type) {
         if (tableNameMapper.containsKey(tableName)) {
-            String qualifier = tableNameMapper.getOrDefault(tableName, "");
-            String pkgName = StringUtils.substringBeforeLast(qualifier, ".");
-            logger.debug("{}  -> {}", tableName, pkgName);
-            String topPackage = StringUtils.substringBeforeLast(pkgName, ".");
-            return topPackage + "." + type.getPackage();
+            return getTopPackage(tableName) + "." + type.getPackage();
         } else {
             return "";
         }
     }
 
+    public String getTopPackage(String tableName) {
+        if (tableNameMapper.containsKey(tableName)) {
+            String qualifier = tableNameMapper.getOrDefault(tableName, "");
+            String pkgName = StringUtils.substringBeforeLast(qualifier, ".");
+            logger.debug("{}  -> {}", tableName, pkgName);
+            return StringUtils.substringBeforeLast(pkgName, ".");
+        } else {
+            return "";
+        }
+    }
 
     public String getCalssName(String tableName) {
         return buildClassName(tableName);

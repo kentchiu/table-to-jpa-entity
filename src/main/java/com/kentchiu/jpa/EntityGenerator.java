@@ -45,7 +45,7 @@ public class EntityGenerator {
 
     public void export(Path javaSourceHome, Table table, List<String> ignoreColumns) {
         List<String> lines = exportTable(table, ignoreColumns);
-        String pkgName = transformer.buildPackageName(table.getName(), config.getType());
+        String pkgName = transformer.getPackage(table.getName(), config.getType());
         String className = transformer.buildClassName(table.getName());
         String folder = StringUtils.replace(pkgName, ".", "/");
         String name = config.getType().getJavaFileName(className);
@@ -71,7 +71,7 @@ public class EntityGenerator {
     }
 
     protected List<String> exportTable(Table table, List<String> ignoreColumns) {
-        String packageName = transformer.buildPackageName(table.getName(), config.getType());
+        String packageName = transformer.getPackage(table.getName(), config.getType());
         HashMap<Object, Object> context = Maps.newHashMap();
         if (!StringUtils.isBlank(packageName)) {
             context.put("packageName", packageName);
