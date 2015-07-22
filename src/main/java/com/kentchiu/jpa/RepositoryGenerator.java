@@ -15,9 +15,7 @@ public class RepositoryGenerator extends AbstractGenerator {
     }
 
     List<String> applyTemplate(Table table) {
-        List<String> lines = applyTemplate("repository.mustache", getBaseContext(table));
-        lines.forEach(System.out::println);
-        return lines;
+        return applyTemplate("repository.mustache", getBaseContext(table));
     }
 
     protected String getClassName(Table table) {

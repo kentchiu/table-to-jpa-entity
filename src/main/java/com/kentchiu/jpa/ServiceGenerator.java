@@ -15,9 +15,7 @@ public class ServiceGenerator extends AbstractGenerator {
     }
 
     List<String> applyTemplate(Table table) {
-        List<String> lines = applyTemplate("service.mustache", getBaseContext(table));
-        lines.forEach(System.out::println);
-        return lines;
+        return applyTemplate("service.mustache", getBaseContext(table));
     }
 
     protected String getClassName(Table table) {

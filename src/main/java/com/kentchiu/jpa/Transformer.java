@@ -43,14 +43,6 @@ public class Transformer {
         this.tableNameMapper = tableNameMapper;
     }
 
-//    String getPackage(String tableName, Type type) {
-//        if (tableNameMapper.containsKey(tableName)) {
-//            return getTopPackage(tableName) + "." + type.getPackage();
-//        } else {
-//            return "";
-//        }
-//    }
-
     public String getTopPackage(String tableName) {
         if (tableNameMapper.containsKey(tableName)) {
             String qualifier = tableNameMapper.getOrDefault(tableName, "");
@@ -62,9 +54,6 @@ public class Transformer {
         }
     }
 
-//    public String getClassName(String tableName) {
-//        return getDomainName(tableName);
-//    }
 
     public Property getProperty(Column column, Type type) {
         Property p = new Property(column);
