@@ -18,6 +18,15 @@ public class EntityGenerator extends AbstractGenerator {
 
 
     private Logger logger = LoggerFactory.getLogger(EntityGenerator.class);
+
+    public List<String> getIgnoreColumns() {
+        return ignoreColumns;
+    }
+
+    public void setIgnoreColumns(List<String> ignoreColumns) {
+        this.ignoreColumns = ignoreColumns;
+    }
+
     private List<String> ignoreColumns;
 
     public EntityGenerator(Config config) {
