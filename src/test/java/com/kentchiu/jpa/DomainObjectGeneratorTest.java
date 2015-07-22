@@ -11,7 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 
-public abstract class AbstractGeneratorTest {
+public abstract class DomainObjectGeneratorTest {
 
     EntityGenerator generator;
 

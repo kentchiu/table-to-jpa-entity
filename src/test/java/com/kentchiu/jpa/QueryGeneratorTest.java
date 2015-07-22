@@ -17,7 +17,7 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class QueryGeneratorTest extends AbstractGeneratorTest {
+public class QueryGeneratorTest extends DomainObjectGeneratorTest {
 
     @Before
     public void setUp() throws Exception {

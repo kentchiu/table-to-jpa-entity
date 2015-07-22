@@ -18,7 +18,7 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class EntityGeneratorTest extends AbstractGeneratorTest {
+public class EntityGeneratorTest extends DomainObjectGeneratorTest {
 
 
     @Before
