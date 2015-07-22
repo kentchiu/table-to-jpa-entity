@@ -285,7 +285,7 @@ public class InputGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines, hasItem("import java.util.Date;"));
         assertThat(lines, hasItem("import java.math.BigDecimal;"));
 
-        int i = 9;
+        int i = 10;
         assertThat(lines.get(i++), is("/*"));
         assertThat(lines.get(i++), is(" * a table comment"));
         assertThat(lines.get(i++), is(" */"));

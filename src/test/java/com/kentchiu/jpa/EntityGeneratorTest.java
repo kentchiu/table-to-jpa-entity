@@ -345,6 +345,7 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
     @Test
     public void testExportTable() throws Exception {
         List<String> lines = generator.exportTable(Tables.table1());
+
         dump(lines);
 
         assertThat(lines, hasItem("import com.kentchiu.spring.attribute.AttributeInfo;"));
@@ -358,7 +359,7 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines, hasItem("import java.util.Date;"));
         assertThat(lines, hasItem("import java.math.BigDecimal;"));
 
-        int i = 13;
+        int i = 14;
         assertThat(lines.get(i++), is("/*"));
         assertThat(lines.get(i++), is(" * a table comment"));
         assertThat(lines.get(i++), is(" */"));

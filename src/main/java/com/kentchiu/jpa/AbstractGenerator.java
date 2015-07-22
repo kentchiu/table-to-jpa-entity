@@ -6,6 +6,7 @@ import com.github.mustachejava.MustacheFactory;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.kentchiu.jpa.domain.Table;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -59,8 +60,8 @@ public abstract class AbstractGenerator {
     public abstract Optional<Path> export(Table table);
 
     protected Optional<Path> exportToFile(Table table, List<String> lines) {
-        String pkgName = transformer.getPackage(table.getName(), config.getType());
-        String className = transformer.buildClassName(table.getName());
+        String pkgName = getPackageName(table);
+        String className = getClassName(table);
         String name = config.getType().getJavaFileName(className);
         String folder = StringUtils.replace(pkgName, ".", "/");
         Path file = getJavaSourceHome().resolve(folder).resolve(name);
@@ -81,6 +82,18 @@ public abstract class AbstractGenerator {
             return Optional.empty();
         }
     }
+
+    protected Map<String, Object> getBaseContext(Table table) {
+        Map<String, Object> context = Maps.newHashMap();
+        context.put("table", table);
+        context.put("Domain", transformer.getDomainName(table.getName()));
+        context.put("topPackage", transformer.getTopPackage(table.getName()));
+        return context;
+    }
+
+    protected abstract String getClassName(Table table);
+
+    protected abstract String getPackageName(Table table);
 
     protected List<String> applyTemplate(String template, Map<String, Object> context) {
         try {

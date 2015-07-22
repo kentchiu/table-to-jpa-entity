@@ -289,7 +289,7 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines, hasItem("import java.util.List;"));
         assertThat(lines, hasItem("import org.apache.commons.lang3.StringUtils;"));
 
-        int i = 20;
+        int i = 21;
         assertThat(lines.get(i++), is("/*"));
         assertThat(lines.get(i++), is(" * a table comment"));
         assertThat(lines.get(i++), is(" */"));

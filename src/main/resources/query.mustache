@@ -27,11 +27,11 @@ import {{import}};
 /*
  * {{table.comment}}
  */
-public class {{class}}Query {{{extend}}}{
+public class {{Domain}}Query {{{extend}}}{
 {{{properties}}}
 
-    public Query<{{class}}> buildQuery() {
-        {{class}} from = from({{class}}.class);
+    public Query<{{Domain}}> buildQuery() {
+        {{Domain}} from = from({{Domain}}.class);
         List<OnGoingLogicalCondition> conditions = new ArrayList<>();
 
 //        if (StringUtils.isNotBlank(__ref__Uuid)) {

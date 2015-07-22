@@ -6,9 +6,9 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
-public class RepositoryGenerator extends AbstractGenerator {
+public class ServiceImplGenerator extends AbstractGenerator {
 
-    public RepositoryGenerator(Config config) {
+    public ServiceImplGenerator(Config config) {
         super(config);
     }
 
@@ -18,16 +18,16 @@ public class RepositoryGenerator extends AbstractGenerator {
     }
 
     List<String> applyTemplate(Table table) {
-        List<String> lines = applyTemplate("repository.mustache", getBaseContext(table));
+        List<String> lines = applyTemplate("service_impl.mustache", getBaseContext(table));
         lines.forEach(System.out::println);
         return lines;
     }
 
     protected String getClassName(Table table) {
-        return transformer.getDomainName(table.getName());
+        return transformer.getDomainName(table.getName()) + "ServiceImpl";
     }
 
     protected String getPackageName(Table table) {
-        return transformer.getTopPackage(table.getName()) + "." + "dao";
+        return transformer.getTopPackage(table.getName()) + "/service";
     }
 }

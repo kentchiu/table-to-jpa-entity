@@ -2,7 +2,6 @@ package com.kentchiu.jpa;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import com.kentchiu.jpa.domain.Column;
 import com.kentchiu.jpa.domain.Table;
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +17,12 @@ public class EntityGenerator extends AbstractGenerator {
 
 
     private Logger logger = LoggerFactory.getLogger(EntityGenerator.class);
+    private List<String> ignoreColumns;
+
+    public EntityGenerator(Config config) {
+        super(config);
+        ignoreColumns = new ArrayList<>();
+    }
 
     public List<String> getIgnoreColumns() {
         return ignoreColumns;
@@ -27,44 +32,13 @@ public class EntityGenerator extends AbstractGenerator {
         this.ignoreColumns = ignoreColumns;
     }
 
-    private List<String> ignoreColumns;
-
-    public EntityGenerator(Config config) {
-        super(config);
-        ignoreColumns = new ArrayList<>();
-    }
-
     @Override
     public Optional<Path> export(Table table) {
         String templateName = config.getType().getTemplateName();
         return exportToFile(table, applyTemplate(templateName + ".mustache", getContext(table)));
     }
 
-    private Map<String, Object> getContext(Table table) {
-        String packageName = transformer.getPackage(table.getName(), config.getType());
-        Map<String, Object> context = Maps.newHashMap();
-        if (!StringUtils.isBlank(packageName)) {
-            context.put("packageName", packageName);
-        }
 
-        List<Map<String, String>> imports = buildImports().stream().map(i -> ImmutableMap.of("import", i)).collect(Collectors.toList());
-
-        String className = transformer.buildClassName(table.getName());
-        context.put("imports", imports);
-        context.put("table", table);
-        context.put("class", className);
-        if (Type.QUERY == config.getType()) {
-            context.put("extend", "extends PageableQuery<" + className + "> ");
-        } else {
-            if (!Objects.equals(Object.class, config.getBaseClass())) {
-                context.put("extend", "extends " + config.getBaseClass().getSimpleName());
-            } else {
-                context.put("extend", "");
-            }
-        }
-        context.put("properties", buildProperties(table, ignoreColumns));
-        return context;
-    }
 
 
     private String buildProperties(Table table, List<String> ignoreColumns) {
@@ -194,6 +168,39 @@ public class EntityGenerator extends AbstractGenerator {
     public List<String> exportTable(Table table) {
         String templateName = config.getType().getTemplateName();
         return applyTemplate(templateName + ".mustache", getContext(table));
+    }
+
+    private Map<String, Object> getContext(Table table) {
+        Map<String, Object> baseContext = getBaseContext(table);
+
+        String packageName = getPackageName(table);
+        if (!StringUtils.isBlank(packageName)) {
+            baseContext.put("packageName", packageName);
+        }
+
+        List<Map<String, String>> imports = buildImports().stream().map(i -> ImmutableMap.of("import", i)).collect(Collectors.toList());
+
+
+        baseContext.put("imports", imports);
+        if (Type.QUERY == config.getType()) {
+            baseContext.put("extend", "extends PageableQuery<" + transformer.getDomainName(table.getName()) + "> ");
+        } else {
+            if (!Objects.equals(Object.class, config.getBaseClass())) {
+                baseContext.put("extend", "extends " + config.getBaseClass().getSimpleName());
+            } else {
+                baseContext.put("extend", "");
+            }
+        }
+        baseContext.put("properties", buildProperties(table, ignoreColumns));
+        return baseContext;
+    }
+
+    protected String getClassName(Table table) {
+        return transformer.getDomainName(table.getName());
+    }
+
+    protected String getPackageName(Table table) {
+        return transformer.getTopPackage(table.getName()) + "." + config.getType().getPackage();
     }
 }
 

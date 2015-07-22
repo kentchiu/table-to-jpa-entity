@@ -16,13 +16,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
-public class RepositoryGeneratorTest {
+public class ServiceGeneratorTest {
 
-    private RepositoryGenerator generator;
+    private ServiceGenerator generator;
 
     @Before
     public void setUp() throws Exception {
-        generator = new RepositoryGenerator(new Config());
+        generator = new ServiceGenerator(new Config());
     }
 
     @Test
@@ -31,8 +31,9 @@ public class RepositoryGeneratorTest {
         generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.FooBar"));
         Optional<Path> export = generator.exportToFile(table, ImmutableList.of());
         assertThat(export.isPresent(), Is.is(true));
-        assertThat(export.get().toString(), containsString("/src/main/java/com/kentchiu/dao/FooBar.java"));
+        assertThat(export.get().toString(), containsString("/src/main/java/com/kentchiu/service/FooBarService.java"));
     }
+
 
     @Test
     public void testApplyTemplate() throws Exception {
@@ -40,13 +41,15 @@ public class RepositoryGeneratorTest {
         generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.FooBar"));
         List<String> list = generator.applyTemplate(table);
         int i = 0;
-        assertThat(list.get(i++), is("package com.kentchiu.dao;"));
+        assertThat(list.get(i++), is("package com.kentchiu.service;"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("import com.kentchiu.domain.CartDetail;"));
-        assertThat(list.get(i++), is("import org.springframework.data.jpa.repository.JpaRepository;"));
+        assertThat(list.get(i++), is("import com.bq.i1.base.serivce.CrudService;"));
+        assertThat(list.get(i++), is("import com.kentchiu.domain.FooBar;"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("public interface FooBarRepository extends JpaRepository<FooBar, String> {"));
+        assertThat(list.get(i++), is(""));
+        assertThat(list.get(i++), is("public interface FooBarService extends CrudService<FooBar> {"));
         assertThat(list.get(i++), is("}"));
     }
+
 
 }

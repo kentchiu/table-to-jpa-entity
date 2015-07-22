@@ -1,0 +1,39 @@
+package {{topPackage}}.dao;
+
+import {{topPackage}}.dao.{{Domain}}Repository;
+import {{topPackage}}.domain.{{Domain}};
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityManager;
+
+
+@Service
+public class {{Domain}}ServiceImpl implements {{Domain}}Service {
+
+    private {{Domain}}Repository repository;
+    private EntityManager entityManager;
+
+    @Override
+    public JpaRepository<{{Domain}}, String> getRepository() {
+        return repository;
+    }
+
+    @Autowired
+    public void setRepository({{Domain}}Repository repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    public EntityManager getEntityManager() {
+        return entityManager;
+    }
+
+    @Autowired
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
+    }
+}
+
+

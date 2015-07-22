@@ -43,13 +43,13 @@ public class Transformer {
         this.tableNameMapper = tableNameMapper;
     }
 
-    String getPackage(String tableName, Type type) {
-        if (tableNameMapper.containsKey(tableName)) {
-            return getTopPackage(tableName) + "." + type.getPackage();
-        } else {
-            return "";
-        }
-    }
+//    String getPackage(String tableName, Type type) {
+//        if (tableNameMapper.containsKey(tableName)) {
+//            return getTopPackage(tableName) + "." + type.getPackage();
+//        } else {
+//            return "";
+//        }
+//    }
 
     public String getTopPackage(String tableName) {
         if (tableNameMapper.containsKey(tableName)) {
@@ -62,9 +62,9 @@ public class Transformer {
         }
     }
 
-    public String getCalssName(String tableName) {
-        return buildClassName(tableName);
-    }
+//    public String getClassName(String tableName) {
+//        return getDomainName(tableName);
+//    }
 
     public Property getProperty(Column column, Type type) {
         Property p = new Property(column);
@@ -73,7 +73,7 @@ public class Transformer {
     }
 
 
-    String buildClassName(String tableName) {
+    String getDomainName(String tableName) {
         String className;
         if (tableNameMapper.containsKey(tableName)) {
             String qualifier = tableNameMapper.getOrDefault(tableName, "");
@@ -137,11 +137,11 @@ public class Transformer {
                         logger.info("map {} -> {}", column.getReferenceTable(), mapName);
                     }
 
-                    propertyName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, buildClassName(mapName)) + "Uuid";
-                    methodName = buildClassName(mapName) + "Uuid";
+                    propertyName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, getDomainName(mapName)) + "Uuid";
+                    methodName = getDomainName(mapName) + "Uuid";
                 } else {
                     String referenceTable = column.getReferenceTable();
-                    typeName = buildClassName(referenceTable);
+                    typeName = getDomainName(referenceTable);
                     String mapName = columnMapper.getOrDefault(column.getName(), referenceTable);
                     if (columnMapper.containsKey(column.getName())) {
                         logger.info("map {} -> {}", referenceTable, mapName);
@@ -151,7 +151,7 @@ public class Transformer {
                         methodName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, mapName);
                     } else {
                         propertyName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, typeName);
-                        methodName = buildClassName(mapName);
+                        methodName = getDomainName(mapName);
                     }
                 }
             }

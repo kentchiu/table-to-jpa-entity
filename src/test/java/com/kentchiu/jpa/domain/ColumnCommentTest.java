@@ -19,6 +19,16 @@ public class ColumnCommentTest {
         assertThat(c.getOptions().isEmpty(), is(true));
     }
 
+
+    @Test
+    public void testNull() throws Exception {
+        Column c = new Column();
+        c.parser(null);
+        assertThat(c.getDescription(), is(""));
+        assertThat(c.getDefaultValue(), is(""));
+        assertThat(c.getOptions().isEmpty(), is(true));
+    }
+
     @Test
     public void testSimpleComment() throws Exception {
         Column c = new Column();

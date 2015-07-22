@@ -45,7 +45,7 @@ public class Column {
     void parser(String comment) {
         if (StringUtils.isBlank(comment)) {
             logger.error("comment is mandatory : column name {}", name);
-            return;
+            comment = "";
         } else {
             logger.debug("comment : {}", name);
         }
