@@ -22,7 +22,7 @@ public class RepositoryGeneratorTest {
 
     @Before
     public void setUp() throws Exception {
-        generator = new RepositoryGenerator(new Config());
+        generator = new RepositoryGenerator();
     }
 
     @Test

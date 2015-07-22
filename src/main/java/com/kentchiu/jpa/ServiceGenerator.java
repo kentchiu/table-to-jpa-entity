@@ -8,9 +8,6 @@ import java.util.Optional;
 
 public class ServiceGenerator extends AbstractGenerator {
 
-    public ServiceGenerator(Config config) {
-        super(config);
-    }
 
 
     public Optional<Path> export(Table table) {

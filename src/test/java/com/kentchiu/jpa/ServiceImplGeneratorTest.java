@@ -22,7 +22,7 @@ public class ServiceImplGeneratorTest {
 
     @Before
     public void setUp() throws Exception {
-        generator = new ServiceImplGenerator(new Config());
+        generator = new ServiceImplGenerator();
     }
 
 

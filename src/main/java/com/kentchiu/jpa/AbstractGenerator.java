@@ -22,13 +22,11 @@ import java.util.Optional;
 
 public abstract class AbstractGenerator {
 
-    protected Config config;
     protected Transformer transformer;
     protected Path projectHome;
     private Logger logger = LoggerFactory.getLogger(AbstractGenerator.class);
 
-    public AbstractGenerator(Config config) {
-        this.config = config;
+    public AbstractGenerator() {
         this.transformer = new Transformer();
         try {
             this.projectHome = Files.createTempDirectory("com.kentchiu.jpa.codegen");
@@ -61,10 +59,8 @@ public abstract class AbstractGenerator {
 
     protected Optional<Path> exportToFile(Table table, List<String> lines) {
         String pkgName = getPackageName(table);
-        String className = getClassName(table);
-        String name = config.getType().getJavaFileName(className);
         String folder = StringUtils.replace(pkgName, ".", "/");
-        Path file = getJavaSourceHome().resolve(folder).resolve(name);
+        Path file = getJavaSourceHome().resolve(folder).resolve(getClassName(table) + ".java");
         try {
             if (!Files.exists(file)) {
                 if (Files.exists(file.getParent())) {

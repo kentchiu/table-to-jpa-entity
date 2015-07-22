@@ -8,9 +8,6 @@ import java.util.Optional;
 
 public class RepositoryGenerator extends AbstractGenerator {
 
-    public RepositoryGenerator(Config config) {
-        super(config);
-    }
 
 
     public Optional<Path> export(Table table) {

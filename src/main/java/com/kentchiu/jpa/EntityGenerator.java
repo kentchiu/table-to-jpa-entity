@@ -15,12 +15,14 @@ import java.util.stream.Collectors;
 
 public class EntityGenerator extends AbstractGenerator {
 
+    protected Config config;
 
     private Logger logger = LoggerFactory.getLogger(EntityGenerator.class);
     private List<String> ignoreColumns;
 
     public EntityGenerator(Config config) {
-        super(config);
+        super();
+        this.config = config;
         ignoreColumns = new ArrayList<>();
     }
 
@@ -37,8 +39,6 @@ public class EntityGenerator extends AbstractGenerator {
         String templateName = config.getType().getTemplateName();
         return exportToFile(table, applyTemplate(templateName + ".mustache", getContext(table)));
     }
-
-
 
 
     private String buildProperties(Table table, List<String> ignoreColumns) {
@@ -196,7 +196,8 @@ public class EntityGenerator extends AbstractGenerator {
     }
 
     protected String getClassName(Table table) {
-        return transformer.getDomainName(table.getName());
+        String javaFileName = config.getType().getClassPostFix();
+        return transformer.getDomainName(table.getName()) + javaFileName;
     }
 
     protected String getPackageName(Table table) {

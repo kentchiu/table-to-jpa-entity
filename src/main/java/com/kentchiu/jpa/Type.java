@@ -1,8 +1,5 @@
 package com.kentchiu.jpa;
 
-import com.google.common.base.Preconditions;
-import org.apache.commons.lang3.StringUtils;
-
 public enum Type {
     JPA, INPUT, UPDATE, QUERY;
 
@@ -21,17 +18,16 @@ public enum Type {
         }
     }
 
-    public String getJavaFileName(String className) {
-        Preconditions.checkState(StringUtils.isNoneBlank(className));
+    public String getClassPostFix() {
         switch (this) {
             case JPA:
-                return className + ".java";
+                return "";
             case INPUT:
-                return className + "Input.java";
+                return "Input";
             case UPDATE:
-                return className + "UpdateInput.java";
+                return "UpdateInput";
             case QUERY:
-                return className + "Query.java";
+                return "Query";
             default:
                 throw new IllegalStateException("Unknown type :" + this);
         }
