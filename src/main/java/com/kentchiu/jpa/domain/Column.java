@@ -3,6 +3,8 @@ package com.kentchiu.jpa.domain;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,8 @@ public class Column {
     private Map<String, String> options = Maps.newLinkedHashMap();
     private String defaultValue = "";
     private boolean unique = false;
+    private Logger logger = LoggerFactory.getLogger(Column.class);
+
 
     public boolean isUnique() {
         return unique;
@@ -39,7 +43,12 @@ public class Column {
     }
 
     void parser(String comment) {
-
+        if (StringUtils.isBlank(comment)) {
+            logger.error("comment is mandatory : column name {}", name);
+            return;
+        } else {
+            logger.debug("comment : {}", name);
+        }
         Pattern p = Pattern.compile("([^(]*)(\\((.*/.*?)\\))?(\\((.*)\\))?");
         Matcher m = p.matcher(comment);
         if (m.matches()) {
