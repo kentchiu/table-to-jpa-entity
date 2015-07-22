@@ -1,13 +1,7 @@
 package com.kentchiu.jpa;
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
 import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.kentchiu.jpa.domain.Column;
 import com.kentchiu.jpa.domain.Table;
@@ -15,38 +9,31 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.StringWriter;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
 public class EntityGenerator extends AbstractGenerator {
 
+
     private Logger logger = LoggerFactory.getLogger(EntityGenerator.class);
+    private List<String> ignoreColumns;
 
     public EntityGenerator(Config config) {
         super(config);
+        ignoreColumns = new ArrayList<>();
     }
 
-    public void export(List<Table> tables, List<String> ignoreColumns) {
-        for (Table table : tables) {
-            export(table, ignoreColumns);
-        }
+    @Override
+    public Optional<Path> export(Table table) {
+        String templateName = config.getType().getTemplateName();
+        return exportToFile(table, applyTemplate(templateName + ".mustache", getContext(table)));
     }
 
-    public void export(Table table, List<String> ignoreColumns) {
-        List<String> lines = exportTable(table, ignoreColumns);
-        exportToFile(table, lines);
-    }
-
-    protected List<String> exportTable(Table table) {
-        return exportTable(table, ImmutableList.of());
-    }
-
-    protected List<String> exportTable(Table table, List<String> ignoreColumns) {
+    private Map<String, Object> getContext(Table table) {
         String packageName = transformer.getPackage(table.getName(), config.getType());
-        HashMap<Object, Object> context = Maps.newHashMap();
+        Map<String, Object> context = Maps.newHashMap();
         if (!StringUtils.isBlank(packageName)) {
             context.put("packageName", packageName);
         }
@@ -67,22 +54,9 @@ public class EntityGenerator extends AbstractGenerator {
             }
         }
         context.put("properties", buildProperties(table, ignoreColumns));
-
-        MustacheFactory mf = new DefaultMustacheFactory();
-        String templateName = config.getType().getTemplateName();
-        Mustache mustache = mf.compile(templateName + ".mustache");
-        try {
-            StringWriter stringWriter = new StringWriter();
-            mustache.execute(stringWriter, context).flush();
-            String content = stringWriter.toString();
-            Iterable<String> split = Splitter.on('\n').split(content);
-            return Lists.newArrayList(split);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Lists.newArrayList();
-        }
-
+        return context;
     }
+
 
     private String buildProperties(Table table, List<String> ignoreColumns) {
         List<String> lines = new ArrayList<>();
@@ -208,5 +182,9 @@ public class EntityGenerator extends AbstractGenerator {
     }
 
 
+    public List<String> exportTable(Table table) {
+        String templateName = config.getType().getTemplateName();
+        return applyTemplate(templateName + ".mustache", getContext(table));
+    }
 }
 

@@ -1,7 +1,6 @@
 package com.kentchiu.jpa;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.kentchiu.jpa.domain.Column;
 import com.kentchiu.jpa.domain.Columns;
@@ -29,7 +28,7 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
     @Test
     public void testGenerate() throws Exception {
         generator.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.foobar.domain.MyTest"));
-        generator.export(Tables.all(), ImmutableList.of());
+        generator.export(Tables.table1());
         assertThat(Files.exists(generator.getJavaSourceHome().resolve("com/foobar/service/query/MyTestQuery.java")), is(true));
     }
 

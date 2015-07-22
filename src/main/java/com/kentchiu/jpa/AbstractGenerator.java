@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class AbstractGenerator {
+public abstract class AbstractGenerator {
 
     protected Config config;
     protected Transformer transformer;
@@ -55,6 +55,8 @@ public class AbstractGenerator {
     public void setColumnMapper(Map<String, String> columnMapper) {
         transformer.setColumnMapper(columnMapper);
     }
+
+    public abstract Optional<Path> export(Table table);
 
     protected Optional<Path> exportToFile(Table table, List<String> lines) {
         String pkgName = transformer.getPackage(table.getName(), config.getType());
