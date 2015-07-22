@@ -4,7 +4,6 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -18,8 +17,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -40,25 +37,7 @@ public class EntityGenerator extends AbstractGenerator {
 
     public void export(Table table, List<String> ignoreColumns) {
         List<String> lines = exportTable(table, ignoreColumns);
-        String pkgName = transformer.getPackage(table.getName(), config.getType());
-        String className = transformer.buildClassName(table.getName());
-        String name = config.getType().getJavaFileName(className);
-        String folder = StringUtils.replace(pkgName, ".", "/");
-        Path file = getJavaSourceHome().resolve(folder).resolve(name);
-        try {
-            if (!Files.exists(file)) {
-                if (Files.exists(file.getParent())) {
-                    Preconditions.checkState(Files.isDirectory(file.getParent()), file.getParent() + " is not a directory");
-                } else {
-                    Files.createDirectories(file.getParent());
-                }
-                Files.createFile(file);
-            }
-            logger.info("create entity file : {}", file.toAbsolutePath().toString());
-            Files.write(file, lines);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        exportToFile(table, lines);
     }
 
     protected List<String> exportTable(Table table) {
@@ -124,21 +103,6 @@ public class EntityGenerator extends AbstractGenerator {
         return results;
     }
 
-    private List<String> convert(String template, Map<String, Object> context) {
-        try {
-            MustacheFactory mf = new DefaultMustacheFactory();
-            Mustache mustache = mf.compile(template);
-            StringWriter stringWriter = new StringWriter();
-            mustache.execute(stringWriter, context).flush();
-            String content = stringWriter.toString();
-            Iterable<String> split = Splitter.on('\n').split(content);
-            return Lists.newArrayList(split);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return Lists.newArrayList();
-        }
-    }
-
 
     List<String> buildProperty(Column column) {
 
@@ -193,7 +157,7 @@ public class EntityGenerator extends AbstractGenerator {
                 context.put("defaultValue", " = \"" + column.getDefaultValue() + "\"");
             }
         }
-        return convert("property_" + config.getType().getTemplateName() + ".mustache", context);
+        return applyTemplate("property_" + config.getType().getTemplateName() + ".mustache", context);
     }
 
 
