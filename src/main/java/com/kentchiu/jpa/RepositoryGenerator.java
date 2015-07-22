@@ -21,7 +21,7 @@ public class RepositoryGenerator extends AbstractGenerator {
     }
 
     protected String getClassName(Table table) {
-        return transformer.getDomainName(table.getName());
+        return transformer.getDomainName(table.getName()) + "Repository";
     }
 
     protected String getPackageName(Table table) {

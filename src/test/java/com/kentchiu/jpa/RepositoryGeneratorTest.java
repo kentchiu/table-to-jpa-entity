@@ -31,7 +31,7 @@ public class RepositoryGeneratorTest {
         generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.FooBar"));
         Optional<Path> export = generator.exportToFile(table, ImmutableList.of());
         assertThat(export.isPresent(), Is.is(true));
-        assertThat(export.get().toString(), containsString("/src/main/java/com/kentchiu/dao/FooBar.java"));
+        assertThat(export.get().toString(), containsString("/src/main/java/com/kentchiu/dao/FooBarRepository.java"));
     }
 
     @Test
