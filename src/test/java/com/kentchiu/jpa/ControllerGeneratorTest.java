@@ -79,7 +79,11 @@ public class ControllerGeneratorTest {
         assertThat(list.get(i++), is("        FooBar fooBar = new FooBar();"));
         assertThat(list.get(i++), is("        DomainUtil.copyNotNullProperties(input, fooBar);"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("        // FIXME ref`"));
+        assertThat(list.get(i++), is("        // FIXME add reference if need"));
+        assertThat(list.get(i++), is("        // if (StringUtils.isNotBlank(input.getXxxUuid())) {"));
+        assertThat(list.get(i++), is("        //     Xxx xxx = xxxService.findOne(input.getXxxUuid()).orElseThrow(() -> new ResourceNotFoundException(Xxx.class, input.getXxxUuid()));"));
+        assertThat(list.get(i++), is("        //     fooBar.setXxx(xxx);"));
+        assertThat(list.get(i++), is("        // }"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("        BindException exception = new BindException(fooBar, fooBar.getClass().getSimpleName());"));
         assertThat(list.get(i++), is("        Validators.validateBean(exception, fooBar);"));
@@ -104,7 +108,11 @@ public class ControllerGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("        DomainUtil.copyNotNullProperties(input, fooBar);"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("        // FIXME ref`"));
+        assertThat(list.get(i++), is("        // FIXME add reference if need"));
+        assertThat(list.get(i++), is("        // if (StringUtils.isNotBlank(input.getXxxUuid())) {"));
+        assertThat(list.get(i++), is("        //     Xxx xxx = xxxService.findOne(input.getXxxUuid()).orElseThrow(() -> new ResourceNotFoundException(Xxx.class, input.getXxxUuid()));"));
+        assertThat(list.get(i++), is("        //     fooBar.setXxx(xxx);"));
+        assertThat(list.get(i++), is("        // }"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("        BindException exception = new BindException(fooBar, fooBar.getClass().getSimpleName());"));

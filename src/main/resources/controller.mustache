@@ -35,7 +35,11 @@ public class {{Domain}}Controller extends AbstractController {
         {{Domain}} {{domain}} = new {{Domain}}();
         DomainUtil.copyNotNullProperties(input, {{domain}});
 
-        // FIXME ref`
+        // FIXME add reference if need
+        // if (StringUtils.isNotBlank(input.getXxxUuid())) {
+        //     Xxx xxx = xxxService.findOne(input.getXxxUuid()).orElseThrow(() -> new ResourceNotFoundException(Xxx.class, input.getXxxUuid()));
+        //     {{domain}}.setXxx(xxx);
+        // }
 
         BindException exception = new BindException({{domain}}, {{domain}}.getClass().getSimpleName());
         Validators.validateBean(exception, {{domain}});
@@ -60,7 +64,11 @@ public class {{Domain}}Controller extends AbstractController {
 
         DomainUtil.copyNotNullProperties(input, {{domain}});
 
-        // FIXME ref`
+        // FIXME add reference if need
+        // if (StringUtils.isNotBlank(input.getXxxUuid())) {
+        //     Xxx xxx = xxxService.findOne(input.getXxxUuid()).orElseThrow(() -> new ResourceNotFoundException(Xxx.class, input.getXxxUuid()));
+        //     {{domain}}.setXxx(xxx);
+        // }
 
 
         BindException exception = new BindException({{domain}}, {{domain}}.getClass().getSimpleName());
