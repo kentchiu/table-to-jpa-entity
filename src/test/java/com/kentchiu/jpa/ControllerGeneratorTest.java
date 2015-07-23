@@ -40,9 +40,18 @@ public class ControllerGeneratorTest {
         Table table = Tables.table1();
         generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.FooBar"));
         List<String> list = generator.applyTemplate(table);
+
+        list.stream().forEach(System.out::println);
         int i = 0;
 
         assertThat(list.get(i++), is("package com.kentchiu.web;"));
+        assertThat(list.get(i++), is(""));
+        assertThat(list.get(i++), is("import com.bq.i1.base.web.AbstractController;"));
+        assertThat(list.get(i++), is("import com.kentchiu.domain.FooBar;"));
+        assertThat(list.get(i++), is("import com.kentchiu.service.FooBarService;"));
+        assertThat(list.get(i++), is("import com.kentchiu.service.query.FooBarQuery;"));
+        assertThat(list.get(i++), is("import com.kentchiu.web.dto.FooBarInput;"));
+        assertThat(list.get(i++), is("import com.kentchiu.web.dto.FooBarUpdateInput;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("import com.kentchiu.spring.base.domain.DomainUtil;"));
         assertThat(list.get(i++), is("import com.kentchiu.spring.base.domain.ResourceNotFoundException;"));

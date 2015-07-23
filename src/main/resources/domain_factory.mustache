@@ -25,8 +25,8 @@ public class {{Domain}}s {
     }
 
 
-    public static Page<{{Domain}}> itemPage(int size) {
-        return new PageImpl<>(all().subList(0, size));
+    public static Page<{{Domain}}> page() {
+        return new PageImpl<>(all());
     }
 
 }

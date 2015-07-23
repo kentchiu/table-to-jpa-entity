@@ -42,7 +42,7 @@ public class RepositoryGeneratorTest {
         int i = 0;
         assertThat(list.get(i++), is("package com.kentchiu.dao;"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("import com.kentchiu.domain.CartDetail;"));
+        assertThat(list.get(i++), is("import com.kentchiu.domain.FooBar;"));
         assertThat(list.get(i++), is("import org.springframework.data.jpa.repository.JpaRepository;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("public interface FooBarRepository extends JpaRepository<FooBar, String> {"));

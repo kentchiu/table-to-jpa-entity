@@ -42,10 +42,12 @@ public class ServiceImplGeneratorTest {
         generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.FooBar"));
         List<String> list = generator.applyTemplate(table);
         int i = 0;
-        assertThat(list.get(i++), is("package com.kentchiu.dao;"));
+        assertThat(list.get(i++), is("package com.kentchiu.service;"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("import com.kentchiu.dao.FooBarRepository;"));
         assertThat(list.get(i++), is("import com.kentchiu.domain.FooBar;"));
+        assertThat(list.get(i++), is("import com.kentchiu.dao.FooBarRepository;"));
+        assertThat(list.get(i++), is("import com.kentchiu.service.FooBarService;"));
+        assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("import org.springframework.beans.factory.annotation.Autowired;"));
         assertThat(list.get(i++), is("import org.springframework.data.jpa.repository.JpaRepository;"));
         assertThat(list.get(i++), is("import org.springframework.stereotype.Service;"));

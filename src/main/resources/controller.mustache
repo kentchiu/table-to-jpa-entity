@@ -1,5 +1,12 @@
 package {{topPackage}}.web;
 
+import com.bq.i1.base.web.AbstractController;
+import {{topPackage}}.domain.{{Domain}};
+import {{topPackage}}.service.{{Domain}}Service;
+import {{topPackage}}.service.query.{{Domain}}Query;
+import {{topPackage}}.web.dto.{{Domain}}Input;
+import {{topPackage}}.web.dto.{{Domain}}UpdateInput;
+
 import com.kentchiu.spring.base.domain.DomainUtil;
 import com.kentchiu.spring.base.domain.ResourceNotFoundException;
 import com.kentchiu.spring.base.domain.Validators;

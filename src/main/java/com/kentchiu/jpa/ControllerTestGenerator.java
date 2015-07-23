@@ -27,7 +27,7 @@ public class ControllerTestGenerator extends AbstractGenerator {
     }
 
     protected String getClassName(Table table) {
-        return transformer.getDomainName(table.getName()) + "Controller";
+        return transformer.getDomainName(table.getName()) + "ControllerTest";
     }
 
     protected String getPackageName(Table table) {
