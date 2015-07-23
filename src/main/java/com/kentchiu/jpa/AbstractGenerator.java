@@ -46,6 +46,9 @@ public abstract class AbstractGenerator {
     public Path getJavaSourceHome() {
         return projectHome.resolve("src/main/java");
     }
+    public Path getJavaTestSourceHome() {
+        return projectHome.resolve("src/test/java");
+    }
 
     public void setTableNameMapper(Map<String, String> tableNameMapper) {
         transformer.setTableNameMapper(tableNameMapper);
@@ -58,9 +61,15 @@ public abstract class AbstractGenerator {
     public abstract Optional<Path> export(Table table);
 
     protected Optional<Path> exportToFile(Table table, List<String> lines) {
+        Path baseFolder;
+        if (isTest()) {
+            baseFolder = getJavaTestSourceHome();
+        } else {
+            baseFolder = getJavaSourceHome();
+        }
         String pkgName = getPackageName(table);
         String folder = StringUtils.replace(pkgName, ".", "/");
-        Path file = getJavaSourceHome().resolve(folder).resolve(getClassName(table) + ".java");
+        Path file = baseFolder.resolve(folder).resolve(getClassName(table) + ".java");
         try {
             if (!Files.exists(file)) {
                 if (Files.exists(file.getParent())) {
@@ -77,6 +86,12 @@ public abstract class AbstractGenerator {
             e.printStackTrace();
             return Optional.empty();
         }
+    }
+
+
+
+    protected boolean isTest() {
+        return false;
     }
 
     protected Map<String, Object> getBaseContext(Table table) {

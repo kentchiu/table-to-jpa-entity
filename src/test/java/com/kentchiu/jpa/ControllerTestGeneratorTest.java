@@ -31,7 +31,7 @@ public class ControllerTestGeneratorTest {
         generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.FooBar"));
         Optional<Path> export = generator.exportToFile(table, ImmutableList.of());
         assertThat(export.isPresent(), Is.is(true));
-        assertThat(export.get().toString(), containsString("/src/main/java/com/kentchiu/web/FooBarController.java"));
+        assertThat(export.get().toString(), containsString("/src/test/java/com/kentchiu/web/FooBarController.java"));
     }
 
 

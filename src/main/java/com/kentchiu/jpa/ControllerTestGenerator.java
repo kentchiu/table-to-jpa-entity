@@ -10,6 +10,10 @@ import java.util.Optional;
 
 public class ControllerTestGenerator extends AbstractGenerator {
 
+    @Override
+    protected boolean isTest() {
+        return true;
+    }
 
     public Optional<Path> export(Table table) {
         return exportToFile(table, applyTemplate(table));
