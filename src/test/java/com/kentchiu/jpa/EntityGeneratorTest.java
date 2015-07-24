@@ -28,9 +28,9 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
 
     @Test
     public void testGenerate() throws Exception {
-        generator.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.foobar.domain.MyTest"));
+        generator.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.foobar.module.domain.MyTest"));
         generator.export(Tables.table1());
-        assertThat(Files.exists(generator.getJavaSourceHome().resolve("com/foobar/domain/MyTest.java")), is(true));
+        assertThat(Files.exists(generator.getJavaSourceHome().resolve("com/foobar/module/domain/MyTest.java")), is(true));
     }
 
 

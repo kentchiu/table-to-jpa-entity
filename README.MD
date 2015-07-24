@@ -1,7 +1,7 @@
 
 
 ## TODO
-
+- TODO: enum comment support both `=` and `:`
 - TODO: configable topPackage
 - TODO: integer, boolean 的default value要判斷型別，而不是都用字串
 - TODO: fetch ignore columns from base class 

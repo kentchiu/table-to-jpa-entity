@@ -99,6 +99,7 @@ public abstract class AbstractGenerator {
         context.put("table", table);
         context.put("Domain", transformer.getDomainName(table.getName()));
         context.put("topPackage", transformer.getTopPackage(table.getName()));
+        context.put("moduleName", transformer.getModuleName(table.getName()));
         return context;
     }
 

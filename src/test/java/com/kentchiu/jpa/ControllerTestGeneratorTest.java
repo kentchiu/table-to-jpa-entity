@@ -28,31 +28,31 @@ public class ControllerTestGeneratorTest {
     @Test
     public void testExport() throws Exception {
         Table table = Tables.table1();
-        generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.FooBar"));
+        generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
         Optional<Path> export = generator.exportToFile(table, ImmutableList.of());
         assertThat(export.isPresent(), Is.is(true));
-        assertThat(export.get().toString(), containsString("/src/test/java/com/kentchiu/web/FooBarControllerTest.java"));
+        assertThat(export.get().toString(), containsString("/src/test/java/com/kentchiu/module/web/FooBarControllerTest.java"));
     }
 
 
     @Test
     public void testApplyTemplate() throws Exception {
         Table table = Tables.table1();
-        generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.FooBar"));
+        generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
         List<String> list = generator.applyTemplate(table);
         int i = 0;
 
         list.forEach(System.out::println);
 
 
-        assertThat(list.get(i++), is("package com.kentchiu.web;"));
+        assertThat(list.get(i++), is("package com.kentchiu.module.web;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("import com.bq.i1.base.web.AbstractControllerTest;"));
-        assertThat(list.get(i++), is("import com.kentchiu.web.TestConfig;"));
-        assertThat(list.get(i++), is("import com.kentchiu.domain.FooBar;"));
-        assertThat(list.get(i++), is("import com.kentchiu.domain.FooBars;"));
-        assertThat(list.get(i++), is("import com.kentchiu.service.FooBarService;"));
-        assertThat(list.get(i++), is("import com.kentchiu.service.query.FooBarQuery;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.web.TestConfig;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.domain.FooBar;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.domain.FooBars;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.service.FooBarService;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.service.query.FooBarQuery;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("import com.google.common.collect.Maps;"));
         assertThat(list.get(i++), is("import com.kentchiu.spring.base.domain.DomainUtil;"));

@@ -28,19 +28,19 @@ public class DomainFactoryGeneratorTest {
     @Test
     public void testExport() throws Exception {
         Table table = Tables.table1();
-        generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.FooBar"));
+        generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
         Optional<Path> export = generator.exportToFile(table, ImmutableList.of());
         assertThat(export.isPresent(), Is.is(true));
-        assertThat(export.get().toString(), containsString("/src/test/java/com/kentchiu/domain/FooBars.java"));
+        assertThat(export.get().toString(), containsString("/src/test/java/com/kentchiu/module/domain/FooBars.java"));
     }
 
     @Test
     public void testApplyTemplate() throws Exception {
         Table table = Tables.table1();
-        generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.FooBar"));
+        generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
         List<String> list = generator.applyTemplate(table);
         int i = 0;
-        assertThat(list.get(i++), is("package com.kentchiu.domain;"));
+        assertThat(list.get(i++), is("package com.kentchiu.module.domain;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("import com.bq.i1.base.domain.BaseDomains;"));
         assertThat(list.get(i++), is("import com.google.common.collect.Lists;"));

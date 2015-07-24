@@ -28,23 +28,23 @@ public class ServiceGeneratorTest {
     @Test
     public void testExport() throws Exception {
         Table table = Tables.table1();
-        generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.FooBar"));
+        generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
         Optional<Path> export = generator.exportToFile(table, ImmutableList.of());
         assertThat(export.isPresent(), Is.is(true));
-        assertThat(export.get().toString(), containsString("/src/main/java/com/kentchiu/service/FooBarService.java"));
+        assertThat(export.get().toString(), containsString("/src/main/java/com/kentchiu/module/service/FooBarService.java"));
     }
 
 
     @Test
     public void testApplyTemplate() throws Exception {
         Table table = Tables.table1();
-        generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.FooBar"));
+        generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
         List<String> list = generator.applyTemplate(table);
         int i = 0;
-        assertThat(list.get(i++), is("package com.kentchiu.service;"));
+        assertThat(list.get(i++), is("package com.kentchiu.module.service;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("import com.bq.i1.base.serivce.CrudService;"));
-        assertThat(list.get(i++), is("import com.kentchiu.domain.FooBar;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.domain.FooBar;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("public interface FooBarService extends CrudService<FooBar> {"));

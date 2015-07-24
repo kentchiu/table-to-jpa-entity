@@ -46,9 +46,9 @@ public class Transformer {
     public String getTopPackage(String tableName) {
         if (tableNameMapper.containsKey(tableName)) {
             String qualifier = tableNameMapper.getOrDefault(tableName, "");
-            String pkgName = StringUtils.substringBeforeLast(qualifier, ".");
-            logger.debug("{}  -> {}", tableName, pkgName);
-            return StringUtils.substringBeforeLast(pkgName, ".");
+            Preconditions.checkState(StringUtils.contains(qualifier, "domain"), "table mapper value should contain domain package");
+            String modulePackage = StringUtils.substringBefore(qualifier, ".domain");
+            return StringUtils.substringBeforeLast(modulePackage, ".");
         } else {
             return "";
         }
@@ -73,6 +73,17 @@ public class Transformer {
         }
         logger.debug("{}  -> {}", tableName, className);
         return className;
+    }
+
+    public String getModuleName(String tableName) {
+        if (tableNameMapper.containsKey(tableName)) {
+            String qualifier = tableNameMapper.getOrDefault(tableName, "");
+            Preconditions.checkState(StringUtils.contains(qualifier, "domain"), "table mapper value should contain domain package");
+            String modulePackage = StringUtils.substringBefore(qualifier, ".domain");
+            return StringUtils.substringAfterLast(modulePackage, ".");
+        } else {
+            return "";
+        }
     }
 
     public class Property {

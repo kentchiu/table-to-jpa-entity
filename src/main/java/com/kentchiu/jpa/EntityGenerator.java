@@ -201,7 +201,7 @@ public class EntityGenerator extends AbstractGenerator {
     }
 
     protected String getPackageName(Table table) {
-        return transformer.getTopPackage(table.getName()) + "." + config.getType().getPackage();
+        return transformer.getTopPackage(table.getName()) + "." + transformer.getModuleName(table.getName()) + "." + config.getType().getPackage();
     }
 }
 

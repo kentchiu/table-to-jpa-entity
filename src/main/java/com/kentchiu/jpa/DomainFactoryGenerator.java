@@ -26,6 +26,6 @@ public class DomainFactoryGenerator extends AbstractGenerator {
     }
 
     protected String getPackageName(Table table) {
-        return transformer.getTopPackage(table.getName()) + "." + "domain";
+        return transformer.getTopPackage(table.getName()) + "." + transformer.getModuleName(table.getName()) + ".domain";
     }
 }

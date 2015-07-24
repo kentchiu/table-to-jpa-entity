@@ -12,14 +12,15 @@ public class TransformerTest {
     private Transformer transformer = new Transformer();
 
     @Test
-    public void testPackage() throws Exception {
-        transformer.setTableNameMapper(ImmutableMap.of(Tables.table1().getName(), "com.kentchiu.jpa.domain.MyTable1"));
+    public void testTopPackage() throws Exception {
+        transformer.setTableNameMapper(ImmutableMap.of(Tables.table1().getName(), "com.kentchiu.jpa.module.domain.MyTable1"));
         assertThat(transformer.getTopPackage(Tables.table1().getName()), is("com.kentchiu.jpa"));
-//        assertThat(transformer.getPackage(Tables.table1().getName(), Type.INPUT), is("com.kentchiu.jpa.web.dto"));
-//        assertThat(transformer.getPackage(Tables.table1().getName(), Type.UPDATE), is("com.kentchiu.jpa.web.dto"));
-//        assertThat(transformer.getPackage(Tables.table1().getName(), Type.QUERY), is("com.kentchiu.jpa.service.query"));
-
     }
 
+    @Test
+    public void testGetModuleName() throws Exception {
+        transformer.setTableNameMapper(ImmutableMap.of(Tables.table1().getName(), "com.kentchiu.jpa.module.domain.MyTable1"));
+        assertThat(transformer.getModuleName(Tables.table1().getName()), is("module"));
+    }
 
 }
