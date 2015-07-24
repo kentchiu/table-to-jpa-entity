@@ -2,20 +2,23 @@
 
 ## TODO
 
+- TODO: configable topPackage
+- TODO: integer, boolean 的default value要判斷型別，而不是都用字串
 - TODO: fetch ignore columns from base class 
 - TODO: json config
-- TODO: Repository
-- TODO: Service
-- TODO: DomainFactory
-- TODO: Controller
-- TODO: ControllerTest
 - TODO: Master-Detail Controller
 - TODO: Master-Detail ControllerTest 
 - TODO: Master-Detail-Extend Controller
 - TODO: Master-Detail-Extend ControllerTest
-- TODO: fix expend issue : product -> proproduct, address ->addraddress
+- TODO: fix expend issue : product -> proproduct, address -> addraddress
 - TODO: 日期格式裡的中文註解沒format時，沒有產生對應的@DateTimeFormat
 - TODO: gen constants form option
+- DONE: Repository
+- DONE: Query Object
+- DONE: Service
+- DONE: DomainFactory
+- DONE: Controller
+- DONE: ControllerTest
 - DONE: pk,fk要出string版本的 xxxInput給網頁用
 - DONE: 抓schema default value後放到@AttrubiuteInfo
 - DONE: 抓schema default value後放到source code的field `private String myValue = "1";`
@@ -37,4 +40,3 @@
 - DONE: 日期改成用 Date, @DateTimeFormat(pattern = "yyyy-MM-dd")
 - DONE: Master-Detail ? (rejected 儘量減少對master-detail的依賴)
 - DONE: input to dto package (可自行選擇，export config?)
-- DONE: Query Object
