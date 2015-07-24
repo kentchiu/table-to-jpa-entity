@@ -9,14 +9,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class PostgresExportTest {
-    private OracleExport export;
+    private PostgresExport export;
 
     @Before
     public void setUp() throws Exception {
         String url = "jdbc:postgresql://localhost:5432/iotview";
         String username = "postgres";
         String password = "postgres";
-        export = new OracleExport(url, username, password);
+        export = new PostgresExport(url, username, password);
     }
 
 

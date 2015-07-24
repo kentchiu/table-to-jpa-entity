@@ -36,18 +36,6 @@ public class MySqlExport extends DatabaseExport {
         return results;
     }
 
-    protected Map<String, String> buildTableCommentMap(String tableNamePattern) throws SQLException {
-        Statement stmt = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
-        ResultSet rs = stmt.executeQuery("select TABLE_NAME,TABLE_COMMENT from information_schema.TABLES where TABLE_NAME like '" + tableNamePattern + "'");
-        Map<String, String> results = Maps.newHashMap();
-        while (rs.next()) {
-            String name = rs.getString("TABLE_NAME");
-            String comment = rs.getString("TABLE_COMMENT");
-            results.put(name, comment);
-        }
-        return results;
-    }
-
     @Override
     protected String getTableComment(String tableName) throws SQLException {
         Statement stmt = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE);
