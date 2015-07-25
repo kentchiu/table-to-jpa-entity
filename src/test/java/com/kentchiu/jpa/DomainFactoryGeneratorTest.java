@@ -42,7 +42,7 @@ public class DomainFactoryGeneratorTest {
         int i = 0;
         assertThat(list.get(i++), is("package com.kentchiu.module.domain;"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("import com.bq.i1.base.domain.BaseDomains;"));
+        assertThat(list.get(i++), is("import com.kentchiu.base.domain.BaseDomains;"));
         assertThat(list.get(i++), is("import com.google.common.collect.Lists;"));
         assertThat(list.get(i++), is("import com.kentchiu.spring.base.domain.CsvExporter;"));
         assertThat(list.get(i++), is("import org.springframework.data.domain.Page;"));

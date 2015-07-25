@@ -46,12 +46,13 @@ public class ControllerGeneratorTest {
 
         assertThat(list.get(i++), is("package com.kentchiu.module.web;"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("import com.bq.i1.base.web.AbstractController;"));
+        assertThat(list.get(i++), is("import com.kentchiu.base.web.AbstractController;"));
         assertThat(list.get(i++), is("import com.kentchiu.module.domain.FooBar;"));
         assertThat(list.get(i++), is("import com.kentchiu.module.service.FooBarService;"));
         assertThat(list.get(i++), is("import com.kentchiu.module.service.query.FooBarQuery;"));
         assertThat(list.get(i++), is("import com.kentchiu.module.web.dto.FooBarInput;"));
         assertThat(list.get(i++), is("import com.kentchiu.module.web.dto.FooBarUpdateInput;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.web.AbstractController;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("import com.kentchiu.spring.base.domain.DomainUtil;"));
         assertThat(list.get(i++), is("import com.kentchiu.spring.base.domain.ResourceNotFoundException;"));

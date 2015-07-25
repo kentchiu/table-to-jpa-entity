@@ -47,7 +47,7 @@ public class ControllerTestGeneratorTest {
 
         assertThat(list.get(i++), is("package com.kentchiu.module.web;"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("import com.bq.i1.base.web.AbstractControllerTest;"));
+        assertThat(list.get(i++), is("import com.kentchiu.base.web.AbstractControllerTest;"));
         assertThat(list.get(i++), is("import com.kentchiu.module.web.TestConfig;"));
         assertThat(list.get(i++), is("import com.kentchiu.module.domain.FooBar;"));
         assertThat(list.get(i++), is("import com.kentchiu.module.domain.FooBars;"));
