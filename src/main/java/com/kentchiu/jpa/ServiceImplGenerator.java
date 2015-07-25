@@ -23,6 +23,6 @@ public class ServiceImplGenerator extends AbstractGenerator {
     }
 
     protected String getPackageName(Table table) {
-        return transformer.getTopPackage(table.getName()) + ".module" + ".service";
+        return transformer.getTopPackage(table.getName()) + "." + transformer.getModuleName(table.getName()) + ".service";
     }
 }

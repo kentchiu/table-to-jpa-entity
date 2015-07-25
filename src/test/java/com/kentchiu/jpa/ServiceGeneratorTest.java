@@ -43,7 +43,7 @@ public class ServiceGeneratorTest {
         int i = 0;
         assertThat(list.get(i++), is("package com.kentchiu.module.service;"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("import com.kentchiu.base.serivce.CrudService;"));
+        assertThat(list.get(i++), is("import com.kentchiu.base.service.CrudService;"));
         assertThat(list.get(i++), is("import com.kentchiu.module.domain.FooBar;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));

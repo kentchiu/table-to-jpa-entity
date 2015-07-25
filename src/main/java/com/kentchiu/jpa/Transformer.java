@@ -78,7 +78,7 @@ public class Transformer {
     public String getModuleName(String tableName) {
         if (tableNameMapper.containsKey(tableName)) {
             String qualifier = tableNameMapper.getOrDefault(tableName, "");
-            Preconditions.checkState(StringUtils.contains(qualifier, "domain"), "table mapper value should contain domain package");
+            Preconditions.checkState(StringUtils.contains(qualifier, "domain"), "table mapper value should contain domain package but was " + qualifier);
             String modulePackage = StringUtils.substringBefore(qualifier, ".domain");
             return StringUtils.substringAfterLast(modulePackage, ".");
         } else {
