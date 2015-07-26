@@ -173,14 +173,14 @@ public class EntityGenerator extends AbstractGenerator {
     private Map<String, Object> getContext(Table table) {
         Map<String, Object> baseContext = getBaseContext(table);
 
+        // package
         String packageName = getPackageName(table);
         if (!StringUtils.isBlank(packageName)) {
             baseContext.put("packageName", packageName);
         }
 
+        // import
         List<Map<String, String>> imports = buildImports().stream().map(i -> ImmutableMap.of("import", i)).collect(Collectors.toList());
-
-
         baseContext.put("imports", imports);
         if (Type.QUERY == config.getType()) {
             baseContext.put("extend", "extends PageableQuery<" + transformer.getDomainName(table.getName()) + "> ");
@@ -191,8 +191,22 @@ public class EntityGenerator extends AbstractGenerator {
                 baseContext.put("extend", "");
             }
         }
+        // fieldEnums
+        baseContext.put("fieldEnums", buildFieldEnums(table, ignoreColumns));
+
+        // properties
         baseContext.put("properties", buildProperties(table, ignoreColumns));
+
         return baseContext;
+    }
+
+    private List<FieldEnum> buildFieldEnums(Table table, List<String> ignoreColumns) {
+        List<FieldEnum> results = new ArrayList();
+        table.getColumns().stream().filter(column -> !ignoreColumns.contains(column.getName())).forEach(c -> {
+            List<FieldEnum> fieldEnums = buildEnum(c);
+            results.addAll(fieldEnums);
+        });
+        return results;
     }
 
     protected String getClassName(Table table) {
@@ -202,6 +216,50 @@ public class EntityGenerator extends AbstractGenerator {
 
     protected String getPackageName(Table table) {
         return transformer.getTopPackage(table.getName()) + "." + transformer.getModuleName(table.getName()) + "." + config.getType().getPackage();
+    }
+
+    public List<FieldEnum> buildEnum(Column column) {
+        ArrayList<FieldEnum> results = new ArrayList<>();
+        Map<String, String> options = column.getOptions();
+        for (Map.Entry<String, String> entry : options.entrySet()) {
+            FieldEnum fe = new FieldEnum();
+            fe.setName(transformer.getProperty(column, Type.JPA).getPropertyName().toUpperCase() + "_" + entry.getKey());
+            fe.setValue("\"" + entry.getKey() + "\"");
+            fe.setDescription(column.getDescription() + " : " + entry.getValue());
+            results.add(fe);
+        }
+        return results;
+    }
+
+
+    class FieldEnum {
+        private String value;
+        private String name;
+        private String description;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
     }
 }
 

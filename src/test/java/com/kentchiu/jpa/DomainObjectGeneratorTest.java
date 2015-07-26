@@ -31,22 +31,23 @@ public abstract class DomainObjectGeneratorTest {
 
     @Test
     public void testAttributeInfo() throws Exception {
-        Column comment = new Column();
-        comment.setDescription("column comment");
-        assertThat(generator.buildAttributeInfo(comment), is("@AttributeInfo(description = \"column comment\")"));
+        Column column = new Column();
+        column.setDescription("column column");
+        assertThat(generator.buildAttributeInfo(column), is("@AttributeInfo(description = \"column column\")"));
     }
+
 
     @Test
     public void testAttributeInfo_with_options() throws Exception {
-        Column comment = new Column();
-        comment.setDescription("产品类型");
-        Map<String, String> options = comment.getOptions();
+        Column column = new Column();
+        column.setDescription("产品类型");
+        Map<String, String> options = column.getOptions();
         options.put("1", "套件");
         options.put("2", "包件");
         options.put("3", "补件");
         options.put("4", "其他");
 
-        assertThat(generator.buildAttributeInfo(comment), is("@AttributeInfo(description = \"产品类型\", format = \"1=套件/2=包件/3=补件/4=其他\")"));
+        assertThat(generator.buildAttributeInfo(column), is("@AttributeInfo(description = \"产品类型\", format = \"1=套件/2=包件/3=补件/4=其他\")"));
     }
 
     @Test

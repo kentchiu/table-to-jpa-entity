@@ -23,5 +23,13 @@ import {{import}};
 @Entity
 @Table(name = "{{table.name}}")
 public class {{Domain}} {{extend}}{
+
+{{#fieldEnums}}
+    /**
+     * {{description}}
+     */
+    public static final String {{name}} = {{{value}}};
+{{/fieldEnums}}
+
 {{{properties}}}
 }

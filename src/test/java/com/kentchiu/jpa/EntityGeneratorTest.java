@@ -344,7 +344,16 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
 
     @Test
     public void testExportTable() throws Exception {
-        List<String> lines = generator.exportTable(Tables.table1());
+        Table table = Tables.table1();
+        Column column = new Column();
+        column.setName("type");
+        column.setDescription("sexual");
+        Map<String, String> options = column.getOptions();
+        options.put("M", "MALE");
+        options.put("F", "FEMALE");
+
+        table.getColumns().add(column);
+        List<String> lines = generator.exportTable(table);
 
         dump(lines);
 
@@ -368,6 +377,12 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines.get(i++), is("public class MyTable1 {"));
 
         String content = Joiner.on('\n').join(lines);
+
+
+        assertThat(content, containsString("    /**"));
+        assertThat(content, containsString("     * sexual : MALE"));
+        assertThat(content, containsString("     */"));
+        assertThat(content, containsString("    public static final String TYPE_M = \"M\";"));
 
         assertThat(content, containsString("    private String myColumn11;"));
         assertThat(content, containsString("    private String myColumn12;"));
@@ -444,5 +459,35 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
         options.put("N", "不允许");
 
         assertThat(generator.buildAttributeInfo(column), is("@AttributeInfo(description = \"是否允许定制颜色\", format = \"Y=允许/N=不允许\", defaultValue = \"'Y'\")"));
+    }
+
+    @Test
+    public void testEnum_form_options() throws Exception {
+        Column column = new Column();
+        column.setName("type");
+        column.setDescription("产品类型");
+        Map<String, String> options = column.getOptions();
+        options.put("1", "套件");
+        options.put("2", "包件");
+        options.put("3", "补件");
+        options.put("4", "其他");
+
+        List<EntityGenerator.FieldEnum> enums = generator.buildEnum(column);
+        assertThat(enums, hasSize(4));
+        assertThat(enums.get(0).getName(), is("TYPE_1"));
+        assertThat(enums.get(0).getValue(), is("\"1\""));
+        assertThat(enums.get(0).getDescription(), is("产品类型 : 套件"));
+
+        assertThat(enums.get(1).getName(), is("TYPE_2"));
+        assertThat(enums.get(1).getValue(), is("\"2\""));
+        assertThat(enums.get(1).getDescription(), is("产品类型 : 包件"));
+
+        assertThat(enums.get(2).getName(), is("TYPE_3"));
+        assertThat(enums.get(2).getValue(), is("\"3\""));
+        assertThat(enums.get(2).getDescription(), is("产品类型 : 补件"));
+
+        assertThat(enums.get(3).getName(), is("TYPE_4"));
+        assertThat(enums.get(3).getValue(), is("\"4\""));
+        assertThat(enums.get(3).getDescription(), is("产品类型 : 其他"));
     }
 }
