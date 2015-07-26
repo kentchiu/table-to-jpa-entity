@@ -9,6 +9,9 @@ import java.util.Optional;
 public class RepositoryGenerator extends AbstractGenerator {
 
 
+    public RepositoryGenerator(Transformer transformer) {
+        super(transformer);
+    }
 
     public Optional<Path> export(Table table) {
         return exportToFile(table, applyTemplate(table));

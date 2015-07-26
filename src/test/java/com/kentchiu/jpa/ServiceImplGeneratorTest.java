@@ -22,14 +22,14 @@ public class ServiceImplGeneratorTest {
 
     @Before
     public void setUp() throws Exception {
-        generator = new ServiceImplGenerator();
+        generator = new ServiceImplGenerator(new Transformer());
     }
 
 
     @Test
     public void testExport() throws Exception {
         Table table = Tables.table1();
-        generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
+        generator.transformer.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
         Optional<Path> export = generator.exportToFile(table, ImmutableList.of());
         assertThat(export.isPresent(), Is.is(true));
         assertThat(export.get().toString(), containsString("/src/main/java/com/kentchiu/module/service/FooBarServiceImpl.java"));
@@ -39,7 +39,7 @@ public class ServiceImplGeneratorTest {
     @Test
     public void testApplyTemplate() throws Exception {
         Table table = Tables.table1();
-        generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
+        generator.transformer.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
         List<String> list = generator.applyTemplate(table);
         int i = 0;
         assertThat(list.get(i++), is("package com.kentchiu.module.service;"));

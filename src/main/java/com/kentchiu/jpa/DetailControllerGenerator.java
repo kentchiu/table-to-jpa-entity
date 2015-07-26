@@ -4,19 +4,17 @@ import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 import com.kentchiu.jpa.domain.Table;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-public class DetailControllerGenerator extends AbstractGenerator {
+public class DetailControllerGenerator extends AbstractControllerGenerator {
 
 
-    public Optional<Path> export(Table table) {
-        return exportToFile(table, applyTemplate(table));
+    public DetailControllerGenerator(Transformer transformer) {
+        super(transformer);
     }
 
-    List<String> applyTemplate(Table table) {
+    protected List<String> applyTemplate(Table table) {
         Map<String, Object> context = getBaseContext(table);
 
         context.put("masterName", "deviceKind");
@@ -38,7 +36,4 @@ public class DetailControllerGenerator extends AbstractGenerator {
         return transformer.getDomainName(table.getName()) + "DetailController";
     }
 
-    protected String getPackageName(Table table) {
-        return transformer.getTopPackage(table.getName()) + "." + transformer.getModuleName(table.getName()) + ".web";
-    }
 }

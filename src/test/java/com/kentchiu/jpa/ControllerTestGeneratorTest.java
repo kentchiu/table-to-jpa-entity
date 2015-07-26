@@ -22,13 +22,15 @@ public class ControllerTestGeneratorTest {
 
     @Before
     public void setUp() throws Exception {
-        generator = new ControllerTestGenerator();
+        Table table = Tables.table1();
+        Transformer transformer = new Transformer();
+        transformer.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
+        generator = new ControllerTestGenerator(transformer);
     }
 
     @Test
     public void testExport() throws Exception {
         Table table = Tables.table1();
-        generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
         Optional<Path> export = generator.exportToFile(table, ImmutableList.of());
         assertThat(export.isPresent(), Is.is(true));
         assertThat(export.get().toString(), containsString("/src/test/java/com/kentchiu/module/web/FooBarControllerTest.java"));
@@ -38,7 +40,6 @@ public class ControllerTestGeneratorTest {
     @Test
     public void testApplyTemplate() throws Exception {
         Table table = Tables.table1();
-        generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
         List<String> list = generator.applyTemplate(table);
         int i = 0;
 

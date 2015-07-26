@@ -8,6 +8,10 @@ import java.util.Optional;
 
 public class DomainFactoryGenerator extends AbstractGenerator {
 
+    public DomainFactoryGenerator(Transformer transformer) {
+        super(transformer);
+    }
+
     @Override
     protected boolean isTest() {
         return true;

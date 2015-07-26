@@ -18,14 +18,25 @@ public class Transformer {
 
     private Logger logger = LoggerFactory.getLogger(Transformer.class);
     /**
-     * table name -> java fully qualified name
+     * table name -> java fully qualified name.
      */
     private Map<String, String> tableNameMapper = new HashMap<>();
     /**
-     * abbreviate name -> full name, and foreign key name -> property name
+     * abbreviate name -> full name, and foreign key name -> property name.
      */
     private Map<String, String> columnMapper = new HashMap<>();
+    /**
+     * master - detail mapper. Mapping by DetailConfig.
+     */
+    private Map<String, DetailConfig> masterDetailMapper = new HashMap<>();
 
+    public Map<String, DetailConfig> getMasterDetailMapper() {
+        return masterDetailMapper;
+    }
+
+    public void setMasterDetailMapper(Map<String, DetailConfig> masterDetailMapper) {
+        this.masterDetailMapper = masterDetailMapper;
+    }
 
     public Map<String, String> getColumnMapper() {
         return columnMapper;

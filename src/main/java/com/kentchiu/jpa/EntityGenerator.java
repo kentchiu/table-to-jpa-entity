@@ -5,8 +5,6 @@ import com.google.common.collect.ImmutableMap;
 import com.kentchiu.jpa.domain.Column;
 import com.kentchiu.jpa.domain.Table;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -17,11 +15,10 @@ public class EntityGenerator extends AbstractGenerator {
 
     protected Config config;
 
-    private Logger logger = LoggerFactory.getLogger(EntityGenerator.class);
     private List<String> ignoreColumns;
 
-    public EntityGenerator(Config config) {
-        super();
+    public EntityGenerator(Transformer transformer, Config config) {
+        super(transformer);
         this.config = config;
         ignoreColumns = new ArrayList<>();
     }

@@ -10,6 +10,10 @@ import java.util.Optional;
 
 public class ControllerTestGenerator extends AbstractGenerator {
 
+    public ControllerTestGenerator(Transformer transformer) {
+        super(transformer);
+    }
+
     @Override
     protected boolean isTest() {
         return true;

@@ -22,21 +22,22 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
 
     @Before
     public void setUp() throws Exception {
-        generator = new EntityGenerator(new Config(Type.JPA));
+        Transformer transformer = new Transformer();
+        transformer.setTableNameMapper(ImmutableMap.of(Tables.table1().getName(), "com.kentchiu.jpa.domain.FooBar"));
+        generator = new EntityGenerator(transformer, new Config(Type.JPA));
         generator.setProjectHome(Files.createTempDirectory("java"));
     }
 
     @Test
     public void testGenerate() throws Exception {
-        generator.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.foobar.module.domain.MyTest"));
         generator.export(Tables.table1());
-        assertThat(Files.exists(generator.getJavaSourceHome().resolve("com/foobar/module/domain/MyTest.java")), is(true));
+        assertThat(Files.exists(generator.getJavaSourceHome().resolve("com/kentchiu/jpa/domain/FooBar.java")), is(true));
     }
 
 
     @Test
     public void testTableMapping() throws Exception {
-        generator.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.kentchiu.jpa.domain.FooBar"));
+        //generator.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.kentchiu.jpa.domain.FooBar"));
         List<String> lines = generator.exportTable(Tables.table1());
         dump(lines);
         assertThat(lines, hasItem("package com.kentchiu.jpa.domain;"));
@@ -52,7 +53,7 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
         List<String> strings = generator.exportTable(table);
         assertThat(strings, hasItem("@Entity"));
         assertThat(strings, hasItem("@Table(name = \"MY_TABLE_1\")"));
-        assertThat(strings, hasItem("public class MyTable1 {"));
+        assertThat(strings, hasItem("public class FooBar {"));
     }
 
 
@@ -269,7 +270,7 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
         Column column = Columns.stringColumn();
         column.setNullable(true);
         column.setReferenceTable("OTHER_TABLE");
-        generator.setColumnMapper(ImmutableMap.of("OTHER_TABLE", "xxx"));
+        generator.getTransformer().setColumnMapper(ImmutableMap.of("OTHER_TABLE", "xxx"));
         List<String> lines = generator.buildProperty(column);
 
         dump(lines);
@@ -300,7 +301,7 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
         Column column = Columns.stringColumn();
         column.setNullable(false);
         column.setReferenceTable("OTHER_TABLE");
-        generator.setColumnMapper(ImmutableMap.of("OTHER_TABLE", "xxx"));
+        generator.transformer.setColumnMapper(ImmutableMap.of("OTHER_TABLE", "xxx"));
         List<String> lines = generator.buildProperty(column);
 
         dump(lines);
@@ -315,7 +316,7 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
     public void testColumnMapping() throws Exception {
         Map<String, String> mapper = new HashMap<>();
         mapper.put("MY_TABLE", "com.kentchiu.jpa.FooBar");
-        generator.setTableNameMapper(mapper);
+        generator.transformer.setTableNameMapper(mapper);
 
         Column column = Columns.createStringColumn("prop", "comment", true);
         column.setReferenceTable("MY_TABLE");
@@ -368,13 +369,13 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines, hasItem("import java.util.Date;"));
         assertThat(lines, hasItem("import java.math.BigDecimal;"));
 
-        int i = 14;
+        int i = 15;
         assertThat(lines.get(i++), is("/*"));
         assertThat(lines.get(i++), is(" * a table comment"));
         assertThat(lines.get(i++), is(" */"));
         assertThat(lines.get(i++), is("@Entity"));
         assertThat(lines.get(i++), is("@Table(name = \"MY_TABLE_1\")"));
-        assertThat(lines.get(i++), is("public class MyTable1 {"));
+        assertThat(lines.get(i++), is("public class FooBar {"));
 
         String content = Joiner.on('\n').join(lines);
 
@@ -394,7 +395,7 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
     @Test
     public void testProperty_substitute() throws Exception {
         Column column = Columns.createStringColumn("FOO_QTY_AND_AMT_PROP", "column comment", true);
-        generator.setColumnMapper(ImmutableMap.of("QTY", "QUALITY", "AMT", "AMOUNT"));
+        generator.getTransformer().setColumnMapper(ImmutableMap.of("QTY", "QUALITY", "AMT", "AMOUNT"));
         List<String> lines = generator.buildProperty(column);
         dump(lines);
 
@@ -423,7 +424,7 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
         Column column = Columns.stringColumn();
         column.setNullable(true);
         column.setReferenceTable("OTHER_TABLE");
-        generator.setColumnMapper(ImmutableMap.of("column1", "FOO_BAR"));
+        generator.getTransformer().setColumnMapper(ImmutableMap.of("column1", "FOO_BAR"));
         List<String> lines = generator.buildProperty(column);
 
         dump(lines);

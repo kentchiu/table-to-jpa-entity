@@ -23,13 +23,15 @@ public class DetailControllerGeneratorTest {
 
     @Before
     public void setUp() throws Exception {
-        generator = new DetailControllerGenerator();
+        Table table = Tables.table1();
+        Transformer transformer = new Transformer();
+        transformer.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
+        generator = new DetailControllerGenerator(transformer);
     }
 
     @Test
     public void testExport() throws Exception {
         Table table = Tables.table1();
-        generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
         Optional<Path> export = generator.exportToFile(table, ImmutableList.of());
         assertThat(export.isPresent(), Is.is(true));
         assertThat(export.get().toString(), containsString("/src/main/java/com/kentchiu/module/web/FooBarDetailController.java"));
@@ -40,7 +42,6 @@ public class DetailControllerGeneratorTest {
     @Ignore
     public void testApplyTemplate() throws Exception {
         Table table = Tables.table1();
-        generator.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
         List<String> list = generator.applyTemplate(table);
 
         list.stream().forEach(System.out::println);

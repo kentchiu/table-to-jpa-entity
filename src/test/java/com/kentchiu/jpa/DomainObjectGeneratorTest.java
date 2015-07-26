@@ -23,7 +23,7 @@ public abstract class DomainObjectGeneratorTest {
 
     @Test
     public void testImports_reference_tables() throws Exception {
-        generator.setTableNameMapper(ImmutableMap.of("MY_TABLE", "com.foo.bar.Foo", "MY_TABLE_2", "com.foo.bar.Boo"));
+        generator.getTransformer().setTableNameMapper(ImmutableMap.of("MY_TABLE", "com.foo.bar.Foo", "MY_TABLE_2", "com.foo.bar.Boo"));
         List<String> imports = generator.buildImports();
         assertThat(imports, hasItem("com.foo.bar.Foo"));
         assertThat(imports, hasItem("com.foo.bar.Boo"));

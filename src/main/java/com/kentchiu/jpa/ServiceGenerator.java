@@ -9,6 +9,9 @@ import java.util.Optional;
 public class ServiceGenerator extends AbstractGenerator {
 
 
+    public ServiceGenerator(Transformer transformer) {
+        super(transformer);
+    }
 
     public Optional<Path> export(Table table) {
         return exportToFile(table, applyTemplate(table));

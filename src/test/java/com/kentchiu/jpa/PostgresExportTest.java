@@ -1,6 +1,7 @@
 package com.kentchiu.jpa;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+@Ignore
 public class PostgresExportTest {
     private PostgresExport export;
 

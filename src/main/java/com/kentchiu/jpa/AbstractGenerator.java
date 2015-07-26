@@ -26,13 +26,17 @@ public abstract class AbstractGenerator {
     protected Path projectHome;
     private Logger logger = LoggerFactory.getLogger(AbstractGenerator.class);
 
-    public AbstractGenerator() {
-        this.transformer = new Transformer();
+    public AbstractGenerator(Transformer transformer) {
+        this.transformer = transformer;
         try {
             this.projectHome = Files.createTempDirectory("com.kentchiu.jpa.codegen");
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Transformer getTransformer() {
+        return transformer;
     }
 
     public Path getProjectHome() {
@@ -48,14 +52,6 @@ public abstract class AbstractGenerator {
     }
     public Path getJavaTestSourceHome() {
         return projectHome.resolve("src/test/java");
-    }
-
-    public void setTableNameMapper(Map<String, String> tableNameMapper) {
-        transformer.setTableNameMapper(tableNameMapper);
-    }
-
-    public void setColumnMapper(Map<String, String> columnMapper) {
-        transformer.setColumnMapper(columnMapper);
     }
 
     public abstract Optional<Path> export(Table table);
