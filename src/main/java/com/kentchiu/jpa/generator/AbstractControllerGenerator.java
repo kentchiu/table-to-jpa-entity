@@ -27,4 +27,6 @@ public abstract class AbstractControllerGenerator extends AbstractGenerator {
     protected String getPackageName(Table table) {
         return transformer.getTopPackage(table.getName()) + "." + transformer.getModuleName(table.getName()) + ".web";
     }
+
+
 }

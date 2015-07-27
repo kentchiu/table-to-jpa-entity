@@ -2,7 +2,7 @@ package com.kentchiu.jpa.generator;
 
 import java.util.Map;
 
-class TransformerBuilder {
+public class TransformerBuilder {
 
 
     private Transformer transformer;

@@ -1,7 +1,9 @@
 package {{topPackage}}.{{moduleName}}.web;
 
 import {{topPackage}}.base.web.AbstractController;
+import {{topPackage}}.{{moduleName}}.domain.{{masterDomain}};
 import {{topPackage}}.{{moduleName}}.domain.{{Domain}};
+import {{topPackage}}.{{moduleName}}.service.{{masterDomain}}Service;
 import {{topPackage}}.{{moduleName}}.service.{{Domain}}Service;
 import {{topPackage}}.{{moduleName}}.service.query.{{Domain}}Query;
 import {{topPackage}}.{{moduleName}}.web.dto.{{Domain}}Input;
@@ -20,11 +22,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-
+{{=<% %>=}}
 @RestController
-@RequestMapping("/{{masterName}}s/{{masterName}}Uuid}/{{detailName}}s")
-public class {{detailDomain}}Controller extends AbstractController {
-
+@RequestMapping("/<%masterName%>s/{<%masterName%>Uuid}/<%detailName%>s")
+public class <%detailDomain%>Controller extends AbstractController {
+<%={{ }}=%>
     private {{masterDomain}}Service {{masterName}}Service;
     private {{detailDomain}}Service service;
 
@@ -40,7 +42,7 @@ public class {{detailDomain}}Controller extends AbstractController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<{{detailDomain}}> list{{detailDomain}}s(@PathVariable String {{masterName}}Uuid, @Valid {{detailDomain}}Query query) {
-        {{masterName}}Service.findOne({{masterName}}Uuid).orElseThrow(()->  new ResourceNotFoundException({{masterDomain}}.class, {{masterName}}Uuid));
+        checkMasterExistOrThrow({{masterName}}Uuid);
         return service.findAll(query);
     }
 
@@ -48,9 +50,14 @@ public class {{detailDomain}}Controller extends AbstractController {
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
     public {{detailDomain}} add{{detailDomain}}(@PathVariable String {{masterName}}Uuid, @Valid @RequestBody {{detailDomain}}Input input) throws BindException {
-        {{masterName}}Service.findOne({{masterName}}Uuid).orElseThrow(()->  new ResourceNotFoundException({{masterDomain}}.class, {{masterName}}Uuid));
+        checkMasterExistOrThrow({{masterName}}Uuid);
         {{detailDomain}} {{detailName}} = new {{detailDomain}}();
         DomainUtil.copyNotNullProperties(input, {{detailName}});
+
+        if (StringUtils.isNotBlank(input.get{{masterDomain}}Uuid())) {
+            {{masterDomain}} {{masterName}} = {{masterName}}Service.findOne(input.get{{masterDomain}}Uuid()).orElseThrow(() -> new ResourceNotFoundException({{masterDomain}}.class, input.get{{masterDomain}}Uuid()));
+            detection.set{{masterDomain}}({{masterName}});
+        }
 
         // FIXME  add references
         // if (StringUtils.isNotBlank(input.getXxxUuid())) {
@@ -72,13 +79,13 @@ public class {{detailDomain}}Controller extends AbstractController {
 
     @RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
     public {{detailDomain}} get{{detailDomain}}(@PathVariable String {{masterName}}Uuid, @PathVariable String uuid) {
-        {{masterName}}Service.findOne({{masterName}}Uuid).orElseThrow(()->  new ResourceNotFoundException({{masterDomain}}.class, {{masterName}}Uuid));
+        checkMasterExistOrThrow({{masterName}}Uuid);
         return service.findOne(uuid).orElseThrow(() -> new ResourceNotFoundException({{detailDomain}}.class, uuid));
     }
 
     @RequestMapping(value = "/{uuid}", method = RequestMethod.PATCH)
     public {{detailDomain}} update{{detailDomain}}(@PathVariable String {{masterName}}Uuid, @PathVariable String uuid, @Valid @RequestBody {{detailDomain}}UpdateInput input) throws BindException {
-        {{masterName}}Service.findOne({{masterName}}Uuid).orElseThrow(()->  new ResourceNotFoundException({{masterDomain}}.class, {{masterName}}Uuid));
+        checkMasterExistOrThrow({{masterName}}Uuid);
         {{detailDomain}} {{detailName}} = service.findOne(uuid).orElseThrow(() -> new ResourceNotFoundException({{detailDomain}}.class, uuid));
 
         DomainUtil.copyNotNullProperties(input, {{detailName}});
@@ -88,8 +95,6 @@ public class {{detailDomain}}Controller extends AbstractController {
         //    Xxx xxx = xxxService.findOne(input.getXxxUuid()).orElseThrow(() -> new ResourceNotFoundException(Xxx.class, input.getXxxUuid()));
         //    {{detailDomain}}.setXxx(xxx);
         // }
-
-
 
         BindException exception = new BindException({{detailName}}, {{detailName}}.getClass().getSimpleName());
         Validators.validateBean(exception, {{detailName}});
@@ -104,8 +109,12 @@ public class {{detailDomain}}Controller extends AbstractController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @RequestMapping(value = "/{uuid}", method = RequestMethod.DELETE)
-    public void delete{{detailDomain}}(@PathVariable String uuid) {
+    public void delete{{detailDomain}}(@PathVariable String {{masterName}}Uuid, @PathVariable String uuid) {
+        checkMasterExistOrThrow({{masterName}}Uuid);
         service.delete(uuid);
     }
 
+    private void checkMasterExistOrThrow(@PathVariable String {{masterName}}Uuid) {
+        {{masterName}}Service.findOne({{masterName}}Uuid).orElseThrow(() -> new ResourceNotFoundException({{detailDomain}}.class, {{masterName}}Uuid));
+    }
 }

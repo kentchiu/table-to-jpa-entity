@@ -21,8 +21,5 @@ public class ControllerGenerator extends AbstractControllerGenerator {
         return applyTemplate("controller.mustache", context);
     }
 
-    protected String getClassName(Table table) {
-        return transformer.getDomainName(table.getName()) + "Controller";
-    }
 
 }

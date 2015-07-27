@@ -32,8 +32,5 @@ public class DetailControllerGenerator extends AbstractControllerGenerator {
         return applyTemplate("detail_controller.mustache", context);
     }
 
-    protected String getClassName(Table table) {
-        return transformer.getDomainName(table.getName()) + "DetailController";
-    }
 
 }
