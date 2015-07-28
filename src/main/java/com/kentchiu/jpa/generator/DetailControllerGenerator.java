@@ -8,7 +8,6 @@ import java.util.Map;
 
 public class DetailControllerGenerator extends AbstractControllerGenerator {
 
-
     public DetailControllerGenerator(Transformer transformer) {
         super(transformer);
     }
@@ -16,10 +15,14 @@ public class DetailControllerGenerator extends AbstractControllerGenerator {
     protected List<String> applyTemplate(Table table) {
         Map<String, Object> context = getBaseContext(table);
 
-        context.put("masterName", "deviceKind");
-        context.put("detailName", "detection");
-        context.put("masterDomain", "DeviceKind");
-        context.put("detailDomain", "DeviceDetection");
+        DetailConfig config = transformer.getMasterDetailMapper().get(table.getName());
+
+        Preconditions.checkNotNull(config, "master detail should be config and put in MasterDetailMapper by key : [" + table.getName() + "]");
+
+        context.put("masterName", config.getMasterName());
+        context.put("detailName", config.getDetailName());
+        context.put("masterDomain", config.getMasterDomain(transformer));
+        context.put("detailDomain", config.getDetailDomain(transformer));
 
         Preconditions.checkNotNull(context.get("masterName"), "masterName is mandatory");
         Preconditions.checkNotNull(context.get("detailName"), "detailName is mandatory");
@@ -31,5 +34,7 @@ public class DetailControllerGenerator extends AbstractControllerGenerator {
         return applyTemplate("detail_controller.mustache", context);
     }
 
-
 }
+
+
+

@@ -24,7 +24,9 @@ public class DetailControllerTestGeneratorTest {
     public void setUp() throws Exception {
         Table table = Tables.table1();
         Transformer transformer = new Transformer();
-        transformer.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
+        transformer.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar", "dvc_device_kind", "com.kentchiu.module.domain.DeviceKind", "dvc_device_detection", "com.kentchiu.module.domain.DeviceDetection"));
+        DetailConfig config = new DetailConfig("deviceKind", "detection", "dvc_device_kind", "dvc_device_detection");
+        transformer.setMasterDetailMapper(ImmutableMap.of(table.getName(), config));
         generator = new DetailControllerTestGenerator(transformer);
     }
 

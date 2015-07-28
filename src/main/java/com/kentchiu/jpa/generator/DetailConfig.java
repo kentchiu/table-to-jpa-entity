@@ -6,6 +6,18 @@ public class DetailConfig {
     public String detailTable;
     public String masterTable;
 
+    public DetailConfig(String masterName, String detailName, String masterTable, String detailTable) {
+        this.masterName = masterName;
+        this.detailName = detailName;
+        this.detailTable = detailTable;
+        this.masterTable = masterTable;
+    }
+
+    public DetailConfig(String masterName, String detailName) {
+        this.masterName = masterName;
+        this.detailName = detailName;
+    }
+
     public String getMasterName() {
         return masterName;
     }
@@ -37,4 +49,24 @@ public class DetailConfig {
     public void setMasterTable(String masterTable) {
         this.masterTable = masterTable;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("DetailConfig{");
+        sb.append("masterName='").append(masterName).append('\'');
+        sb.append(", detailName='").append(detailName).append('\'');
+        sb.append(", detailTable='").append(detailTable).append('\'');
+        sb.append(", masterTable='").append(masterTable).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
+
+    String getMasterDomain(Transformer transformer) {
+        return transformer.getDomainName(getMasterTable());
+    }
+
+    String getDetailDomain(Transformer transformer) {
+        return transformer.getDomainName(getDetailTable());
+    }
+
 }

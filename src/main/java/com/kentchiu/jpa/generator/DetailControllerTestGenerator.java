@@ -26,10 +26,11 @@ public class DetailControllerTestGenerator extends AbstractControllerGenerator {
     protected List<String> applyTemplate(Table table) {
         Map<String, Object> context = getBaseContext(table);
 
-        context.put("masterName", "deviceKind");
-        context.put("detailName", "detection");
-        context.put("masterDomain", "DeviceKind");
-        context.put("detailDomain", "DeviceDetection");
+        DetailConfig config = transformer.getMasterDetailMapper().get(table.getName());
+        context.put("masterName", config.getMasterName());
+        context.put("detailName", config.getDetailName());
+        context.put("masterDomain", transformer.getDomainName(config.getMasterTable()));
+        context.put("detailDomain", transformer.getDomainName(config.getMasterTable()));
 
         Preconditions.checkNotNull(context.get("masterName"), "masterName is mandatory");
         Preconditions.checkNotNull(context.get("detailName"), "detailName is mandatory");
