@@ -56,7 +56,7 @@ public class <%detailDomain%>Controller extends AbstractController {
 
         if (StringUtils.isNotBlank(input.get{{masterDomain}}Uuid())) {
             {{masterDomain}} {{masterName}} = {{masterName}}Service.findOne(input.get{{masterDomain}}Uuid()).orElseThrow(() -> new ResourceNotFoundException({{masterDomain}}.class, input.get{{masterDomain}}Uuid()));
-            detection.set{{masterDomain}}({{masterName}});
+            {{detailName}}.set{{masterDomain}}({{masterName}});
         }
 
         // FIXME  add references
