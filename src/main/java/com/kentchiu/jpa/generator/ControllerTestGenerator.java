@@ -1,6 +1,5 @@
 package com.kentchiu.jpa.generator;
 
-import com.google.common.base.CaseFormat;
 import com.kentchiu.jpa.domain.Table;
 
 import java.nio.file.Path;
@@ -8,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class ControllerTestGenerator extends AbstractGenerator {
+public class ControllerTestGenerator extends AbstractControllerGenerator {
 
     public ControllerTestGenerator(Transformer transformer) {
         super(transformer);
@@ -23,18 +22,16 @@ public class ControllerTestGenerator extends AbstractGenerator {
         return exportToFile(table, applyTemplate(table));
     }
 
-    List<String> applyTemplate(Table table) {
+    protected List<String> applyTemplate(Table table) {
         Map<String, Object> context = getBaseContext(table);
-        String domain = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, transformer.getDomainName(table.getName()));
+        String domain = getDomain(table);
         context.put("domain", domain);
         return applyTemplate("controller_test.mustache", context);
     }
+
 
     protected String getClassName(Table table) {
         return transformer.getDomainName(table.getName()) + "ControllerTest";
     }
 
-    protected String getPackageName(Table table) {
-        return transformer.getTopPackage(table.getName()) + "." + transformer.getModuleName(table.getName()) + ".web";
-    }
 }

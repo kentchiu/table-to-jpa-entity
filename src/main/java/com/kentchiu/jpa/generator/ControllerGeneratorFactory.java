@@ -15,4 +15,13 @@ public class ControllerGeneratorFactory {
     }
 
 
+    public static AbstractControllerGenerator makeControllerTest(Transformer transformer, String tableName) {
+        boolean isDetail = transformer.getMasterDetailMapper().containsKey(tableName);
+        if (isDetail) {
+            return new DetailControllerTestGenerator(transformer);
+        } else {
+            return new ControllerTestGenerator(transformer);
+        }
+    }
+
 }

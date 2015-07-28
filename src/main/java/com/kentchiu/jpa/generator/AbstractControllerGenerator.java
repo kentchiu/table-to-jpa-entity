@@ -1,5 +1,6 @@
 package com.kentchiu.jpa.generator;
 
+import com.google.common.base.CaseFormat;
 import com.kentchiu.jpa.domain.Table;
 
 import java.nio.file.Path;
@@ -29,4 +30,7 @@ public abstract class AbstractControllerGenerator extends AbstractGenerator {
     }
 
 
+    protected String getDomain(Table table) {
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, transformer.getDomainName(table.getName()));
+    }
 }

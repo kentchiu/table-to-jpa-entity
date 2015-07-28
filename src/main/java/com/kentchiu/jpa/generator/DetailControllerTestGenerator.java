@@ -6,12 +6,22 @@ import com.kentchiu.jpa.domain.Table;
 import java.util.List;
 import java.util.Map;
 
-public class DetailControllerGenerator extends AbstractControllerGenerator {
+public class DetailControllerTestGenerator extends AbstractControllerGenerator {
 
-
-    public DetailControllerGenerator(Transformer transformer) {
+    public DetailControllerTestGenerator(Transformer transformer) {
         super(transformer);
     }
+
+    @Override
+    protected boolean isTest() {
+        return true;
+    }
+
+
+    protected String getClassName(Table table) {
+        return transformer.getDomainName(table.getName()) + "ControllerTest";
+    }
+
 
     protected List<String> applyTemplate(Table table) {
         Map<String, Object> context = getBaseContext(table);
@@ -28,7 +38,7 @@ public class DetailControllerGenerator extends AbstractControllerGenerator {
 
         String domain = getDomain(table);
         context.put("domain", domain);
-        return applyTemplate("detail_controller.mustache", context);
+        return applyTemplate("detail_controller_test.mustache", context);
     }
 
 
