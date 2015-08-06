@@ -17,23 +17,24 @@ import java.util.Map;
 public class Transformer {
 
     private Logger logger = LoggerFactory.getLogger(Transformer.class);
-    /**
-     * table name -> java fully qualified name.
-     */
     private Map<String, String> tableNameMapper = new HashMap<>();
-    /**
-     * abbreviate name -> full name, and foreign key name -> property name.
-     */
     private Map<String, String> columnMapper = new HashMap<>();
-    /**
-     * master - detail mapper. Mapping by DetailConfig.
-     */
     private Map<String, DetailConfig> masterDetailMapper = new HashMap<>();
 
     public Map<String, DetailConfig> getMasterDetailMapper() {
         return masterDetailMapper;
     }
 
+    /**
+     * master - detail mapper. Mapping by DetailConfig.
+     * <p/>
+     * 如果 table有 master - detail 的關係，可透過 `MasterDetailsMapper` 做 master - detail 的mapping，這樣 code gen出來的 detail controller
+     * 就會有 master - detail關聯的 controller
+     * ex:
+     * TBL_ORDER - TBL_ITEM 這兩個 object 是 master - detail的關係
+     * 如果沒有做 mapping， TBL_ITEM 產生出來的 controller 的 api是像這樣 `/items`
+     * 如果有做 mapping， TBL_ITEM 產生出來的 controller 的 api是像這樣 `orders/{orderUuid}/items`
+     */
     public void setMasterDetailMapper(Map<String, DetailConfig> masterDetailMapper) {
         this.masterDetailMapper = masterDetailMapper;
     }
@@ -42,14 +43,36 @@ public class Transformer {
         return columnMapper;
     }
 
+    /**
+     * abbreviate name -> full name, and foreign key name -> property name.
+     * <p/>
+     * database column name 轉成換 domain object property時，有時需要做名稱的映射(mapping)
+     * ex: 在db裡，可能商問數量是 `ITEM_QTY`, 但我們希望在程式裡不要使用縮寫字，那就可以把原來的`QTY` mapping成 `QUANTITY`
+     * 如果沒有做mapping，`ITEM_QTY` code gen的結果是，`itemQty`
+     * 如果`QTY` mapping成 `QUANTITY`，code gen的結果是 `itemQuantity`
+     */
     public void setColumnMapper(Map<String, String> columnMapper) {
         this.columnMapper = columnMapper;
     }
+
 
     public Map<String, String> getTableNameMapper() {
         return tableNameMapper;
     }
 
+    /**
+     * table name -> java fully qualified name.
+     * <p/>
+     * 將table name mapping成 java class name.
+     * schema中的table name，根據 schema name rule的規範，會像這樣`FOO_BAR_MY_TABLE`，
+     * 如果這樣的 table name，直接轉成 java class name，會變這樣 `fooBarMyTable`，
+     * 這樣的名稱可讀性不高，而且也會被 code gen到根目錄
+     * 所以，透過 `tableNameMapper` 可以把 table name mapping 至適合的package及適合的 class name
+     * ex: 原來的 ``FOO_BAR_MY_TABLE` mapping 成 `foo.bar.domain.MyObject`這樣，code gen時，就會在
+     * `foo.bar.domain`下產生名為 `MyObject` 的class
+     * <p/>
+     * NOTE: mapping的package name，最後一定要是以 `.domain` 結尾，因為 code gen會自動去算出模組名稱，然後找到適當的package 放其他  code 出來的code
+     */
     public void setTableNameMapper(Map<String, String> tableNameMapper) {
         this.tableNameMapper = tableNameMapper;
     }

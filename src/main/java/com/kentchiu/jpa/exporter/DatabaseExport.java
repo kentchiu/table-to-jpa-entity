@@ -1,7 +1,6 @@
 package com.kentchiu.jpa.exporter;
 
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.kentchiu.jpa.domain.Column;
 import com.kentchiu.jpa.domain.Table;
@@ -33,6 +32,12 @@ public abstract class DatabaseExport {
         return foreignKeyMap;
     }
 
+    /**
+     * Foreign Key - Reference Table Mapper. Mapping foreign key to reference table
+     * ex: ORDER_ID (FK) -> TABLE_ORDER (TABLE)
+     * <p/>
+     * 要設定 Foreign Key 的來源 table，才有辦法正確產生 `@ManyToOne` 的資訊
+     */
     public void setForeignKeyMap(Map<String, String> foreignKeyMap) {
         this.foreignKeyMap = foreignKeyMap;
     }
@@ -100,48 +105,6 @@ public abstract class DatabaseExport {
         }
         return columns;
     }
-
-
-    List<Table> buildTables(String tableNamePattern) throws SQLException {
-        DatabaseMetaData databaseMetaData = this.connection.getMetaData();
-
-        List<Table> tables = Lists.newArrayList();
-        ResultSet tableResultSet = databaseMetaData.getTables(null, null, tableNamePattern, new String[]{"TABLE"});
-        while (tableResultSet.next()) {
-            // dumping debug
-            ResultSetMetaData tableMetaData = tableResultSet.getMetaData();
-            for (int i = 1; i <= tableMetaData.getColumnCount(); i++) {
-                String name = tableMetaData.getColumnName(i);
-                logger.trace("{} => {}", name, tableResultSet.getString(name));
-            }
-            Table table = new Table();
-            table.setName(tableResultSet.getString("TABLE_NAME"));
-            tables.add(table);
-        }
-        return tables;
-    }
-//    no idea how to distinguish pk, index, unique, composite key unique
-//    public ArrayList<String> getUniqueColumns(String tableName) throws SQLException {
-//        DatabaseMetaData databaseMetaData = this.connection.getMetaData();
-//        boolean listUniqueIndex = true;
-//        ResultSet rs = databaseMetaData.getIndexInfo(null, null, tableName, listUniqueIndex, true);
-//        ArrayList<String> results = Lists.newArrayList();
-//        while (rs.next()) {
-//            String indexName = rs.getString("INDEX_NAME");
-//            String table = rs.getString("TABLE_NAME");
-//            String schema = rs.getString("TABLE_SCHEM");
-//            String columnName = rs.getString("COLUMN_NAME");
-//            if (indexName == null) {
-//                continue;
-//            }
-//            System.out.println("****************************************");
-//            System.out.println("Table: " + schema + "." + table);
-//            System.out.println("Index Name: " + indexName);
-//            System.out.println("Column Name: " + columnName);
-//            results.add(columnName);
-//        }
-//        return results;
-//    }
 
     protected abstract Map<String, String> buildColumnCommentMap(String tableName);
 

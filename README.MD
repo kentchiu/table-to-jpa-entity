@@ -2,17 +2,18 @@
 
 ## TODO
 - TODO: enum comment support both `=` and `:`
-- TODO: configable topPackage
 - TODO: integer, boolean 的default value要判斷型別，而不是都用字串
-- TODO: fetch ignore columns from base class 
 - TODO: json config
-- TODO: Master-Detail Controller
-- TODO: Master-Detail ControllerTest 
 - TODO: Master-Detail-Extend Controller
 - TODO: Master-Detail-Extend ControllerTest
 - TODO: fix expend issue : product -> proproduct, address -> addraddress
 - TODO: 日期格式裡的中文註解沒format時，沒有產生對應的@DateTimeFormat
-- TODO: gen constants form option
+- DONE: ~~remove reference table, using table mapping instead~~ rejected
+- DONE: Master-Detail Controller
+- DONE: Master-Detail ControllerTest 
+- DONE: configable topPackage
+- DONE: ~~fetch ignore columns from base class~~ rejected, no need 
+- DONE: gen constants form option
 - DONE: Repository
 - DONE: Query Object
 - DONE: Service
