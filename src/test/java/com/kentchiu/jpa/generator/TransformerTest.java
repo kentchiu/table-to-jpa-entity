@@ -36,6 +36,15 @@ public class TransformerTest {
 
 
     @Test
+    public void testProperty_substitute_not_an_abbreviate() throws Exception {
+        Column column = Columns.createStringColumn("FOO_QUALITY_AND_AMTT_PROP", "column comment", true);
+        transformer.setColumnMapper(ImmutableMap.of("QTY", "QUALITY", "AMT", "AMOUNT"));
+        Transformer.Property property = transformer.getProperty(column, Type.JPA);
+        assertThat(property.getPropertyName(), is("fooQualityAndAmttProp"));
+    }
+
+
+    @Test
     public void testProperty_ManyToOne_name_conflict() throws Exception {
         Column column = Columns.stringColumn();
         column.setNullable(true);
