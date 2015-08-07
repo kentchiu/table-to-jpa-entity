@@ -403,62 +403,9 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
     }
 
 
-    @Test
-    public void testProperty_substitute() throws Exception {
-        Column column = Columns.createStringColumn("FOO_QTY_AND_AMT_PROP", "column comment", true);
-        generator.getTransformer().setColumnMapper(ImmutableMap.of("QTY", "QUALITY", "AMT", "AMOUNT"));
-        List<String> lines = generator.buildProperty(column);
-        dump(lines);
-
-        int i = 0;
-        // field
-        assertThat(lines.get(i++), is("    private String fooQualityAndAmountProp;"));
-
-        i = 2;
-        // getter
-        assertThat(lines.get(i++), is("    @Column(name = \"FOO_QTY_AND_AMT_PROP\")"));
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"column comment\")"));
-        assertThat(lines.get(i++), is("    public String getFooQualityAndAmountProp() {"));
-        assertThat(lines.get(i++), is("        return fooQualityAndAmountProp;"));
-        assertThat(lines.get(i++), is("    }"));
-
-        i = 8;
-        // setter
-        assertThat(lines.get(i++), is("    public void setFooQualityAndAmountProp(String fooQualityAndAmountProp) {"));
-        assertThat(lines.get(i++), is("        this.fooQualityAndAmountProp = fooQualityAndAmountProp;"));
-        assertThat(lines.get(i++), is("    }"));
-    }
 
 
-    @Test
-    public void testProperty_ManyToOne_name_conflict() throws Exception {
-        Column column = Columns.stringColumn();
-        column.setNullable(true);
-        column.setReferenceTable("OTHER_TABLE");
-        generator.getTransformer().setColumnMapper(ImmutableMap.of("column1", "FOO_BAR"));
-        List<String> lines = generator.buildProperty(column);
 
-        dump(lines);
-        int i = 0;
-        // field
-        assertThat(lines.get(i++), is("    private OtherTable fooBar;"));
-
-        i = 2;
-        // getter
-        assertThat(lines.get(i++), is("    @ManyToOne"));
-        assertThat(lines.get(i++), is("    @NotFound(action = NotFoundAction.IGNORE)"));
-        assertThat(lines.get(i++), is("    @JoinColumn(name = \"column1\")"));
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"column comment\")"));
-        assertThat(lines.get(i++), is("    public OtherTable getFooBar() {"));
-        assertThat(lines.get(i++), is("        return fooBar;"));
-        assertThat(lines.get(i++), is("    }"));
-
-        i = 10;
-        // setter
-        assertThat(lines.get(i++), is("    public void setFooBar(OtherTable fooBar) {"));
-        assertThat(lines.get(i++), is("        this.fooBar = fooBar;"));
-        assertThat(lines.get(i++), is("    }"));
-    }
 
 
     @Test

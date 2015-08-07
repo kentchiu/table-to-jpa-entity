@@ -106,11 +106,6 @@ public class EntityGenerator extends AbstractGenerator {
 
 
         if (StringUtils.isNotBlank(column.getDefaultValue())) {
-//            if (StringUtils.equals("BigDecimal.ZERO", column.getDefaultValue())) {
-//                context.put("defaultValue", (" = BigDecimal.ZERO"));
-//            } else {
-//                context.put("defaultValue", " = \"" + column.getDefaultValue() + "\"");
-//            }
             if (property.getTypeName().equals("String")) {
                 context.put("defaultValue", " = \"" + column.getDefaultValue() + "\"");
             } else {

@@ -1,6 +1,8 @@
 package com.kentchiu.jpa.generator;
 
 import com.google.common.collect.ImmutableMap;
+import com.kentchiu.jpa.domain.Column;
+import com.kentchiu.jpa.domain.Columns;
 import com.kentchiu.jpa.domain.Tables;
 import org.junit.Test;
 
@@ -22,5 +24,26 @@ public class TransformerTest {
         transformer.setTableNameMapper(ImmutableMap.of(Tables.table1().getName(), "com.kentchiu.jpa.module.domain.MyTable1"));
         assertThat(transformer.getModuleName(Tables.table1().getName()), is("module"));
     }
+
+
+    @Test
+    public void testProperty_substitute() throws Exception {
+        Column column = Columns.createStringColumn("FOO_QTY_AND_AMT_PROP", "column comment", true);
+        transformer.setColumnMapper(ImmutableMap.of("QTY", "QUALITY", "AMT", "AMOUNT"));
+        Transformer.Property property = transformer.getProperty(column, Type.JPA);
+        assertThat(property.getPropertyName(), is("fooQualityAndAmountProp"));
+    }
+
+
+    @Test
+    public void testProperty_ManyToOne_name_conflict() throws Exception {
+        Column column = Columns.stringColumn();
+        column.setNullable(true);
+        column.setReferenceTable("OTHER_TABLE");
+        transformer.setColumnMapper(ImmutableMap.of("column1", "FOO_BAR"));
+        Transformer.Property property = transformer.getProperty(column, Type.JPA);
+        assertThat(property.getPropertyName(), is("fooBar"));
+    }
+
 
 }

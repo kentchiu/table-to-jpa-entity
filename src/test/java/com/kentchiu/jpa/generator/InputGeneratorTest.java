@@ -299,59 +299,6 @@ public class InputGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(content, containsString("    @NotNull"));
     }
 
-    @Test
-    public void testProperty_substitute() throws Exception {
-        Column column = Columns.createStringColumn("FOO_QTY_AND_AMT_PROP", "column comment", true);
-        generator.getTransformer().setColumnMapper(ImmutableMap.of("QTY", "QUALITY", "AMT", "AMOUNT"));
-        List<String> lines = generator.buildProperty(column);
-        dump(lines);
-
-        int i = 0;
-        // field
-        assertThat(lines.get(i++), is("    private String fooQualityAndAmountProp;"));
-
-        i = 2;
-        // getter
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"column comment\")"));
-        assertThat(lines.get(i++), is("    public String getFooQualityAndAmountProp() {"));
-        assertThat(lines.get(i++), is("        return fooQualityAndAmountProp;"));
-        assertThat(lines.get(i++), is("    }"));
-
-        i = 7;
-        // setter
-        assertThat(lines.get(i++), is("    public void setFooQualityAndAmountProp(String fooQualityAndAmountProp) {"));
-        assertThat(lines.get(i++), is("        this.fooQualityAndAmountProp = fooQualityAndAmountProp;"));
-        assertThat(lines.get(i++), is("    }"));
-    }
-
-
-    @Test
-    public void testProperty_ManyToOne_name_conflict() throws Exception {
-        Column column = Columns.stringColumn();
-        column.setNullable(true);
-        column.setReferenceTable("OTHER_TABLE");
-        generator.getTransformer().setColumnMapper(ImmutableMap.of("column1", "FOO_BAR"));
-        List<String> lines = generator.buildProperty(column);
-
-        dump(lines);
-        int i = 0;
-        // field
-
-        assertThat(lines.get(i++), is("    private String fooBarUuid;"));
-        i = 2;
-        // getter
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"column comment\")"));
-        assertThat(lines.get(i++), is("    public String getFooBarUuid() {"));
-        assertThat(lines.get(i++), is("        return fooBarUuid;"));
-        assertThat(lines.get(i++), is("    }"));
-
-        i = 7;
-        // setter
-        assertThat(lines.get(i++), is("    public void setFooBarUuid(String fooBarUuid) {"));
-        assertThat(lines.get(i++), is("        this.fooBarUuid = fooBarUuid;"));
-        assertThat(lines.get(i++), is("    }"));
-    }
-
 
     @Test
     public void testAttributeInfo_with_options_and_default_value() throws Exception {
