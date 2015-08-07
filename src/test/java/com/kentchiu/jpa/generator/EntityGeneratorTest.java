@@ -162,6 +162,18 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
     }
 
     @Test
+    public void testProperty_boolean_with_default_value() throws Exception {
+        Column column = Columns.booleanColumn();
+        column.setDefaultValue("true");
+        List<String> lines = generator.buildProperty(column);
+        dump(lines);
+
+        int i = 0;
+        // field
+        assertThat(lines.get(i++), is("    private Boolean boolProperty = true;"));
+    }
+
+    @Test
     public void testProperty_Date() throws Exception {
         List<String> lines = generator.buildProperty(Columns.dateColumn());
         dump(lines);
