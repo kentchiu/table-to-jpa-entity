@@ -161,30 +161,29 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines.get(i++), is("    }"));
     }
 
-
+    @Test
     public void testProperty_Date() throws Exception {
         List<String> lines = generator.buildProperty(Columns.dateColumn());
         dump(lines);
 
         int i = 0;
         // field
-        assertThat(lines.get(i++), is("    private Date column1;"));
+        assertThat(lines.get(i++), is("    private Date dateProperty;"));
 
         i = 2;
         // getter
-        assertThat(lines.get(i++), is("    @Column(name = \"column1\")"));
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"column comment\")"));
-        assertThat(lines.get(i++), is("    public Date getColumn1() {"));
-        assertThat(lines.get(i++), is("        return column1;"));
+        assertThat(lines.get(i++), is("    @Column(name = \"DATE_PROPERTY\")"));
+        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"this is a date property\", format = \"yyyy-MM-dd\")"));
+        assertThat(lines.get(i++), is("    public Date getDateProperty() {"));
+        assertThat(lines.get(i++), is("        return dateProperty;"));
         assertThat(lines.get(i++), is("    }"));
 
         i = 8;
         // setter
-        assertThat(lines.get(i++), is("    public void setColumn1(Date column1) {"));
-        assertThat(lines.get(i++), is("        this.column1 = column1;"));
+        assertThat(lines.get(i++), is("    public void setDateProperty(Date dateProperty) {"));
+        assertThat(lines.get(i++), is("        this.dateProperty = dateProperty;"));
         assertThat(lines.get(i++), is("    }"));
     }
-
 
     @Test
     public void testProperty_string_not_null() throws Exception {

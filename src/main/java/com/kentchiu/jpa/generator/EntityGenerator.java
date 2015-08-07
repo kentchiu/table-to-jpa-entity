@@ -1,6 +1,7 @@
 package com.kentchiu.jpa.generator;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.kentchiu.jpa.domain.Column;
 import com.kentchiu.jpa.domain.Table;
@@ -69,12 +70,12 @@ public class EntityGenerator extends AbstractGenerator {
         }
 
 
-        if (Type.QUERY == config.getType()) {
-            if (property.isDateType() && StringUtils.contains(column.getComment(), "(format")) {
+        if (Type.QUERY == config.getType() || Type.JPA == config.getType()) {
+            if (property.isDateType()) {
+                Preconditions.checkState(StringUtils.contains(column.getComment(), "(format"), "date type should has format attribute");
                 String value = "@DateTimeFormat(pattern = \"" + StringUtils.substringBetween(column.getComment(), "=", ")") + "\")";
                 context.put("dateTimeFormat", value);
             }
-
         }
 
         if (StringUtils.isNotBlank(buildAttributeInfo(column))) {

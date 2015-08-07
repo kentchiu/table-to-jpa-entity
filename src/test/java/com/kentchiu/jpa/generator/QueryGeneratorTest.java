@@ -120,6 +120,7 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines.get(i++), is("//    }"));
     }
 
+
     @Test
     public void testProperty_string() throws Exception {
         List<String> lines = generator.buildProperty(Columns.stringColumn());
