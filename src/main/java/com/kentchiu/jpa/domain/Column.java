@@ -56,6 +56,7 @@ public class Column {
             setDescription(r.group(1));
             for (int i = 2; i < r.groupCount() + 1; i++) {
                 String token = r.group(i);
+                // default part
                 if (StringUtils.contains(token, "default")) {
                     String defaultValue = StringUtils.substringAfter(token, "=").trim();
                     if (defaultValue.startsWith("'")) {
@@ -64,11 +65,18 @@ public class Column {
                         setDefaultValue(defaultValue);
                     }
                 }
+                // option part : key=value (or key:value) pairs
                 if (StringUtils.contains(token, "/") && !StringUtils.startsWith(token, "(")) {
                     List<String> ops = Splitter.on("/").splitToList(token);
                     ops.forEach(op -> {
-                        String key = StringUtils.substringBefore(op, "=").trim();
-                        String value = StringUtils.substringAfter(op, "=").trim();
+                        String separator;
+                        if (op.contains("=")) {
+                            separator = "=";
+                        } else {
+                            separator = ":";
+                        }
+                        String key = StringUtils.substringBefore(op, separator).trim();
+                        String value = StringUtils.substringAfter(op, separator).trim();
                         getOptions().put(key, value);
                     });
                 }
