@@ -102,20 +102,20 @@ public class InputGeneratorTest extends DomainObjectGeneratorTest {
 
         int i = 0;
         // field
-        assertThat(lines.get(i++), is("    private Date dateProperty;"));
+        assertThat(lines.get(i++), is("    private String dateProperty;"));
 
 
         i = 2;
         // getter
-        assertThat(lines.get(i++), is("    @DateTimeFormat(pattern = \"yyyy-MM-dd\")"));
+//        assertThat(lines.get(i++), is("    @DateTimeFormat(pattern = \"yyyy-MM-dd\")"));
         assertThat(lines.get(i++), is("    @AttributeInfo(description = \"this is a date property\", format = \"yyyy-MM-dd\")"));
-        assertThat(lines.get(i++), is("    public Date getDateProperty() {"));
+        assertThat(lines.get(i++), is("    public String getDateProperty() {"));
         assertThat(lines.get(i++), is("        return dateProperty;"));
         assertThat(lines.get(i++), is("    }"));
 
-        i = 8;
+        i = 7;
         // setter
-        assertThat(lines.get(i++), is("    public void setDateProperty(Date dateProperty) {"));
+        assertThat(lines.get(i++), is("    public void setDateProperty(String dateProperty) {"));
         assertThat(lines.get(i++), is("        this.dateProperty = dateProperty;"));
         assertThat(lines.get(i++), is("    }"));
     }

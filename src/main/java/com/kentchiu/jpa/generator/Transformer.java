@@ -158,8 +158,8 @@ public class Transformer {
         }
 
         private void processSimpleColumn(Type type, String name) {
-            if (type != Type.JPA && isDateType()) {
-                if (isDateType()) {
+            if (isDateType()) {
+                if (type == Type.QUERY) {
                     typeName = "Date";
                 } else {
                     typeName = "String";

@@ -69,7 +69,7 @@ public class EntityGenerator extends AbstractGenerator {
         }
 
 
-        if (Type.INPUT == config.getType() || Type.UPDATE == config.getType() || Type.QUERY == config.getType()) {
+        if (Type.QUERY == config.getType()) {
             if (property.isDateType() && StringUtils.contains(column.getComment(), "(format")) {
                 String value = "@DateTimeFormat(pattern = \"" + StringUtils.substringBetween(column.getComment(), "=", ")") + "\")";
                 context.put("dateTimeFormat", value);
