@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Table model -> Java Model
@@ -145,11 +144,6 @@ public class Transformer {
         }
 
         private void invoke(Type type, Map<String, String> mapper) {
-//            String[] searchList = mapper.keySet().toArray(new String[mapper.size()]);
-//            String[] replacementList = mapper.values().toArray(new String[mapper.size()]);
-//            String name = StringUtils.replaceEach(column.getName(), searchList, replacementList);
-            Set<String> keys = mapper.keySet();
-
             String name = column.getName();
 
             for (Map.Entry<String, String> entry : mapper.entrySet()) {

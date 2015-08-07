@@ -5,7 +5,7 @@
 - TODO: json config
 - TODO: Master-Detail-Extend Controller
 - TODO: Master-Detail-Extend ControllerTest
-- TODO: fix expend issue : product -> proproduct, address -> addraddress
+- DONE: fix expend issue : product -> proproduct, address -> addraddress
 - DONE: integer, boolean 的default value要判斷型別，而不是都用字串
 - DONE: 日期格式裡的中文註解沒format時，沒有產生對應的@DateTimeFormat -> 要求一定要有format
 - DONE: ~~remove reference table, using table mapping instead~~ rejected
