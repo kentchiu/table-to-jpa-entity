@@ -4,6 +4,7 @@ package com.kentchiu.jpa.exporter;
 import com.kentchiu.jpa.domain.Table;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Map;
@@ -11,6 +12,7 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+@Ignore
 public class MySqlExportTest {
 
     private MySqlExport export;

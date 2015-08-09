@@ -3,7 +3,7 @@ package {{topPackage}}.{{moduleName}}.web;
 import {{topPackage}}.base.web.AbstractControllerTest;
 import {{topPackage}}.{{moduleName}}.web.TestConfig;
 import {{topPackage}}.{{moduleName}}.domain.{{Domain}};
-import {{topPackage}}.{{moduleName}}.domain.{{Domain}}s;
+import {{topPackage}}.{{moduleName}}.domain.{{DomainPlural}};
 import {{topPackage}}.{{moduleName}}.service.{{Domain}}Service;
 import {{topPackage}}.{{moduleName}}.service.query.{{Domain}}Query;
 
@@ -45,10 +45,10 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testList{{Domain}}s() throws Exception {
-        when(mockService.findAll(any({{Domain}}Query.class))).thenReturn({{Domain}}s.page());
+    public void testList{{DomainPlural}}() throws Exception {
+        when(mockService.findAll(any({{Domain}}Query.class))).thenReturn({{DomainPlural}}.page());
 
-        MockHttpServletRequestBuilder requestBuilder = get("/{{domain}}s")
+        MockHttpServletRequestBuilder requestBuilder = get("/{{domainPlural}}")
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(requestBuilder)
@@ -64,7 +64,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
 
         String json = DomainUtil.toJson(input);
 
-        MockHttpServletRequestBuilder requestBuilder = post("/{{domain}}s")
+        MockHttpServletRequestBuilder requestBuilder = post("/{{domainPlural}}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json);
 
@@ -77,11 +77,11 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
 
     @Test
     public void testGet{{Domain}}() throws Exception {
-        {{Domain}} {{domain}} = {{Domain}}s.all().get(0);
+        {{Domain}} {{domain}} = {{DomainPlural}}.all().get(0);
         String uuid = {{domain}}.getUuid();
         when(mockService.findOne(uuid)).thenReturn(Optional.of({{domain}}));
 
-        MockHttpServletRequestBuilder requestBuilder = get("/{{domain}}s/" + uuid)
+        MockHttpServletRequestBuilder requestBuilder = get("/{{domainPlural}}/" + uuid)
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(requestBuilder)
@@ -92,7 +92,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
 
     @Test
     public void testUpdate{{Domain}}() throws Exception {
-        {{Domain}} {{domain}} = {{Domain}}s.all().get(0);
+        {{Domain}} {{domain}} = {{DomainPlural}}.all().get(0);
         String uuid = {{domain}}.getUuid();
 
         Map<String, String> input = Maps.newLinkedHashMap();
@@ -102,7 +102,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
 
         when(mockService.findOne(uuid)).thenReturn(Optional.of({{domain}}));
 
-        MockHttpServletRequestBuilder requestBuilder = patch("/{{domain}}s/" + uuid)
+        MockHttpServletRequestBuilder requestBuilder = patch("/{{domainPlural}}/" + uuid)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json);
 
@@ -116,10 +116,10 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
 
     @Test
     public void testDelete{{Domain}}() throws Exception {
-        {{Domain}} {{domain}} = {{Domain}}s.all().get(0);
+        {{Domain}} {{domain}} = {{DomainPlural}}.all().get(0);
         String uuid = {{domain}}.getUuid();
 
-        MockHttpServletRequestBuilder requestBuilder = delete("/{{domain}}s/" + uuid)
+        MockHttpServletRequestBuilder requestBuilder = delete("/{{domainPlural}}/" + uuid)
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(requestBuilder)

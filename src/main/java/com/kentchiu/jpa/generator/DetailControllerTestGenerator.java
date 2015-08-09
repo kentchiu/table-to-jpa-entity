@@ -2,6 +2,7 @@ package com.kentchiu.jpa.generator;
 
 import com.google.common.base.Preconditions;
 import com.kentchiu.jpa.domain.Table;
+import org.atteo.evo.inflector.English;
 
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,11 @@ public class DetailControllerTestGenerator extends AbstractControllerGenerator {
         Preconditions.checkNotNull(context.get("detailName"), "detailName is mandatory");
         Preconditions.checkNotNull(context.get("masterDomain"), "masterDomain is mandatory");
         Preconditions.checkNotNull(context.get("detailDomain"), "detailDomain is mandatory");
+
+        context.put("masterNamePlural", English.plural(config.getMasterName()));
+        context.put("detailNamePlural", English.plural(config.getDetailName()));
+        context.put("masterDomainPlural", English.plural(config.getMasterDomain(transformer)));
+        context.put("detailDomainPlural", English.plural(config.getDetailDomain(transformer)));
 
         String domain = getDomain(table);
         context.put("domain", domain);

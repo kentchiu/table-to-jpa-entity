@@ -68,13 +68,17 @@ public class Column {
                 // option part : key=value (or key:value) pairs
                 if (StringUtils.contains(token, "/") && !StringUtils.startsWith(token, "(")) {
                     List<String> ops = Splitter.on("/").splitToList(token);
+
                     ops.forEach(op -> {
                         String separator;
                         if (op.contains("=")) {
                             separator = "=";
-                        } else {
+                        } else if (op.contains(":")) {
                             separator = ":";
+                        } else {
+                            return;
                         }
+
                         String key = StringUtils.substringBefore(op, separator).trim();
                         String value = StringUtils.substringAfter(op, separator).trim();
                         getOptions().put(key, value);

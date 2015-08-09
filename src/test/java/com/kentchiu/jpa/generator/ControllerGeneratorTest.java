@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.kentchiu.jpa.domain.Table;
 import com.kentchiu.jpa.domain.Tables;
+import org.atteo.evo.inflector.English;
 import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +37,12 @@ public class ControllerGeneratorTest {
         assertThat(export.get().toString(), containsString("/src/main/java/com/kentchiu/module/web/FooBarController.java"));
     }
 
+    @Test
+    public void testPlural() throws Exception {
+        assertThat(English.plural("foo", 2), is("foos"));
+        assertThat(English.plural("city", 2), is("cities"));
+        assertThat(English.plural("kiss", 2), is("kisses"));
+    }
 
     @Test
     public void testApplyTemplate() throws Exception {

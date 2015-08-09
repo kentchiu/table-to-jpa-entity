@@ -21,7 +21,7 @@ import javax.validation.Valid;
 
 
 @RestController
-@RequestMapping("/{{domain}}s")
+@RequestMapping("/{{domainPlural}}")
 public class {{Domain}}Controller extends AbstractController {
 
     private {{Domain}}Service service;
@@ -32,7 +32,7 @@ public class {{Domain}}Controller extends AbstractController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public Page<{{Domain}}> list{{Domain}}s(@Valid {{Domain}}Query query) {
+    public Page<{{Domain}}> list{{DomainPlural}}(@Valid {{Domain}}Query query) {
         return service.findAll(query);
     }
 

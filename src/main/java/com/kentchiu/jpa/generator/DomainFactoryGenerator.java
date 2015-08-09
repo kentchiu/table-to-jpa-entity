@@ -1,6 +1,7 @@
 package com.kentchiu.jpa.generator;
 
 import com.kentchiu.jpa.domain.Table;
+import org.atteo.evo.inflector.English;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -26,7 +27,7 @@ public class DomainFactoryGenerator extends AbstractGenerator {
     }
 
     protected String getClassName(Table table) {
-        return transformer.getDomainName(table.getName()) + "s";
+        return English.plural(transformer.getDomainName(table.getName()));
     }
 
     protected String getPackageName(Table table) {

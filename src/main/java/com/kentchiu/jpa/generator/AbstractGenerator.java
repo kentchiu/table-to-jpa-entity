@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.kentchiu.jpa.domain.Table;
 import org.apache.commons.lang3.StringUtils;
+import org.atteo.evo.inflector.English;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,7 +94,9 @@ public abstract class AbstractGenerator {
     protected Map<String, Object> getBaseContext(Table table) {
         Map<String, Object> context = Maps.newHashMap();
         context.put("table", table);
-        context.put("Domain", transformer.getDomainName(table.getName()));
+        String domainName = transformer.getDomainName(table.getName());
+        context.put("Domain", domainName);
+        context.put("DomainPlural", English.plural(domainName));
         context.put("topPackage", transformer.getTopPackage(table.getName()));
         context.put("moduleName", transformer.getModuleName(table.getName()));
         return context;

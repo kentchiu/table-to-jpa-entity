@@ -60,7 +60,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
     public void testList{{Domain}}s() throws Exception {
         when(mockService.findAll(any({{Domain}}Query.class))).thenReturn({{Domain}}s.page());
 
-        MockHttpServletRequestBuilder requestBuilder = get("/{{masterName}}s/" + {{masterName}}Uuid + "/{{detailName}}s")
+        MockHttpServletRequestBuilder requestBuilder = get("/{{masterNamePlural}}/" + {{masterName}}Uuid + "/{{detailNamePlural}}")
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(requestBuilder)
@@ -76,7 +76,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
 
         String json = DomainUtil.toJson(input);
 
-        MockHttpServletRequestBuilder requestBuilder = post("/{{masterName}}s/" + {{masterName}}Uuid + "/{{detailName}}s")
+        MockHttpServletRequestBuilder requestBuilder = post("/{{masterNamePlural}}/" + {{masterName}}Uuid + "/{{detailNamePlural}}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json);
 
@@ -93,7 +93,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
         String uuid = {{detailName}}.getUuid();
         when(mockService.findOne(uuid)).thenReturn(Optional.of({{detailName}}));
 
-        MockHttpServletRequestBuilder requestBuilder = get("/{{masterName}}s/" + {{masterName}}Uuid + "/{{detailName}}s/" + uuid)
+        MockHttpServletRequestBuilder requestBuilder = get("/{{masterNamePlural}}/" + {{masterName}}Uuid + "/{{detailNamePlural}}/" + uuid)
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(requestBuilder)
@@ -114,7 +114,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
 
         when(mockService.findOne(uuid)).thenReturn(Optional.of({{detailName}}));
 
-        MockHttpServletRequestBuilder requestBuilder = patch("/{{masterName}}s/" + {{masterName}}Uuid + "/{{detailName}}s/" + uuid)
+        MockHttpServletRequestBuilder requestBuilder = patch("/{{masterNamePlural}}/" + {{masterName}}Uuid + "/{{detailNamePlural}}/" + uuid)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json);
 
@@ -131,7 +131,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
         {{Domain}} {{detailName}} = {{Domain}}s.all().get(0);
         String uuid = {{detailName}}.getUuid();
 
-        MockHttpServletRequestBuilder requestBuilder = delete("/{{masterName}}s/" + {{masterName}}Uuid + "/{{detailName}}s/" + uuid)
+        MockHttpServletRequestBuilder requestBuilder = delete("/{{masterNamePlural}}/" + {{masterName}}Uuid + "/{{detailNamePlural}}/" + uuid)
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(requestBuilder)

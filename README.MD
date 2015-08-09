@@ -1,14 +1,14 @@
 
 
 ## TODO
-- `(a/b/c)` 這種格式不應該被當作enum
 - detail 的query，input, update 不應該包含 master 的資訊
-- 複數字尾處理，s，es，ies
 - json config
 - Master-Detail-Extend Controller
 - Master-Detail-Extend ControllerTest
 
 ## DONE
+- 複數字尾處理，s，es，ies
+- `(a/b/c)` 這種格式不應該被當作enum
 - enum comment support both `=` and `:`
 - fix expend issue : product -> proproduct, address -> addraddress
 - integer, boolean 的default value要判斷型別，而不是都用字串

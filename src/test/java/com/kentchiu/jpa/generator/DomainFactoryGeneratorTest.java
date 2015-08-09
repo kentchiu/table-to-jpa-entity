@@ -24,7 +24,7 @@ public class DomainFactoryGeneratorTest {
     public void setUp() throws Exception {
         Transformer transformer = new Transformer();
         Table table = Tables.table1();
-        transformer.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
+        transformer.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar", "CITY", "com.kentchiu.module.domain.City"));
         generator = new DomainFactoryGenerator(transformer);
     }
 
@@ -34,6 +34,16 @@ public class DomainFactoryGeneratorTest {
         Optional<Path> export = generator.exportToFile(table, ImmutableList.of());
         assertThat(export.isPresent(), Is.is(true));
         assertThat(export.get().toString(), containsString("/src/test/java/com/kentchiu/module/domain/FooBars.java"));
+    }
+
+
+    @Test
+    public void testExport_plural() throws Exception {
+        Table table = new Table();
+        table.setName("CITY");
+        Optional<Path> export = generator.exportToFile(table, ImmutableList.of());
+        assertThat(export.isPresent(), Is.is(true));
+        assertThat(export.get().toString(), containsString("/src/test/java/com/kentchiu/module/domain/Cities.java"));
     }
 
     @Test

@@ -1,6 +1,7 @@
 package com.kentchiu.jpa.generator;
 
 import com.kentchiu.jpa.domain.Table;
+import org.atteo.evo.inflector.English;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -26,6 +27,7 @@ public class ControllerTestGenerator extends AbstractControllerGenerator {
         Map<String, Object> context = getBaseContext(table);
         String domain = getDomain(table);
         context.put("domain", domain);
+        context.put("domainPlural", English.plural(domain));
         return applyTemplate("controller_test.mustache", context);
     }
 
