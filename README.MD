@@ -1,6 +1,9 @@
 
 
 ## TODO
+- `(a/b/c)` 這種格式不應該被當作enum
+- detail 的query，input, update 不應該包含 master 的資訊
+- 複數字尾處理，s，es，ies
 - json config
 - Master-Detail-Extend Controller
 - Master-Detail-Extend ControllerTest
