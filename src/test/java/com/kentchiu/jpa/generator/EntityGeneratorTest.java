@@ -423,7 +423,7 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
     @Test
     public void testEnum_form_options() throws Exception {
         Column column = new Column();
-        column.setName("type");
+        column.setName("ITEM_TYPE");
         column.setDescription("产品类型");
         Map<String, String> options = column.getOptions();
         options.put("1", "套件");
@@ -433,19 +433,19 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
 
         List<EntityGenerator.FieldEnum> enums = generator.buildEnum(column);
         assertThat(enums, hasSize(4));
-        assertThat(enums.get(0).getName(), is("TYPE_1"));
+        assertThat(enums.get(0).getName(), is("ITEM_TYPE_1"));
         assertThat(enums.get(0).getValue(), is("\"1\""));
         assertThat(enums.get(0).getDescription(), is("产品类型 : 套件"));
 
-        assertThat(enums.get(1).getName(), is("TYPE_2"));
+        assertThat(enums.get(1).getName(), is("ITEM_TYPE_2"));
         assertThat(enums.get(1).getValue(), is("\"2\""));
         assertThat(enums.get(1).getDescription(), is("产品类型 : 包件"));
 
-        assertThat(enums.get(2).getName(), is("TYPE_3"));
+        assertThat(enums.get(2).getName(), is("ITEM_TYPE_3"));
         assertThat(enums.get(2).getValue(), is("\"3\""));
         assertThat(enums.get(2).getDescription(), is("产品类型 : 补件"));
 
-        assertThat(enums.get(3).getName(), is("TYPE_4"));
+        assertThat(enums.get(3).getName(), is("ITEM_TYPE_4"));
         assertThat(enums.get(3).getValue(), is("\"4\""));
         assertThat(enums.get(3).getDescription(), is("产品类型 : 其他"));
     }

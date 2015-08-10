@@ -1,5 +1,6 @@
 package com.kentchiu.jpa.generator;
 
+import com.google.common.base.CaseFormat;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.kentchiu.jpa.domain.Column;
@@ -225,7 +226,9 @@ public class EntityGenerator extends AbstractGenerator {
         Map<String, String> options = column.getOptions();
         for (Map.Entry<String, String> entry : options.entrySet()) {
             FieldEnum fe = new FieldEnum();
-            fe.setName(transformer.getProperty(column, Type.JPA).getPropertyName().toUpperCase() + "_" + entry.getKey());
+            String property = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, transformer.getProperty(column, Type.JPA).getPropertyName());
+            String name = property + "_" + entry.getKey();
+            fe.setName(name);
             fe.setValue("\"" + entry.getKey() + "\"");
             fe.setDescription(column.getDescription() + " : " + entry.getValue());
             results.add(fe);
