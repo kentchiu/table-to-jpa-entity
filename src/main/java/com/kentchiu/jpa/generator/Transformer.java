@@ -1,7 +1,9 @@
 package com.kentchiu.jpa.generator;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
 import com.kentchiu.jpa.domain.Column;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -9,7 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Table model -> Java Model
@@ -146,10 +151,9 @@ public class Transformer {
         private void invoke(Type type, Map<String, String> mapper) {
             String name = column.getName();
 
-            for (Map.Entry<String, String> entry : mapper.entrySet()) {
-                name = name.replaceAll("_" + entry.getKey() + "_", "_" + entry.getValue() + "_");
-                System.out.println(name);
-            }
+            Iterable<String> split = Splitter.on('_').split(name);
+            List<String> tokens = StreamSupport.stream(split.spliterator(), false).map(s -> mapper.getOrDefault(s, s)).collect(Collectors.toList());
+            name = Joiner.on('_').join(tokens);
 
             if (StringUtils.isBlank(column.getReferenceTable())) {
                 processSimpleColumn(type, name);

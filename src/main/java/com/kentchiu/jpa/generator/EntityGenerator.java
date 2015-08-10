@@ -1,11 +1,12 @@
 package com.kentchiu.jpa.generator;
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.kentchiu.jpa.domain.Column;
 import com.kentchiu.jpa.domain.Table;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -15,8 +16,8 @@ import java.util.stream.Collectors;
 public class EntityGenerator extends AbstractGenerator {
 
     protected Config config;
-
     private List<String> ignoreColumns;
+    private Logger logger = LoggerFactory.getLogger(EntityGenerator.class);
 
     public EntityGenerator(Transformer transformer, Config config) {
         super(transformer);
@@ -72,9 +73,12 @@ public class EntityGenerator extends AbstractGenerator {
 
         if (Type.QUERY == config.getType() || Type.JPA == config.getType()) {
             if (property.isDateType()) {
-                Preconditions.checkState(StringUtils.contains(column.getComment(), "(format"), "date type should has format attribute");
-                String value = "@DateTimeFormat(pattern = \"" + StringUtils.substringBetween(column.getComment(), "=", ")") + "\")";
-                context.put("dateTimeFormat", value);
+                if (StringUtils.contains(column.getComment(), "(format")) {
+                    String value = "@DateTimeFormat(pattern = \"" + StringUtils.substringBetween(column.getComment(), "=", ")") + "\")";
+                    context.put("dateTimeFormat", value);
+                } else {
+                    logger.warn("date type should has format attribute : {}", column);
+                }
             }
         }
 

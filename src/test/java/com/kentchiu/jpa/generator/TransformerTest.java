@@ -34,6 +34,13 @@ public class TransformerTest {
         assertThat(property.getPropertyName(), is("fooQualityAndAmountProp"));
     }
 
+    @Test
+    public void testProperty_substitute_2() throws Exception {
+        Column column = Columns.createStringColumn("QTY_AND_AMT", "column comment", true);
+        transformer.setColumnMapper(ImmutableMap.of("QTY", "QUALITY", "AMT", "AMOUNT"));
+        Transformer.Property property = transformer.getProperty(column, Type.JPA);
+        assertThat(property.getPropertyName(), is("qualityAndAmount"));
+    }
 
     @Test
     public void testProperty_substitute_not_an_abbreviate() throws Exception {
