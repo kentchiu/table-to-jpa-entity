@@ -3,12 +3,12 @@
 ## TODO
 - detail input, update 不應該包含 master uuid 的資訊
 - detail controller add,update 改從master uuid 抓
-- detail 的query要加入 master uuid的條件
 - json config
 - Master-Detail-Extend Controller
 - Master-Detail-Extend ControllerTest
 
 ## DONE
+- detail 的query要加入 master uuid的條件
 - input，update的日期改成@JsonFormat
 - 複數字尾處理，s，es，ies
 - `(a/b/c)` 這種格式不應該被當作enum

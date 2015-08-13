@@ -92,6 +92,7 @@ public class DetailControllerGeneratorTest {
         assertThat(list.get(i++), is("    @RequestMapping(method = RequestMethod.GET)"));
         assertThat(list.get(i++), is("    public Page<DeviceDetection> listDeviceDetections(@PathVariable String deviceKindUuid, @Valid DeviceDetectionQuery query) {"));
         assertThat(list.get(i++), is("        checkMasterExistOrThrow(deviceKindUuid);"));
+        assertThat(list.get(i++), is("        query.setDeviceKindUuid(deviceKindUuid);"));
         assertThat(list.get(i++), is("        return service.findAll(query);"));
         assertThat(list.get(i++), is("    }"));
         assertThat(list.get(i++), is(""));
