@@ -104,10 +104,9 @@ public class DetailControllerGeneratorTest {
         assertThat(list.get(i++), is("        DeviceDetection detection = new DeviceDetection();"));
         assertThat(list.get(i++), is("        DomainUtil.copyNotNullProperties(input, detection);"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("        if (StringUtils.isNotBlank(input.getDeviceKindUuid())) {"));
-        assertThat(list.get(i++), is("            DeviceKind deviceKind = deviceKindService.findOne(input.getDeviceKindUuid()).orElseThrow(() -> new ResourceNotFoundException(DeviceKind.class, input.getDeviceKindUuid()));"));
-        assertThat(list.get(i++), is("            detection.setDeviceKind(deviceKind);"));
-        assertThat(list.get(i++), is("        }"));
+        assertThat(list.get(i++), is("        // master"));
+        assertThat(list.get(i++), is("        DeviceKind deviceKind = deviceKindService.findOne(deviceKindUuid).orElseThrow(() -> new ResourceNotFoundException(DeviceKind.class, deviceKindUuid));"));
+        assertThat(list.get(i++), is("        detection.setDeviceKind(deviceKind);"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("        // FIXME  add references"));
         assertThat(list.get(i++), is("        // if (StringUtils.isNotBlank(input.getXxxUuid())) {"));

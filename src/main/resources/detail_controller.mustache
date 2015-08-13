@@ -55,10 +55,9 @@ public class <%detailDomain%>Controller extends AbstractController {
         {{detailDomain}} {{detailName}} = new {{detailDomain}}();
         DomainUtil.copyNotNullProperties(input, {{detailName}});
 
-        if (StringUtils.isNotBlank(input.get{{masterDomain}}Uuid())) {
-            {{masterDomain}} {{masterName}} = {{masterName}}Service.findOne(input.get{{masterDomain}}Uuid()).orElseThrow(() -> new ResourceNotFoundException({{masterDomain}}.class, input.get{{masterDomain}}Uuid()));
-            {{detailName}}.set{{masterDomain}}({{masterName}});
-        }
+        // master
+        {{masterDomain}} {{masterName}} = {{masterName}}Service.findOne({{masterName}}Uuid).orElseThrow(() -> new ResourceNotFoundException({{masterDomain}}.class, {{masterName}}Uuid));
+        {{detailName}}.set{{masterDomain}}({{masterName}});
 
         // FIXME  add references
         // if (StringUtils.isNotBlank(input.getXxxUuid())) {
