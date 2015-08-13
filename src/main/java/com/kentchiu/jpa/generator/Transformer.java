@@ -165,11 +165,11 @@ public class Transformer {
 
         private void processSimpleColumn(Type type, String name) {
             if (isDateType()) {
-                if (type == Type.QUERY || type == Type.JPA) {
+                //if (type == Type.QUERY || type == Type.JPA) {
                     typeName = "Date";
-                } else {
-                    typeName = "String";
-                }
+                //} else {
+                //    typeName = "String";
+                //}
                 propertyName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name);
                 methodName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name);
             } else {

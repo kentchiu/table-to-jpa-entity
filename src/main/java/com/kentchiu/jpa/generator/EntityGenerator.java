@@ -72,16 +72,26 @@ public class EntityGenerator extends AbstractGenerator {
         }
 
 
-        if (Type.QUERY == config.getType() || Type.JPA == config.getType()) {
-            if (property.isDateType()) {
+        if (property.isDateType()) {
+            if (Type.QUERY == config.getType() || Type.JPA == config.getType()) {
                 if (StringUtils.contains(column.getComment(), "(format")) {
                     String value = "@DateTimeFormat(pattern = \"" + StringUtils.substringBetween(column.getComment(), "=", ")") + "\")";
                     context.put("dateTimeFormat", value);
                 } else {
                     logger.warn("date type should has format attribute : {}", column);
                 }
+            } else if (Type.INPUT == config.getType() || Type.UPDATE == config.getType()) {
+                if (StringUtils.contains(column.getComment(), "(format")) {
+                    String value = "@JsonFormat(pattern = \"" + StringUtils.substringBetween(column.getComment(), "=", ")") + "\")";
+                    context.put("dateTimeFormat", value);
+                } else {
+                    logger.warn("date type should has format attribute : {}", column);
+                }
+            } else {
+                throw new IllegalStateException("Unknown type : " + config.getType());
             }
         }
+
 
         if (StringUtils.isNotBlank(buildAttributeInfo(column))) {
             context.put("attributeInfo", buildAttributeInfo(column));

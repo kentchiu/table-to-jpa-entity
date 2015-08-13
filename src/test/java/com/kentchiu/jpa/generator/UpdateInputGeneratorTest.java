@@ -103,18 +103,19 @@ public class UpdateInputGeneratorTest extends DomainObjectGeneratorTest {
 
         int i = 0;
         // field
-        assertThat(lines.get(i++), is("//    private String dateProperty;"));
+        assertThat(lines.get(i++), is("//    private Date dateProperty;"));
 
         i = 2;
         // getter
+        assertThat(lines.get(i++), is("//    @JsonFormat(pattern = \"yyyy-MM-dd\")"));
         assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"this is a date property\", format = \"yyyy-MM-dd\")"));
-        assertThat(lines.get(i++), is("//    public String getDateProperty() {"));
+        assertThat(lines.get(i++), is("//    public Date getDateProperty() {"));
         assertThat(lines.get(i++), is("//        return dateProperty;"));
         assertThat(lines.get(i++), is("//    }"));
 
-        i = 7;
+        i = 8;
         // setter
-        assertThat(lines.get(i++), is("//    public void setDateProperty(String dateProperty) {"));
+        assertThat(lines.get(i++), is("//    public void setDateProperty(Date dateProperty) {"));
         assertThat(lines.get(i++), is("//        this.dateProperty = dateProperty;"));
         assertThat(lines.get(i++), is("//    }"));
     }
@@ -280,8 +281,9 @@ public class UpdateInputGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines, hasItem("import javax.validation.constraints.*;"));
         assertThat(lines, hasItem("import java.util.Date;"));
         assertThat(lines, hasItem("import java.math.BigDecimal;"));
+        assertThat(lines, hasItem("import com.fasterxml.jackson.annotation.JsonFormat;"));
 
-        int i = 10;
+        int i = 11;
         assertThat(lines.get(i++), is("/*"));
         assertThat(lines.get(i++), is(" * a table comment"));
         assertThat(lines.get(i++), is(" */"));
