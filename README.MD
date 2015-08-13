@@ -1,7 +1,10 @@
 
 
 ## TODO
-- detail 的query，input, update 不應該包含 master 的資訊
+- detail input, update 不應該包含 master uuid 的資訊
+- detail controller add,update 改從master uuid 抓
+- detail 的query要加入 master uuid的條件
+- input，update的日期改成@JsonFormat
 - json config
 - Master-Detail-Extend Controller
 - Master-Detail-Extend ControllerTest
