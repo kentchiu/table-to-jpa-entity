@@ -5,6 +5,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.kentchiu.jpa.domain.Column;
 import com.kentchiu.jpa.domain.Table;
+import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -204,6 +205,16 @@ public class EntityGenerator extends AbstractGenerator {
                 baseContext.put("extend", "");
             }
         }
+
+        if (Type.INPUT == config.getType() || Type.UPDATE == config.getType()) {
+            if (transformer.getMasterDetailMapper().containsKey(table.getName())) {
+                String masterColumn = getMasterColumn(table);
+                logger.debug("ignore master foreign key : {}", masterColumn);
+                ignoreColumns.add(masterColumn);
+            }
+        }
+
+
         // fieldEnums
         baseContext.put("fieldEnums", buildFieldEnums(table, ignoreColumns));
 
@@ -211,6 +222,18 @@ public class EntityGenerator extends AbstractGenerator {
         baseContext.put("properties", buildProperties(table, ignoreColumns));
 
         return baseContext;
+    }
+
+    private String getMasterColumn(Table table) {
+        DetailConfig config = transformer.getMasterDetailMapper().get(table.getName());
+        String masterTable = config.getMasterTable();
+        String masterFkName;
+        if (CharUtils.isAsciiAlphaUpper(masterTable.charAt(0))) {
+            masterFkName = masterTable + "_UUID";
+        } else {
+            masterFkName = masterTable + "_uuid";
+        }
+        return masterFkName;
     }
 
     private List<FieldEnum> buildFieldEnums(Table table, List<String> ignoreColumns) {

@@ -251,29 +251,6 @@ public class InputGeneratorTest extends DomainObjectGeneratorTest {
 
 
     @Test
-    public void testProperty_string_not_null() throws Exception {
-        List<String> lines = generator.buildProperty(Columns.createStringColumn("FOO_BAR", "The foo bar comment", false));
-        dump(lines);
-
-        // field
-        assertThat(lines.get(0), is("    private String fooBar;"));
-
-        // getter
-        int i = 2;
-        assertThat(lines.get(i++), is("    @NotBlank"));
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"The foo bar comment\")"));
-        assertThat(lines.get(i++), is("    public String getFooBar() {"));
-        assertThat(lines.get(i++), is("        return fooBar;"));
-        assertThat(lines.get(i++), is("    }"));
-
-        // setter
-        i = 8;
-        assertThat(lines.get(i++), is("    public void setFooBar(String fooBar) {"));
-        assertThat(lines.get(i++), is("        this.fooBar = fooBar;"));
-        assertThat(lines.get(i++), is("    }"));
-    }
-
-    @Test
     public void testExportTable() throws Exception {
         List<String> lines = generator.exportTable(Tables.table1());
         dump(lines);
