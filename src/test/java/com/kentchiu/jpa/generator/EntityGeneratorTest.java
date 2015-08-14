@@ -185,7 +185,7 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
         i = 2;
         // getter
         assertThat(lines.get(i++), is("    @Column(name = \"DATE_PROPERTY\")"));
-        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"this is a date property\", format = \"yyyy-MM-dd\")"));
+        assertThat(lines.get(i++), is("    @AttributeInfo(description = \"this is a date property\", format = \"yyyy-MM-dd HH:mm:ss\")"));
         assertThat(lines.get(i++), is("    public Date getDateProperty() {"));
         assertThat(lines.get(i++), is("        return dateProperty;"));
         assertThat(lines.get(i++), is("    }"));

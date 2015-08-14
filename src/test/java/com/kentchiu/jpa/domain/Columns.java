@@ -47,7 +47,7 @@ public class Columns {
         Column result = new Column();
         result.setNullable(true);
         result.setName("DATE_PROPERTY");
-        result.setComment("this is a date property(format=yyyy-MM-dd)");
+        result.setComment("this is a date property(format=yyyy-MM-dd HH:mm:ss)");
         result.setJavaType(Date.class.getName());
         return result;
 

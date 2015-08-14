@@ -107,8 +107,8 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
 
         i = 2;
         // getter
-        assertThat(lines.get(i++), is("//    @DateTimeFormat(pattern = \"yyyy-MM-dd\")"));
-        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"this is a date property\", format = \"yyyy-MM-dd\")"));
+        assertThat(lines.get(i++), is("//    @DateTimeFormat(pattern = \"yyyy-MM-dd HH:mm:ss\")"));
+        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"this is a date property\", format = \"yyyy-MM-dd HH:mm:ss\")"));
         assertThat(lines.get(i++), is("//    public Date getDateProperty() {"));
         assertThat(lines.get(i++), is("//        return dateProperty;"));
         assertThat(lines.get(i++), is("//    }"));
@@ -289,6 +289,10 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines, hasItem("import java.util.ArrayList;"));
         assertThat(lines, hasItem("import java.util.List;"));
         assertThat(lines, hasItem("import org.apache.commons.lang3.StringUtils;"));
+        assertThat(lines, hasItem("import com.kentchiu.spring.base.service.query.PageableQuery;"));
+
+
+
 
         int i = 21;
         assertThat(lines.get(i++), is("/*"));

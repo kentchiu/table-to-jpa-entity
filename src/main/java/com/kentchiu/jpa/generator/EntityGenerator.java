@@ -148,7 +148,8 @@ public class EntityGenerator extends AbstractGenerator {
 
         if (StringUtils.isNotBlank(column.getComment()) && column.getComment().contains("(format")) {
             sb.append(", ").append("format = \"");
-            sb.append("yyyy-MM-dd");
+            String format = StringUtils.substringBetween(column.getComment(), "=", ")");
+            sb.append(format);
             sb.append("\"");
         }
 
