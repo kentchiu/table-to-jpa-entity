@@ -6,6 +6,7 @@
 - Master-Detail-Extend ControllerTest
 
 ## DONE
+- Service -> extend form CurdQuery and QueryService
 - json config - rejectd
 - detail input, update 不應該包含 master uuid 的資訊
 - detail controller add,update 改從master uuid 抓

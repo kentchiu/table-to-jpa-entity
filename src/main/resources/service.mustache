@@ -2,9 +2,10 @@ package {{topPackage}}.{{moduleName}}.service;
 
 import {{topPackage}}.{{moduleName}}.domain.{{Domain}};
 import com.kentchiu.spring.base.service.CrudService;
+import com.kentchiu.spring.base.service.QueryService;
 
 
-public interface {{Domain}}Service extends CrudService<{{Domain}}> {
+public interface {{Domain}}Service extends CrudService<{{Domain}}>, QueryService<{{Domain}}> {
 }
 
 

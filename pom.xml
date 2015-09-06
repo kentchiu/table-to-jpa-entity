@@ -6,7 +6,7 @@
 
     <groupId>com.kentchiu</groupId>
     <artifactId>table2jpa</artifactId>
-    <version>0.3.9-SNAPSHOT</version>
+    <version>0.3.9</version>
 
     <dependencies>
         <dependency>

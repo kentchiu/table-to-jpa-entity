@@ -45,9 +45,10 @@ public class ServiceGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("import com.kentchiu.module.domain.FooBar;"));
         assertThat(list.get(i++), is("import com.kentchiu.spring.base.service.CrudService;"));
+        assertThat(list.get(i++), is("import com.kentchiu.spring.base.service.QueryService;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("public interface FooBarService extends CrudService<FooBar> {"));
+        assertThat(list.get(i++), is("public interface FooBarService extends CrudService<FooBar>, QueryService<FooBar> {"));
         assertThat(list.get(i++), is("}"));
     }
 
