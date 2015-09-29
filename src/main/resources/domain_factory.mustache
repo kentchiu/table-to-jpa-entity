@@ -16,14 +16,9 @@ public class {{DomainPlural}} {
 
 
     public static List<{{Domain}}> all() {
-        try {
-            return CsvExporter.csvToDomains({{Domain}}.class, BaseDomains.getCsvHome().resolve("{{table.name}}.csv"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return Lists.newArrayList();
+        return BaseDomains.export({{Domain}}.class, "{{table.name}}.csv");
     }
-
+    
 
     public static Page<{{Domain}}> page() {
         return new PageImpl<>(all());

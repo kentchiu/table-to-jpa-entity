@@ -1,9 +1,11 @@
 
 
 ## TODO
+- Domain export using BaseDomain
 - Query Master uuid 不應該被註解
 - Master-Detail-Extend Controller
 - Master-Detail-Extend ControllerTest
+- page by size , object factory and test : `public static Page<Customer> page(int size) {`
 
 ## DONE
 - Service -> extend form CurdQuery and QueryService
