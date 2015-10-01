@@ -5,9 +5,9 @@
 - Query Master uuid 不應該被註解
 - Master-Detail-Extend Controller
 - Master-Detail-Extend ControllerTest
-- page by size , object factory and test : `public static Page<Customer> page(int size) {`
 
 ## DONE
+- page by size , object factory and test : `public static Page<Customer> page(int size) {`
 - Service -> extend form CurdQuery and QueryService
 - json config - rejectd
 - detail input, update 不應該包含 master uuid 的資訊
