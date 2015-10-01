@@ -43,9 +43,6 @@ public class ControllerTestGeneratorTest {
         List<String> list = generator.applyTemplate(table);
         int i = 0;
 
-        list.forEach(System.out::println);
-
-
         assertThat(list.get(i++), is("package com.kentchiu.module.web;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("import com.kentchiu.base.web.AbstractControllerTest;"));

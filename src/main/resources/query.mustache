@@ -36,6 +36,9 @@ public class {{Domain}}Query {{{extend}}}{
     public Query<{{Domain}}> buildQuery() {
         {{Domain}} from = from({{Domain}}.class);
         List<OnGoingLogicalCondition> conditions = new ArrayList<>();
+{{#extraParams.enableFilter}}
+        conditions.addAll(super.buildQuery(from));
+{{/extraParams.enableFilter}}
 
 //        if (StringUtils.isNotBlank(__ref__Uuid)) {
 //            conditions.add(condition(from.get__Ref__().getUuid()).eq(__ref__Uuid));

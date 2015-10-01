@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +27,7 @@ public abstract class AbstractGenerator {
     protected Transformer transformer;
     protected Path projectHome;
     private Logger logger = LoggerFactory.getLogger(AbstractGenerator.class);
+    private Map<String, Object> extraParams = new HashMap<>();
 
     public AbstractGenerator(Transformer transformer) {
         this.transformer = transformer;
@@ -34,6 +36,21 @@ public abstract class AbstractGenerator {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    static void dump(List<String> lines) {
+        for (int i = 0; i < lines.size(); i++) {
+            String lineNo = StringUtils.leftPad(Integer.toString(i), 3);
+            System.out.println(lineNo + "| " + lines.get(i));
+        }
+    }
+
+    public Map<String, Object> getExtraParams() {
+        return extraParams;
+    }
+
+    public void setExtraParams(Map<String, Object> extraParams) {
+        this.extraParams = extraParams;
     }
 
     public Transformer getTransformer() {
@@ -99,6 +116,7 @@ public abstract class AbstractGenerator {
         context.put("DomainPlural", English.plural(domainName));
         context.put("topPackage", transformer.getTopPackage(table.getName()));
         context.put("moduleName", transformer.getModuleName(table.getName()));
+        context.put("extraParams", extraParams);
         return context;
     }
 

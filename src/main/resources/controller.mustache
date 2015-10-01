@@ -33,6 +33,9 @@ public class {{Domain}}Controller extends AbstractController {
 
     @RequestMapping(method = RequestMethod.GET)
     public Page<{{Domain}}> list{{DomainPlural}}(@Valid {{Domain}}Query query) {
+{{#extraParams.enableFilter}}
+        setFilter(query);
+{{/extraParams.enableFilter}}
         return service.findAll(query);
     }
 

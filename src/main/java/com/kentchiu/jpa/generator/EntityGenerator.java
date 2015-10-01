@@ -197,8 +197,13 @@ public class EntityGenerator extends AbstractGenerator {
         // import
         List<Map<String, String>> imports = buildImports().stream().map(i -> ImmutableMap.of("import", i)).collect(Collectors.toList());
         baseContext.put("imports", imports);
+        Boolean enableFilter = (Boolean) getExtraParams().getOrDefault("enableFilter", false);
         if (Type.QUERY == config.getType()) {
-            baseContext.put("extend", "extends PageableQuery<" + transformer.getDomainName(table.getName()) + "> ");
+            if (enableFilter) {
+                baseContext.put("extend", "extends FilterQuery<" + transformer.getDomainName(table.getName()) + "> ");
+            } else {
+                baseContext.put("extend", "extends PageableQuery<" + transformer.getDomainName(table.getName()) + "> ");
+            }
         } else {
             if (!Objects.equals(Object.class, config.getBaseClass())) {
                 baseContext.put("extend", "extends " + config.getBaseClass().getSimpleName());

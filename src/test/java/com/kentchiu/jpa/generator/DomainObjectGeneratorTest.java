@@ -16,11 +16,6 @@ public abstract class DomainObjectGeneratorTest {
     EntityGenerator generator;
 
 
-    void dump(List<String> lines) {
-        lines.stream().forEach(System.out::println);
-    }
-
-
     @Test
     public void testImports_reference_tables() throws Exception {
         generator.getTransformer().setTableNameMapper(ImmutableMap.of("MY_TABLE", "com.foo.bar.Foo", "MY_TABLE_2", "com.foo.bar.Boo"));
