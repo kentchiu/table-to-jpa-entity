@@ -44,6 +44,9 @@ public class <%detailDomain%>Controller extends AbstractController {
     public Page<{{detailDomain}}> list{{detailDomain}}s(@PathVariable String {{masterName}}Uuid, @Valid {{detailDomain}}Query query) {
         checkMasterExistOrThrow({{masterName}}Uuid);
         query.set{{masterDomain}}Uuid({{masterName}}Uuid);
+{{#extraParams.enableFilter}}
+        setFilter(query);
+{{/extraParams.enableFilter}}
         return service.findAll(query);
     }
 

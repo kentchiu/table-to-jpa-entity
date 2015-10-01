@@ -171,4 +171,25 @@ public class DetailControllerGeneratorTest {
     }
 
 
+    @Test
+    public void testApplyTemplate_enableFilter() throws Exception {
+        Table table = Tables.table1();
+        generator.getExtraParams().put("enableFilter", true);
+        List<String> list = generator.applyTemplate(table);
+
+        AbstractGenerator.dump(list);
+
+        int i = 42;
+
+        assertThat(list.get(i++), is("    @RequestMapping(method = RequestMethod.GET)"));
+        assertThat(list.get(i++), is("    public Page<DeviceDetection> listDeviceDetections(@PathVariable String deviceKindUuid, @Valid DeviceDetectionQuery query) {"));
+        assertThat(list.get(i++), is("        checkMasterExistOrThrow(deviceKindUuid);"));
+        assertThat(list.get(i++), is("        query.setDeviceKindUuid(deviceKindUuid);"));
+        assertThat(list.get(i++), is("        setFilter(query);"));
+        assertThat(list.get(i++), is("        return service.findAll(query);"));
+        assertThat(list.get(i++), is("    }"));
+
+
+    }
+
 }
