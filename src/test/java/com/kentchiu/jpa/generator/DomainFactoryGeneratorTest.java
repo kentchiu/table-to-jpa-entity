@@ -69,12 +69,7 @@ public class DomainFactoryGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    public static List<FooBar> all() {"));
-        assertThat(list.get(i++), is("        try {"));
-        assertThat(list.get(i++), is("            return CsvExporter.csvToDomains(FooBar.class, BaseDomains.getCsvHome().resolve(\"MY_TABLE_1.csv\"));"));
-        assertThat(list.get(i++), is("        } catch (IOException e) {"));
-        assertThat(list.get(i++), is("            e.printStackTrace();"));
-        assertThat(list.get(i++), is("        }"));
-        assertThat(list.get(i++), is("        return Lists.newArrayList();"));
+        assertThat(list.get(i++), is("        return BaseDomains.export(FooBar.class, \"MY_TABLE_1.csv\");"));
         assertThat(list.get(i++), is("    }"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));

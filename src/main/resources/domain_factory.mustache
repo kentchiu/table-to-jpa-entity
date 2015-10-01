@@ -18,7 +18,7 @@ public class {{DomainPlural}} {
     public static List<{{Domain}}> all() {
         return BaseDomains.export({{Domain}}.class, "{{table.name}}.csv");
     }
-    
+
 
     public static Page<{{Domain}}> page() {
         return new PageImpl<>(all());
