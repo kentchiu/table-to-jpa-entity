@@ -1,0 +1,74 @@
+{{=<% %>=}}
+# Group <%extraParams.title%>管理
+
+<%extraParams.title%>屬性:
+
+{{<%Domain%>ControllerTest/<%Domain%>.md}}
+
+## <%extraParams.title%>清單 [/<%masterNamePlural%>/{<%masterName%>Uuid}/<%detailNamePlural%>]
+
++ Parameters
+
+    + <%masterName%>uuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The <%masterNamePlural%> UUID
+
+
+### 取得<%extraParams.title%>清單 [GET]
+
+Arguments:
+
+{{<%Domain%>ControllerTest/<%Domain%>Query.md}}
+
+
+``` bash
+{{<%Domain%>ControllerTest/testList<%DomainPlural%>-curl.md}}
+```
+
+{{<%Domain%>ControllerTest/testList<%DomainPlural%>.md}}
+
+### 新增<%extraParams.title%> [POST]
+
+Arguments:
+
+{{<%Domain%>ControllerTest/<%Domain%>Input.md}}
+
+``` bash
+{{<%Domain%>ControllerTest/testAdd<%Domain%>-curl.md}}
+```
+
+{{<%Domain%>ControllerTest/testAdd<%Domain%>.md}}
+
+## <%extraParams.title%> [/<%masterNamePlural%>/{<%masterName%>Uuid}/<%detailNamePlural%>/{uuid}]
+
++ Parameters
+
+    + <%masterName%>uuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The <%masterNamePlural%> UUID
+    + uuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The <%detailNamePlural%> UUID
+
+
+### 取得<%extraParams.title%> [GET]
+
+``` bash
+{{<%Domain%>ControllerTest/testGet<%Domain%>-curl.md}}
+```
+
+{{<%Domain%>ControllerTest/testGet<%Domain%>.md}}
+
+### 更新<%extraParams.title%> [PATCH]
+
+Arguments:
+
+{{<%Domain%>ControllerTest/<%Domain%>UpdateInput.md}}
+
+``` bash
+{{<%Domain%>ControllerTest/testUpdate<%Domain%>-curl.md}}
+```
+
+{{<%Domain%>ControllerTest/testUpdate<%Domain%>.md}}
+
+### 刪除<%extraParams.title%> [DELETE]
+
+``` bash
+{{<%Domain%>ControllerTest/testDelete<%Domain%>-curl.md}}
+```
+
+{{<%Domain%>ControllerTest/testDelete<%Domain%>.md}}

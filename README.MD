@@ -4,7 +4,9 @@
 - Domain export using BaseDomain
 - Query Master uuid 不應該被註解
 - Master-Detail-Extend Controller
-- Master-Detail-Extend ControllerTest
+- Master-Detail-Extend 
+- attribute 裡的object 改成 name，如果可以，加上link，但要考慮可能會有跨頁問題
+- api doc template
 
 ## DONE
 - page by size , object factory and test : `public static Page<Customer> page(int size) {`
