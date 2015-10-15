@@ -59,7 +59,7 @@ public class ResourceDetailGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("+ Parameters"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("    + deviceKinduuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The deviceKinds UUID"));
+        assertThat(list.get(i++), is("    + deviceKindUuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The deviceKind UUID"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("### 取得FooBar清單 [GET]"));
@@ -91,8 +91,8 @@ public class ResourceDetailGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("+ Parameters"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("    + deviceKinduuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The deviceKinds UUID"));
-        assertThat(list.get(i++), is("    + uuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The detections UUID"));
+        assertThat(list.get(i++), is("    + deviceKindUuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The deviceKind UUID"));
+        assertThat(list.get(i++), is("    + uuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The detection UUID"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("### 取得FooBar [GET]"));
