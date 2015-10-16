@@ -74,11 +74,17 @@ public class DomainFactoryGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    public static Page<FooBar> page(int size) {"));
-        assertThat(list.get(i++), is("        return new PageImpl<>(all().subList(0, size));"));
+        assertThat(list.get(i++), is("        List<FooBar> all = all();"));
+        assertThat(list.get(i++), is("        if (all.size() > size) {"));
+        assertThat(list.get(i++), is("            return new PageImpl<>(all.subList(0, size));"));
+        assertThat(list.get(i++), is("        } else {"));
+        assertThat(list.get(i++), is("            return  new PageImpl<>(all);"));
+        assertThat(list.get(i++), is("        }"));
         assertThat(list.get(i++), is("    }"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("}"));
         assertThat(list.get(i++), is(""));
     }
+
 
 }

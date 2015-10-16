@@ -21,7 +21,12 @@ public class {{DomainPlural}} {
 
 
     public static Page<{{Domain}}> page(int size) {
-        return new PageImpl<>(all().subList(0, size));
+        List<{{Domain}}> all = all();
+        if (all.size() > size) {
+            return new PageImpl<>(all.subList(0, size));
+        } else {
+            return  new PageImpl<>(all);
+        }
     }
 
 }

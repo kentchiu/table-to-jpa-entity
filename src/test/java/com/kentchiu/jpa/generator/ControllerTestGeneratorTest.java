@@ -91,7 +91,7 @@ public class ControllerTestGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Test"));
         assertThat(list.get(i++), is("    public void testListFooBars() throws Exception {"));
-        assertThat(list.get(i++), is("        when(mockService.findAll(any(FooBarQuery.class))).thenReturn(FooBars.page());"));
+        assertThat(list.get(i++), is("        when(mockService.findAll(any(FooBarQuery.class))).thenReturn(FooBars.page(10));"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("        MockHttpServletRequestBuilder requestBuilder = get(\"/fooBars\")"));
         assertThat(list.get(i++), is("                .contentType(MediaType.APPLICATION_JSON);"));

@@ -58,7 +58,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
 
     @Test
     public void testList{{Domain}}s() throws Exception {
-        when(mockService.findAll(any({{Domain}}Query.class))).thenReturn({{Domain}}s.page());
+        when(mockService.findAll(any({{Domain}}Query.class))).thenReturn({{Domain}}s.page(10));
 
         MockHttpServletRequestBuilder requestBuilder = get("/{{masterNamePlural}}/" + {{masterName}}Uuid + "/{{detailNamePlural}}")
                 .contentType(MediaType.APPLICATION_JSON);

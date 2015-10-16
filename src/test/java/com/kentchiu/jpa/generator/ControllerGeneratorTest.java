@@ -60,7 +60,6 @@ public class ControllerGeneratorTest {
         assertThat(list.get(i++), is("import com.kentchiu.module.service.query.FooBarQuery;"));
         assertThat(list.get(i++), is("import com.kentchiu.module.web.dto.FooBarInput;"));
         assertThat(list.get(i++), is("import com.kentchiu.module.web.dto.FooBarUpdateInput;"));
-        assertThat(list.get(i++), is("import com.kentchiu.module.web.AbstractController;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("import com.kentchiu.spring.base.domain.DomainUtil;"));
         assertThat(list.get(i++), is("import com.kentchiu.spring.base.domain.ResourceNotFoundException;"));
@@ -161,7 +160,7 @@ public class ControllerGeneratorTest {
         List<String> list = generator.applyTemplate(table);
 
         AbstractGenerator.dump(list);
-        int i = 33;
+        int i = 32;
         assertThat(list.get(i++), is("    @RequestMapping(method = RequestMethod.GET)"));
         assertThat(list.get(i++), is("    public Page<FooBar> listFooBars(@Valid FooBarQuery query) {"));
         assertThat(list.get(i++), is("        setFilter(query);"));

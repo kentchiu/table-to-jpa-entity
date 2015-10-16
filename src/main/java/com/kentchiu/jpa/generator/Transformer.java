@@ -121,6 +121,7 @@ public class Transformer {
             String modulePackage = StringUtils.substringBefore(qualifier, ".domain");
             return StringUtils.substringAfterLast(modulePackage, ".");
         } else {
+            logger.warn("{} not in tableNameMapper", tableName);
             return "";
         }
     }
