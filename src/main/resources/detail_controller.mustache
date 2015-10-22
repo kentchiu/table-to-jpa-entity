@@ -41,7 +41,7 @@ public class <%detailDomain%>Controller extends AbstractController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public Page<{{detailDomain}}> list{{detailDomain}}s(@PathVariable String {{masterName}}Uuid, @Valid {{detailDomain}}Query query) {
+    public Page<{{detailDomain}}> list{{detailDomainPlural}}(@PathVariable String {{masterName}}Uuid, @Valid {{detailDomain}}Query query) {
         checkMasterExistOrThrow({{masterName}}Uuid);
         query.set{{masterDomain}}Uuid({{masterName}}Uuid);
 {{#extraParams.enableFilter}}
