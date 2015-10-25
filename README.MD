@@ -1,6 +1,7 @@
 
 
 ## TODO
+- DomainObject 只產生特定屬性
 - Query Master uuid 不應該被註解
 - Master-Detail-Extend Controller
 - Master-Detail-Extend 
