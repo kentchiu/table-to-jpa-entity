@@ -32,6 +32,25 @@ public class Tables {
         return table;
     }
 
+    public static Table master() {
+        Table table = createTable("MASTER", "master table");
+        table.getColumns().add(createColumn("MY_COLUMN_1", "my column 1 comment", String.class.getName()));
+        table.getColumns().add(createColumn("MY_COLUMN_1", "my column 2 comment", String.class.getName(), false));
+        table.getColumns().add(createColumn("MY_COLUMN_1", "my column 3 comment", TIMESTAMP.class.getName(), false));
+        table.setPrimaryKey("MY_COLUMN_1");
+        return table;
+    }
+
+
+    public static Table detail() {
+        Table table = createTable("DETAIL", "detail table");
+        table.getColumns().add(createColumn("MY_COLUMN_1_1", "my column 1-1 comment", String.class.getName()));
+        table.getColumns().add(createColumn("MY_COLUMN_1_2", "my column 1-2 comment", String.class.getName(), false));
+        table.getColumns().add(createColumn("MY_COLUMN_1_2", "my column 1-3 comment", TIMESTAMP.class.getName(), false));
+        table.setPrimaryKey("MY_COLUMN_1_1");
+        return table;
+    }
+
     private static Table createTable(String name, String comment) {
         Table table = new Table();
         table.setName(name);

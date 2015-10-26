@@ -271,6 +271,7 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines.get(i++), is("//    }"));
     }
 
+
     @Test
     public void testExportTable() throws Exception {
         List<String> lines = generator.exportTable(Tables.table1());
