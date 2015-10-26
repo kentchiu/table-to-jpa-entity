@@ -18,21 +18,11 @@ import java.util.stream.Collectors;
 public class EntityGenerator extends AbstractGenerator {
 
     protected Config config;
-    private List<String> ignoreColumns;
     private Logger logger = LoggerFactory.getLogger(EntityGenerator.class);
 
     public EntityGenerator(Transformer transformer, Config config) {
         super(transformer);
         this.config = config;
-        ignoreColumns = new ArrayList<>();
-    }
-
-    public List<String> getIgnoreColumns() {
-        return ignoreColumns;
-    }
-
-    public void setIgnoreColumns(List<String> ignoreColumns) {
-        this.ignoreColumns = ignoreColumns;
     }
 
     @Override
@@ -42,7 +32,8 @@ public class EntityGenerator extends AbstractGenerator {
     }
 
 
-    private String buildProperties(Table table, List<String> ignoreColumns) {
+    private String buildProperties(Table table) {
+        List<String> ignoreColumns = getIgnoreColumns(table);
         List<String> lines = new ArrayList<>();
         table.getColumns().stream().filter(column -> !ignoreColumns.contains(column.getName())).forEach(column -> {
             lines.addAll(buildProperty(column));
@@ -212,20 +203,11 @@ public class EntityGenerator extends AbstractGenerator {
             }
         }
 
-        if (Type.INPUT == config.getType() || Type.UPDATE == config.getType()) {
-            if (transformer.getMasterDetailMapper().containsKey(table.getName())) {
-                String masterColumn = getMasterColumn(table);
-                logger.debug("ignore master foreign key : {}", masterColumn);
-                ignoreColumns.add(masterColumn);
-            }
-        }
-
-
         // fieldEnums
-        baseContext.put("fieldEnums", buildFieldEnums(table, ignoreColumns));
+        baseContext.put("fieldEnums", buildFieldEnums(table));
 
         // properties
-        baseContext.put("properties", buildProperties(table, ignoreColumns));
+        baseContext.put("properties", buildProperties(table));
 
         return baseContext;
     }
@@ -242,13 +224,26 @@ public class EntityGenerator extends AbstractGenerator {
         return masterFkName;
     }
 
-    private List<FieldEnum> buildFieldEnums(Table table, List<String> ignoreColumns) {
+    private List<FieldEnum> buildFieldEnums(Table table) {
+        List<String> ignoreColumns = getIgnoreColumns(table);
         List<FieldEnum> results = new ArrayList();
         table.getColumns().stream().filter(column -> !ignoreColumns.contains(column.getName())).forEach(c -> {
             List<FieldEnum> fieldEnums = buildEnum(c);
             results.addAll(fieldEnums);
         });
         return results;
+    }
+
+    private List<String> getIgnoreColumns(Table table) {
+        List<String> ignoreColumns = new ArrayList<>();
+        if (Type.INPUT == config.getType() || Type.UPDATE == config.getType()) {
+            if (transformer.getMasterDetailMapper().containsKey(table.getName())) {
+                String masterColumn = getMasterColumn(table);
+                logger.debug("ignore master foreign key : {}", masterColumn);
+                ignoreColumns.add(masterColumn);
+            }
+        }
+        return ignoreColumns;
     }
 
     protected String getClassName(Table table) {

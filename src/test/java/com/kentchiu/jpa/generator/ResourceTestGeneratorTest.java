@@ -51,7 +51,7 @@ public class ResourceTestGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("{{FooBarControllerTest/FooBar.md}}"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("## FooBar清單 [/FooBars]"));
+        assertThat(list.get(i++), is("## FooBar清單 [/fooBars]"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("### 取得FooBar清單 [GET]"));
         assertThat(list.get(i++), is(""));
@@ -78,7 +78,7 @@ public class ResourceTestGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("{{FooBarControllerTest/testAddFooBar.md}}"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("## FooBar [/FooBars/{uuid}]"));
+        assertThat(list.get(i++), is("## FooBar [/fooBars/{uuid}]"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("+ Parameters"));
         assertThat(list.get(i++), is(""));

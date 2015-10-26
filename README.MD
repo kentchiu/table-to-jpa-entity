@@ -1,13 +1,13 @@
 
 
 ## TODO
-- DomainObject 只產生特定屬性
 - Query Master uuid 不應該被註解
 - Master-Detail-Extend Controller
 - Master-Detail-Extend 
 - splitStrategies @SplitStrategyDetailController was splitStrategys 
 
 ## DONE
+- DomainObject 只產生特定屬性
 - Domain export using BaseDomain
 - api doc template
 - page by size , object factory and test : `public static Page<Customer> page(int size) {`
