@@ -103,7 +103,7 @@ public class ExtendDetailResourceGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    + masterUuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The master UUID"));
         assertThat(list.get(i++), is("    + detailUuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The detail UUID"));
-        assertThat(list.get(i++), is("    + uuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The detail UUID"));
+        assertThat(list.get(i++), is("    + uuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The extendDetail UUID"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("### 取得ExtendDetail [GET]"));

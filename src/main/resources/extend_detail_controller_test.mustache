@@ -104,7 +104,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
         String uuid = {{extendDetailName}}.getUuid();
         when(mockService.findOne(uuid)).thenReturn(Optional.of({{extendDetailName}}));
 
-        MockHttpServletRequestBuilder requestBuilder = get("/{{masterNamePlural}}/" + {{masterName}}Uuid + "/{{detailNamePlural}}/" + {{extendDetailName}}Uuid + "/{{extendDetailNamePlural}}/" + uuid)
+        MockHttpServletRequestBuilder requestBuilder = get("/{{masterNamePlural}}/" + {{masterName}}Uuid + "/{{detailNamePlural}}/" + {{detailName}}Uuid + "/{{extendDetailNamePlural}}/" + uuid)
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(requestBuilder)
@@ -125,7 +125,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
 
         when(mockService.findOne(uuid)).thenReturn(Optional.of({{extendDetailName}}));
 
-        MockHttpServletRequestBuilder requestBuilder = patch("/{{masterNamePlural}}/" + {{masterName}}Uuid + "/{{detailNamePlural}}/" + {{extendDetailName}}Uuid  + "/{{extendDetailNamePlural}}/" + uuid)
+        MockHttpServletRequestBuilder requestBuilder = patch("/{{masterNamePlural}}/" + {{masterName}}Uuid + "/{{detailNamePlural}}/" + {{detailName}}Uuid  + "/{{extendDetailNamePlural}}/" + uuid)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json);
 
@@ -140,9 +140,9 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
     @Test
     public void testDelete{{extendDetailDomain}}() throws Exception {
         {{extendDetailDomain}} {{extendDetailName}} = {{extendDetailDomainPlural}}.all().get(0);
-        String uuid = {{detailName}}.getUuid();
+        String uuid = {{extendDetailName}}.getUuid();
 
-        MockHttpServletRequestBuilder requestBuilder = delete("/{{masterNamePlural}}/" + {{masterName}}Uuid + "/{{detailNamePlural}}/" + {{extendDetailName}}Uuid  + "/{{extendDetailNamePlural}}/" + uuid)
+        MockHttpServletRequestBuilder requestBuilder = delete("/{{masterNamePlural}}/" + {{masterName}}Uuid + "/{{detailNamePlural}}/" + {{detailName}}Uuid  + "/{{extendDetailNamePlural}}/" + uuid)
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(requestBuilder)

@@ -26,7 +26,7 @@ public abstract class AbstractExtendDetailGenerator extends AbstractControllerGe
 
         context.put("masterName", config.getMasterName());
         context.put("detailName", config.getDetailName());
-        context.put("extendDetailName", config.getDetailName());
+        context.put("extendDetailName", config.getExtendDetailName());
         context.put("masterDomain", config.getMasterDomain(transformer));
         context.put("detailDomain", config.getDetailDomain(transformer));
         context.put("extendDetailDomain", config.getExtendDetailDomain(transformer));
