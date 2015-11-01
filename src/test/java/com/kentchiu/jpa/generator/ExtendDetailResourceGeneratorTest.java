@@ -39,7 +39,7 @@ public class ExtendDetailResourceGeneratorTest {
 
 
         generator = new ExtendDetailResourceGenerator(transformer);
-        generator.getExtraParams().put("title", "FooBar");
+        generator.getExtraParams().put("title", "ExtendDetail");
     }
 
     @Test
@@ -58,20 +58,21 @@ public class ExtendDetailResourceGeneratorTest {
         int i = 0;
 
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("# Group FooBar管理"));
+        assertThat(list.get(i++), is("# Group ExtendDetail管理"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("FooBar屬性:"));
+        assertThat(list.get(i++), is("ExtendDetail屬性:"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("{{ExtendDetailControllerTest/ExtendDetail.md}}"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("## FooBar清單 [/masters/{masterUuid}/details]"));
+        assertThat(list.get(i++), is("## ExtendDetail清單 [/masters/{masterUuid}/details/{detailUuid}/extendDetails]"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("+ Parameters"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    + masterUuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The master UUID"));
+        assertThat(list.get(i++), is("    + detailUuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The detail UUID"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("### 取得FooBar清單 [GET]"));
+        assertThat(list.get(i++), is("### 取得ExtendDetail清單 [GET]"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("Arguments:"));
         assertThat(list.get(i++), is(""));
@@ -84,7 +85,7 @@ public class ExtendDetailResourceGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("{{ExtendDetailControllerTest/testListExtendDetails.md}}"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("### 新增FooBar [POST]"));
+        assertThat(list.get(i++), is("### 新增ExtendDetail [POST]"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("Arguments:"));
         assertThat(list.get(i++), is(""));
@@ -96,15 +97,16 @@ public class ExtendDetailResourceGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("{{ExtendDetailControllerTest/testAddExtendDetail.md}}"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("## FooBar [/masters/{masterUuid}/details/{uuid}]"));
+        assertThat(list.get(i++), is("## ExtendDetail [/masters/{masterUuid}/details/{detailUuid}/extendDetails/{uuid}]"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("+ Parameters"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    + masterUuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The master UUID"));
+        assertThat(list.get(i++), is("    + detailUuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The detail UUID"));
         assertThat(list.get(i++), is("    + uuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The detail UUID"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("### 取得FooBar [GET]"));
+        assertThat(list.get(i++), is("### 取得ExtendDetail [GET]"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("``` bash"));
         assertThat(list.get(i++), is("{{ExtendDetailControllerTest/testGetExtendDetail-curl.md}}"));
@@ -112,7 +114,7 @@ public class ExtendDetailResourceGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("{{ExtendDetailControllerTest/testGetExtendDetail.md}}"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("### 更新FooBar [PATCH]"));
+        assertThat(list.get(i++), is("### 更新ExtendDetail [PATCH]"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("Arguments:"));
         assertThat(list.get(i++), is(""));
@@ -124,7 +126,7 @@ public class ExtendDetailResourceGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("{{ExtendDetailControllerTest/testUpdateExtendDetail.md}}"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("### 刪除FooBar [DELETE]"));
+        assertThat(list.get(i++), is("### 刪除ExtendDetail [DELETE]"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("``` bash"));
         assertThat(list.get(i++), is("{{ExtendDetailControllerTest/testDeleteExtendDetail-curl.md}}"));

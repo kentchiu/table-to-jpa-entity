@@ -14,7 +14,7 @@ public class ExtendDetailResourceGenerator extends AbstractExtendDetailGenerator
 
     @Override
     protected String getTemplate() {
-        return "detail_resource.mustache";
+        return "extend_detail_resource.mustache";
     }
 
     @Override
