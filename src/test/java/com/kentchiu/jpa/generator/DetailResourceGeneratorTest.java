@@ -18,9 +18,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
-public class ResourceDetailGeneratorTest {
+public class DetailResourceGeneratorTest {
 
-    private ResourceDetailGenerator generator;
+    private DetailResourceGenerator generator;
     private Table table;
 
     @Before
@@ -35,7 +35,7 @@ public class ResourceDetailGeneratorTest {
         transformer.setMasterDetailMapper(ImmutableMap.of(table.getName(), config));
 
 
-        generator = new ResourceDetailGenerator(transformer);
+        generator = new DetailResourceGenerator(transformer);
         generator.getExtraParams().put("title", "Detail");
     }
 

@@ -1,24 +1,15 @@
 package com.kentchiu.jpa.generator;
 
 import com.kentchiu.jpa.domain.Table;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
-public class ResourceExtendDetailGenerator extends AbstractExtendDetailGenerator {
+public class DetailResourceGenerator extends AbstractDetailGenerator {
 
-    private Logger logger = LoggerFactory.getLogger(ResourceExtendDetailGenerator.class);
-
-    public ResourceExtendDetailGenerator(Transformer transformer) {
+    public DetailResourceGenerator(Transformer transformer) {
         super(transformer);
-    }
-
-    @Override
-    protected String getTemplate() {
-        return "resource_detail.mustache";
     }
 
     @Override
@@ -31,6 +22,10 @@ public class ResourceExtendDetailGenerator extends AbstractExtendDetailGenerator
         return transformer.getDomainName(table.getName());
     }
 
+
+    protected String getTemplate() {
+        return "detail_resource.mustache";
+    }
 
     protected Optional<Path> exportToFile(Table table, List<String> lines) {
         return exportApiDocument(table, lines);

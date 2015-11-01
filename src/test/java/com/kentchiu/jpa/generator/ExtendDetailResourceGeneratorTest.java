@@ -18,14 +18,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
-public class ResourceExtendDetailGeneratorTest {
+public class ExtendDetailResourceGeneratorTest {
 
-    private ResourceExtendDetailGenerator generator;
+    private ExtendDetailResourceGenerator generator;
     private Table table;
 
     @Before
     public void setUp() throws Exception {
-        Table table = Tables.extendDetail();
+        table = Tables.extendDetail();
         Transformer transformer = new Transformer();
 
         Map<String, String> mapper = new HashMap<>();
@@ -38,13 +38,12 @@ public class ResourceExtendDetailGeneratorTest {
         transformer.setMasterDetailMapper(ImmutableMap.of(table.getName(), config));
 
 
-        generator = new ResourceExtendDetailGenerator(transformer);
+        generator = new ExtendDetailResourceGenerator(transformer);
         generator.getExtraParams().put("title", "FooBar");
     }
 
     @Test
     public void testExport() throws Exception {
-        Table table = Tables.extendDetail();
         Optional<Path> export = generator.exportToFile(table, ImmutableList.of());
         assertThat(export.isPresent(), Is.is(true));
         assertThat(export.get().toString(), containsString("/api/module/extendDetail.md"));
@@ -53,7 +52,6 @@ public class ResourceExtendDetailGeneratorTest {
 
     @Test
     public void testApplyTemplate() throws Exception {
-        Table table = Tables.extendDetail();
         List<String> list = generator.applyTemplate(table);
 
         list.stream().forEach(System.out::println);
@@ -133,8 +131,6 @@ public class ResourceExtendDetailGeneratorTest {
         assertThat(list.get(i++), is("```"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("{{ExtendDetailControllerTest/testDeleteExtendDetail.md}}"));
-
-
     }
 
 
