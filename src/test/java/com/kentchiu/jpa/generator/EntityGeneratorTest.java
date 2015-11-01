@@ -403,11 +403,6 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
     }
 
 
-
-
-
-
-
     @Test
     public void testAttributeInfo_with_options_and_default_value() throws Exception {
         Column column = new Column();

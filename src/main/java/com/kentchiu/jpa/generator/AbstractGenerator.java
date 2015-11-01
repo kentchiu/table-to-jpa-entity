@@ -68,6 +68,7 @@ public abstract class AbstractGenerator {
     public Path getJavaSourceHome() {
         return projectHome.resolve("src/main/java");
     }
+
     public Path getJavaTestSourceHome() {
         return projectHome.resolve("src/test/java");
     }
@@ -101,7 +102,6 @@ public abstract class AbstractGenerator {
             return Optional.empty();
         }
     }
-
 
 
     protected boolean isTest() {

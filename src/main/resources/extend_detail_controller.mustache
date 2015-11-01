@@ -52,7 +52,7 @@ public class <%extendDetailDomain%>Controller extends AbstractController {
     public Page<{{extendDetailDomain}}> list{{extendDetailDomainPlural}}(@PathVariable String {{masterName}}Uuid, @PathVariable String {{detailName}}Uuid, @Valid {{extendDetailDomain}}Query query) {
         checkParentExist({{masterName}}Uuid, {{detailName}}Uuid);
 
-        query.set{{extendDetailDomain}}Uuid({{extendDetailName}}Uuid);
+        query.set{{detailDomain}}Uuid({{detailName}}Uuid);
 {{#extraParams.enableFilter}}
         setFilter(query);
 {{/extraParams.enableFilter}}
@@ -128,7 +128,7 @@ public class <%extendDetailDomain%>Controller extends AbstractController {
     }
 
 
-    private void checkParentExist(@PathVariable String masterUuid, @PathVariable String detailUuid) {
+    private void checkParentExist(String {{masterName}}Uuid, String detailUuid) {
         {{masterName}}Service.findOne({{masterName}}Uuid).orElseThrow(() -> new ResourceNotFoundException({{masterDomain}}.class, {{masterName}}Uuid));
         {{detailName}}Service.findOne({{detailName}}Uuid).orElseThrow(() -> new ResourceNotFoundException({{detailDomain}}.class, {{detailName}}Uuid));
     }

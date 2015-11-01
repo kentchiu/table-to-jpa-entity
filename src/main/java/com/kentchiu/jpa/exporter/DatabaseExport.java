@@ -35,7 +35,7 @@ public abstract class DatabaseExport {
     /**
      * Foreign Key - Reference Table Mapper. Mapping foreign key to reference table
      * ex: ORDER_ID (FK) -> TABLE_ORDER (TABLE)
-     * <p/>
+     * <p>
      * 要設定 Foreign Key 的來源 table，才有辦法正確產生 `@ManyToOne` 的資訊
      */
     public void setForeignKeyMap(Map<String, String> foreignKeyMap) {

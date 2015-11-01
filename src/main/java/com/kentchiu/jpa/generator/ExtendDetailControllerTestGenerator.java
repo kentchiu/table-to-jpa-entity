@@ -40,21 +40,21 @@ public class ExtendDetailControllerTestGenerator extends AbstractControllerGener
         context.put("extendDetailName", config.getDetailName());
         context.put("masterDomain", transformer.getDomainName(config.getMasterTable()));
         context.put("detailDomain", transformer.getDomainName(config.getDetailTable()));
-        context.put("extendDomain", transformer.getDomainName(config.getExtendDetailTable()));
+        context.put("extendDetailDomain", transformer.getDomainName(config.getExtendDetailTable()));
 
         Preconditions.checkNotNull(context.get("masterName"), "masterName is mandatory");
         Preconditions.checkNotNull(context.get("detailName"), "detailName is mandatory");
         Preconditions.checkNotNull(context.get("extendDetailName"), "extendName is mandatory");
         Preconditions.checkNotNull(context.get("masterDomain"), "masterDomain is mandatory");
         Preconditions.checkNotNull(context.get("detailDomain"), "detailDomain is mandatory");
-        Preconditions.checkNotNull(context.get("extendDomain"), "extendDomain is mandatory");
+        Preconditions.checkNotNull(context.get("extendDetailDomain"), "extendDetailDomain is mandatory");
 
         context.put("masterNamePlural", English.plural(config.getMasterName()));
         context.put("detailNamePlural", English.plural(config.getDetailName()));
-        context.put("extendNamePlural", English.plural(config.getDetailName()));
+        context.put("extendDetailNamePlural", English.plural(config.getExtendDetailName()));
         context.put("masterDomainPlural", English.plural(config.getMasterDomain(transformer)));
         context.put("detailDomainPlural", English.plural(config.getDetailDomain(transformer)));
-        context.put("extendDomainPlural", English.plural(config.getExtendDetailDomain(transformer)));
+        context.put("extendDetailDomainPlural", English.plural(config.getExtendDetailDomain(transformer)));
 
         String domain = getDomain(table);
         context.put("domain", domain);
