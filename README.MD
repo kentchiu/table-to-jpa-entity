@@ -2,6 +2,7 @@
 
 ## TODO
 - Query Master uuid 不應該被註解
+- DetailQuery buildQuery裡要加上master uuid 的condition
 - Master-Detail-Extend Controller
 - Master-Detail-Extend 
 - splitStrategies @SplitStrategyDetailController was splitStrategys 

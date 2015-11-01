@@ -1,10 +1,11 @@
 package com.kentchiu.jpa.generator;
 
 public class DetailConfig {
-    public String masterName;
-    public String detailName;
-    public String detailTable;
-    public String masterTable;
+
+    private String masterName;
+    private String detailName;
+    private String detailTable;
+    private String masterTable;
 
     public DetailConfig(String masterName, String detailName, String masterTable, String detailTable) {
         this.masterName = masterName;
