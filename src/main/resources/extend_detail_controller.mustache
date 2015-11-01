@@ -1,0 +1,136 @@
+package {{topPackage}}.{{moduleName}}.web;
+
+import {{topPackage}}.base.web.AbstractController;
+import {{topPackage}}.{{moduleName}}.domain.{{masterDomain}};
+import {{topPackage}}.{{moduleName}}.domain.{{detailDomain}};
+import {{topPackage}}.{{moduleName}}.domain.{{extendDetailDomain}};
+import {{topPackage}}.{{moduleName}}.service.{{masterDomain}}Service;
+import {{topPackage}}.{{moduleName}}.service.{{detailDomain}}Service;
+import {{topPackage}}.{{moduleName}}.service.{{extendDetailDomain}}Service;
+import {{topPackage}}.{{moduleName}}.service.query.{{extendDetailDomain}}Query;
+import {{topPackage}}.{{moduleName}}.web.dto.{{extendDetailDomain}}Input;
+import {{topPackage}}.{{moduleName}}.web.dto.{{extendDetailDomain}}UpdateInput;
+import {{topPackage}}.{{moduleName}}.web.AbstractController;
+
+import com.kentchiu.spring.base.domain.DomainUtil;
+import com.kentchiu.spring.base.domain.ResourceNotFoundException;
+import com.kentchiu.spring.base.domain.Validators;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+
+{{=<% %>=}}
+@RestController
+@RequestMapping("/<%masterNamePlural%>/{<%masterName%>Uuid}/<%detailNamePlural%>/{<%detailName%>Uuid}/<%extendDetailNamePlural%>")
+public class <%extendDetailDomain%>Controller extends AbstractController {
+<%={{ }}=%>
+    private {{masterDomain}}Service {{masterName}}Service;
+    private {{detailDomain}}Service {{detailName}}Service;
+    private {{extendDetailDomain}}Service service;
+
+    @Autowired
+    public void set{{masterDomain}}Service({{masterDomain}}Service {{masterName}}Service) {
+        this.{{masterName}}Service = {{masterName}}Service;
+    }
+
+    @Autowired
+    public void set{{detailDomain}}Service({{detailDomain}}Service {{detailName}}Service) {
+        this.{{detailName}}Service = {{detailName}}Service;
+    }
+
+    @Autowired
+    public void setService({{extendDetailDomain}}Service service) {
+        this.service = service;
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public Page<{{extendDetailDomain}}> list{{extendDetailDomainPlural}}(@PathVariable String {{masterName}}Uuid, @PathVariable String {{detailName}}Uuid, @Valid {{extendDetailDomain}}Query query) {
+        checkParentExist({{masterName}}Uuid, {{detailName}}Uuid);
+
+        query.set{{extendDetailDomain}}Uuid({{extendDetailName}}Uuid);
+{{#extraParams.enableFilter}}
+        setFilter(query);
+{{/extraParams.enableFilter}}
+        return service.findAll(query);
+    }
+
+
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @RequestMapping(method = RequestMethod.POST)
+    public {{extendDetailDomain}} add{{extendDetailDomain}}(@PathVariable String {{masterName}}Uuid, @PathVariable String {{detailName}}Uuid, @Valid @RequestBody {{extendDetailDomain}}Input input) throws BindException {
+        checkParentExist({{masterName}}Uuid, {{detailName}}Uuid);
+        {{extendDetailDomain}} {{extendDetailName}} = new {{extendDetailDomain}}();
+        DomainUtil.copyNotNullProperties(input, {{extendDetailName}});
+
+        // detail
+        {{detailDomain}} {{detailName}} = {{detailName}}Service.findOne({{detailName}}Uuid).orElseThrow(() -> new ResourceNotFoundException({{detailDomain}}.class, {{detailName}}Uuid));
+        {{extendDetailName}}.set{{detailDomain}}({{detailName}});
+
+        // FIXME  add references
+        // if (StringUtils.isNotBlank(input.getXxxUuid())) {
+        //    Xxx xxx = xxxService.findOne(input.getXxxUuid()).orElseThrow(() -> new ResourceNotFoundException(Xxx.class, input.getXxxUuid()));
+        //    {{extendDetailDomain}}.setXxx(xxx);
+        // }
+
+        BindException exception = new BindException({{extendDetailName}}, {{extendDetailName}}.getClass().getSimpleName());
+        Validators.validateBean(exception, {{extendDetailName}});
+
+        if (exception.hasErrors()) {
+            throw exception;
+        }
+
+        service.add({{extendDetailName}});
+        return {{extendDetailName}};
+    }
+
+
+    @RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
+    public {{extendDetailDomain}} get{{extendDetailDomain}}(@PathVariable String {{masterName}}Uuid, @PathVariable String {{detailName}}Uuid, @PathVariable String uuid) {
+        checkParentExist({{masterName}}Uuid, {{detailName}}Uuid);
+        return service.findOne(uuid).orElseThrow(() -> new ResourceNotFoundException({{extendDetailDomain}}.class, uuid));
+    }
+
+    @RequestMapping(value = "/{uuid}", method = RequestMethod.PATCH)
+    public {{extendDetailDomain}} update{{extendDetailDomain}}(@PathVariable String {{masterName}}Uuid, @PathVariable String {{detailName}}Uuid, @PathVariable String uuid, @Valid @RequestBody {{extendDetailDomain}}UpdateInput input) throws BindException {
+        checkParentExist({{masterName}}Uuid, {{detailName}}Uuid);
+        {{extendDetailDomain}} {{extendDetailName}} = service.findOne(uuid).orElseThrow(() -> new ResourceNotFoundException({{extendDetailDomain}}.class, uuid));
+
+        DomainUtil.copyNotNullProperties(input, {{extendDetailName}});
+
+        // FIXME  add references
+        // if (StringUtils.isNotBlank(input.getXxxUuid())) {
+        //    Xxx xxx = xxxService.findOne(input.getXxxUuid()).orElseThrow(() -> new ResourceNotFoundException(Xxx.class, input.getXxxUuid()));
+        //    {{extendDetailDomain}}.setXxx(xxx);
+        // }
+
+        BindException exception = new BindException({{extendDetailName}}, {{extendDetailName}}.getClass().getSimpleName());
+        Validators.validateBean(exception, {{extendDetailName}});
+
+        if (exception.hasErrors()) {
+            throw exception;
+        }
+
+        service.update({{extendDetailName}});
+        return {{extendDetailName}};
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @RequestMapping(value = "/{uuid}", method = RequestMethod.DELETE)
+    public void delete{{extendDetailDomain}}(@PathVariable String {{masterName}}Uuid, @PathVariable String {{detailName}}Uuid, @PathVariable String uuid) {
+        checkParentExist({{masterName}}Uuid, {{detailName}}Uuid);
+        service.delete(uuid);
+    }
+
+
+    private void checkParentExist(@PathVariable String masterUuid, @PathVariable String detailUuid) {
+        {{masterName}}Service.findOne({{masterName}}Uuid).orElseThrow(() -> new ResourceNotFoundException({{masterDomain}}.class, {{masterName}}Uuid));
+        {{detailName}}Service.findOne({{detailName}}Uuid).orElseThrow(() -> new ResourceNotFoundException({{detailDomain}}.class, {{detailName}}Uuid));
+    }
+
+}

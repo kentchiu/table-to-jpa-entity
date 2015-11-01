@@ -58,13 +58,15 @@ public class ExtendDetailControllerGeneratorTest {
         assertThat(list.get(i++), is("package com.kentchiu.module.web;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("import com.kentchiu.base.web.AbstractController;"));
-        assertThat(list.get(i++), is("import com.kentchiu.module.domain.DeviceKind;"));
-        assertThat(list.get(i++), is("import com.kentchiu.module.domain.FooBar;"));
-        assertThat(list.get(i++), is("import com.kentchiu.module.service.DeviceKindService;"));
-        assertThat(list.get(i++), is("import com.kentchiu.module.service.FooBarService;"));
-        assertThat(list.get(i++), is("import com.kentchiu.module.service.query.FooBarQuery;"));
-        assertThat(list.get(i++), is("import com.kentchiu.module.web.dto.FooBarInput;"));
-        assertThat(list.get(i++), is("import com.kentchiu.module.web.dto.FooBarUpdateInput;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.domain.Master;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.domain.Detail;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.domain.ExtendDetail;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.service.MasterService;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.service.DetailService;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.service.ExtendDetailService;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.service.query.ExtendDetailQuery;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.web.dto.ExtendDetailInput;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.web.dto.ExtendDetailUpdateInput;"));
         assertThat(list.get(i++), is("import com.kentchiu.module.web.AbstractController;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("import com.kentchiu.spring.base.domain.DomainUtil;"));
@@ -81,11 +83,12 @@ public class ExtendDetailControllerGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("@RestController"));
-        assertThat(list.get(i++), is("@RequestMapping(\"/masters/{masterUuid}/details/{detailUuid}/extendss\")"));
+        assertThat(list.get(i++), is("@RequestMapping(\"/masters/{masterUuid}/details/{detailUuid}/extendDetails\")"));
         assertThat(list.get(i++), is("public class ExtendDetailController extends AbstractController {"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("    private MasterService deviceKindService;"));
-        assertThat(list.get(i++), is("    private DeviceDetectionService service;"));
+        assertThat(list.get(i++), is("    private MasterService masterService;"));
+        assertThat(list.get(i++), is("    private DetailService detailService;"));
+        assertThat(list.get(i++), is("    private ExtendDetailService service;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Autowired"));
         assertThat(list.get(i++), is("    public void setDeviceKindService(DeviceKindService deviceKindService) {"));
@@ -187,7 +190,7 @@ public class ExtendDetailControllerGeneratorTest {
 
         AbstractGenerator.dump(list);
 
-        int i = 42;
+        int i = 48;
 
         assertThat(list.get(i++), is("    @RequestMapping(method = RequestMethod.GET)"));
         assertThat(list.get(i++), is("    public Page<ExtendDetail> listExtendDetails(@PathVariable String masterUuid, @PathVariable String detailUuid, @Valid ExtendDetailQuery query) {"));

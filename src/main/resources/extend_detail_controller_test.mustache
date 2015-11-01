@@ -1,0 +1,143 @@
+package {{topPackage}}.{{moduleName}}.web;
+
+import {{topPackage}}.base.web.AbstractControllerTest;
+import {{topPackage}}.{{moduleName}}.domain.{{masterDomain}};
+import {{topPackage}}.{{moduleName}}.domain.{{Domain}};
+import {{topPackage}}.{{moduleName}}.domain.{{masterDomainPlural}};
+import {{topPackage}}.{{moduleName}}.domain.{{DomainPlural}};
+import {{topPackage}}.{{moduleName}}.service.{{masterDomain}}Service;
+import {{topPackage}}.{{moduleName}}.service.{{Domain}}Service;
+import {{topPackage}}.{{moduleName}}.service.query.{{Domain}}Query;
+import {{topPackage}}.{{moduleName}}.web.dto.{{Domain}}Input;
+import {{topPackage}}.{{moduleName}}.web.dto.{{Domain}}UpdateInput;
+
+import com.google.common.collect.Maps;
+import com.kentchiu.spring.base.domain.DomainUtil;
+import org.hamcrest.Matchers;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+
+import java.util.Map;
+import java.util.Optional;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
+@ContextConfiguration(classes = {TestConfig.class})
+public class {{Domain}}ControllerTest extends AbstractControllerTest {
+
+    @Autowired
+    private {{Domain}}Service mockService;
+    @Autowired
+    private {{masterDomain}}Service mock{{masterDomain}}Service;
+    private String {{masterName}}Uuid;
+
+
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
+        reset(mockService);
+        reset(mock{{masterDomain}}Service);
+        {{masterDomain}} {{masterName}} = {{masterDomainPlural}}.all().get(0);
+        {{masterName}}Uuid = {{masterName}}.getUuid();
+        when(mock{{masterDomain}}Service.findOne({{masterName}}Uuid)).thenReturn(Optional.of({{masterName}}));
+    }
+
+    @Test
+    public void testList{{DomainPlural}}() throws Exception {
+        when(mockService.findAll(any({{Domain}}Query.class))).thenReturn({{DomainPlural}}.page(3));
+
+        MockHttpServletRequestBuilder requestBuilder = get("/{{masterNamePlural}}/" + {{masterName}}Uuid + "/{{detailNamePlural}}")
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().is(HttpStatus.OK.value()))
+                .andExpect(jsonPath("$.totalElements").value(Matchers.greaterThan(1)));
+    }
+
+
+    @Test
+    public void testAdd{{Domain}}() throws Exception {
+        Map<String, String> input = Maps.newLinkedHashMap();
+        input.put("name", "name_001");
+
+        String json = DomainUtil.toJson(input);
+
+        MockHttpServletRequestBuilder requestBuilder = post("/{{masterNamePlural}}/" + {{masterName}}Uuid + "/{{detailNamePlural}}")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().is(HttpStatus.CREATED.value()))
+                .andExpect(jsonPath("$.name").value("name_001"));
+
+        verify(mockService).add(Mockito.any({{Domain}}.class));
+    }
+
+    @Test
+    public void testGet{{Domain}}() throws Exception {
+        {{Domain}} {{detailName}} = {{DomainPlural}}.all().get(0);
+        String uuid = {{detailName}}.getUuid();
+        when(mockService.findOne(uuid)).thenReturn(Optional.of({{detailName}}));
+
+        MockHttpServletRequestBuilder requestBuilder = get("/{{masterNamePlural}}/" + {{masterName}}Uuid + "/{{detailNamePlural}}/" + uuid)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().is(HttpStatus.OK.value()))
+                .andExpect(jsonPath("$.uuid").exists());
+    }
+
+
+    @Test
+    public void testUpdate{{Domain}}() throws Exception {
+        {{Domain}} {{detailName}} = {{DomainPlural}}.all().get(0);
+        String uuid = {{detailName}}.getUuid();
+
+        Map<String, String> input = Maps.newLinkedHashMap();
+        input.put("name", "name_new");
+
+        String json = DomainUtil.toJson(input);
+
+        when(mockService.findOne(uuid)).thenReturn(Optional.of({{detailName}}));
+
+        MockHttpServletRequestBuilder requestBuilder = patch("/{{masterNamePlural}}/" + {{masterName}}Uuid + "/{{detailNamePlural}}/" + uuid)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().is(HttpStatus.OK.value()))
+                .andExpect(jsonPath("$.name").value("name_new"));
+
+        verify(mockService).update(any({{Domain}}.class));
+    }
+
+
+    @Test
+    public void testDelete{{Domain}}() throws Exception {
+        {{Domain}} {{detailName}} = {{DomainPlural}}.all().get(0);
+        String uuid = {{detailName}}.getUuid();
+
+        MockHttpServletRequestBuilder requestBuilder = delete("/{{masterNamePlural}}/" + {{masterName}}Uuid + "/{{detailNamePlural}}/" + uuid)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().is(HttpStatus.NO_CONTENT.value()));
+
+        verify(mockService).delete(uuid);
+    }
+
+}
