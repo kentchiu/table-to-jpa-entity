@@ -85,6 +85,11 @@ public abstract class AbstractGenerator {
         String pkgName = getPackageName(table);
         String folder = StringUtils.replace(pkgName, ".", "/");
         Path file = baseFolder.resolve(folder).resolve(getClassName(table) + ".java");
+        return createFile(file, lines);
+    }
+
+
+    protected Optional<Path> createFile(Path file, List<String> content) {
         try {
             if (!Files.exists(file)) {
                 if (Files.exists(file.getParent())) {
@@ -95,7 +100,7 @@ public abstract class AbstractGenerator {
                 Files.createFile(file);
             }
             logger.info("create entity file : {}", file.toAbsolutePath().toString());
-            Files.write(file, lines);
+            Files.write(file, content);
             return Optional.of(file);
         } catch (IOException e) {
             e.printStackTrace();

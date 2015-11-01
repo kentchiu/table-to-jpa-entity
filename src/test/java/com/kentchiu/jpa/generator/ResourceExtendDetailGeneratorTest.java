@@ -9,41 +9,50 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 
-public class ResourceDetailGeneratorTest {
+public class ResourceExtendDetailGeneratorTest {
 
-    private ResourceDetailGenerator generator;
+    private ResourceExtendDetailGenerator generator;
 
     @Before
     public void setUp() throws Exception {
-        // FIXME change to detail table
-        Table table = Tables.table1();
+        Table table = Tables.extendDetail();
         Transformer transformer = new Transformer();
-        transformer.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar", "dvc_device_kind", "com.kentchiu.module.domain.DeviceKind", "dvc_device_detection", "com.kentchiu.module.domain.DeviceDetection"));
-        DetailConfig config = new DetailConfig("deviceKind", "detection", "dvc_device_kind", "dvc_device_detection");
+
+        Map<String, String> mapper = new HashMap<>();
+        mapper.put("TBL_MASTER", "com.kentchiu.module.domain.Master");
+        mapper.put("TBL_DETAIL", "com.kentchiu.module.domain.Detail");
+        mapper.put("TBL_EXTEND_DETAIL", "com.kentchiu.module.domain.ExtendDetail");
+        transformer.setTableNameMapper(mapper);
+        DetailConfig detailConfig = new DetailConfig("master", "detail", "TBL_MASTER", "TBL_DETAIL");
+        ExtendDetailConfig config = new ExtendDetailConfig(detailConfig, "extendDetail", "TBL_EXTEND_DETAIL");
         transformer.setMasterDetailMapper(ImmutableMap.of(table.getName(), config));
-        generator = new ResourceDetailGenerator(transformer);
+
+
+        generator = new ResourceExtendDetailGenerator(transformer);
         generator.getExtraParams().put("title", "FooBar");
     }
 
     @Test
     public void testExport() throws Exception {
-        Table table = Tables.table1();
+        Table table = Tables.extendDetail();
         Optional<Path> export = generator.exportToFile(table, ImmutableList.of());
         assertThat(export.isPresent(), Is.is(true));
-        assertThat(export.get().toString(), containsString("/api/module/fooBar.md"));
+        assertThat(export.get().toString(), containsString("/api/module/extendDetail.md"));
     }
 
 
     @Test
     public void testApplyTemplate() throws Exception {
-        Table table = Tables.table1();
+        Table table = Tables.extendDetail();
         List<String> list = generator.applyTemplate(table);
 
         list.stream().forEach(System.out::println);
@@ -54,75 +63,77 @@ public class ResourceDetailGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("FooBar屬性:"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("{{FooBarControllerTest/FooBar.md}}"));
+        assertThat(list.get(i++), is("{{ExtendDetailControllerTest/ExtendDetail.md}}"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("## FooBar清單 [/deviceKinds/{deviceKindUuid}/detections]"));
+        assertThat(list.get(i++), is("## FooBar清單 [/masters/{masterUuid}/details]"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("+ Parameters"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("    + deviceKindUuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The deviceKind UUID"));
+        assertThat(list.get(i++), is("    + masterUuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The master UUID"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("### 取得FooBar清單 [GET]"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("Arguments:"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("{{FooBarControllerTest/FooBarQuery.md}}"));
+        assertThat(list.get(i++), is("{{ExtendDetailControllerTest/ExtendDetailQuery.md}}"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("``` bash"));
-        assertThat(list.get(i++), is("{{FooBarControllerTest/testListFooBars-curl.md}}"));
+        assertThat(list.get(i++), is("{{ExtendDetailControllerTest/testListExtendDetails-curl.md}}"));
         assertThat(list.get(i++), is("```"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("{{FooBarControllerTest/testListFooBars.md}}"));
+        assertThat(list.get(i++), is("{{ExtendDetailControllerTest/testListExtendDetails.md}}"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("### 新增FooBar [POST]"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("Arguments:"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("{{FooBarControllerTest/FooBarInput.md}}"));
+        assertThat(list.get(i++), is("{{ExtendDetailControllerTest/ExtendDetailInput.md}}"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("``` bash"));
-        assertThat(list.get(i++), is("{{FooBarControllerTest/testAddFooBar-curl.md}}"));
+        assertThat(list.get(i++), is("{{ExtendDetailControllerTest/testAddExtendDetail-curl.md}}"));
         assertThat(list.get(i++), is("```"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("{{FooBarControllerTest/testAddFooBar.md}}"));
+        assertThat(list.get(i++), is("{{ExtendDetailControllerTest/testAddExtendDetail.md}}"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("## FooBar [/deviceKinds/{deviceKindUuid}/detections/{uuid}]"));
+        assertThat(list.get(i++), is("## FooBar [/masters/{masterUuid}/details/{uuid}]"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("+ Parameters"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("    + deviceKindUuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The deviceKind UUID"));
-        assertThat(list.get(i++), is("    + uuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The detection UUID"));
+        assertThat(list.get(i++), is("    + masterUuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The master UUID"));
+        assertThat(list.get(i++), is("    + uuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The detail UUID"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("### 取得FooBar [GET]"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("``` bash"));
-        assertThat(list.get(i++), is("{{FooBarControllerTest/testGetFooBar-curl.md}}"));
+        assertThat(list.get(i++), is("{{ExtendDetailControllerTest/testGetExtendDetail-curl.md}}"));
         assertThat(list.get(i++), is("```"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("{{FooBarControllerTest/testGetFooBar.md}}"));
+        assertThat(list.get(i++), is("{{ExtendDetailControllerTest/testGetExtendDetail.md}}"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("### 更新FooBar [PATCH]"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("Arguments:"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("{{FooBarControllerTest/FooBarUpdateInput.md}}"));
+        assertThat(list.get(i++), is("{{ExtendDetailControllerTest/ExtendDetailUpdateInput.md}}"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("``` bash"));
-        assertThat(list.get(i++), is("{{FooBarControllerTest/testUpdateFooBar-curl.md}}"));
+        assertThat(list.get(i++), is("{{ExtendDetailControllerTest/testUpdateExtendDetail-curl.md}}"));
         assertThat(list.get(i++), is("```"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("{{FooBarControllerTest/testUpdateFooBar.md}}"));
+        assertThat(list.get(i++), is("{{ExtendDetailControllerTest/testUpdateExtendDetail.md}}"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("### 刪除FooBar [DELETE]"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("``` bash"));
-        assertThat(list.get(i++), is("{{FooBarControllerTest/testDeleteFooBar-curl.md}}"));
+        assertThat(list.get(i++), is("{{ExtendDetailControllerTest/testDeleteExtendDetail-curl.md}}"));
         assertThat(list.get(i++), is("```"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("{{FooBarControllerTest/testDeleteFooBar.md}}"));
+        assertThat(list.get(i++), is("{{ExtendDetailControllerTest/testDeleteExtendDetail.md}}"));
+
+
     }
 
 

@@ -1,0 +1,76 @@
+{{=<% %>=}}
+# Group <%extraParams.title%>管理
+
+<%extraParams.title%>屬性:
+
+{{<%extendDetailDomain%>ControllerTest/<%extendDetailDomain%>.md}}
+
+## <%extraParams.title%>清單 [/<%masterNamePlural%>/{<%masterName%>Uuid}/<%detailNamePlural%>/{<%detailName%>Uuid}/<%extendDetailNamePlural%>/]
+
++ Parameters
+
+    + <%masterName%>Uuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The <%masterName%> UUID
+    + <%detailName%>Uuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The <%detailName%> UUID
+
+
+### 取得<%extraParams.title%>清單 [GET]
+
+Arguments:
+
+{{<%extendDetailDomain%>ControllerTest/<%extendDetailDomain%>Query.md}}
+
+
+``` bash
+{{<%extendDetailDomain%>ControllerTest/testList<%extendDetailDomainPlural%>-curl.md}}
+```
+
+{{<%extendDetailDomain%>ControllerTest/testList<%extendDetailDomainPlural%>.md}}
+
+### 新增<%extraParams.title%> [POST]
+
+Arguments:
+
+{{<%extendDetailDomain%>ControllerTest/<%extendDetailDomain%>Input.md}}
+
+``` bash
+{{<%extendDetailDomain%>ControllerTest/testAdd<%extendDetailDomain%>-curl.md}}
+```
+
+{{<%extendDetailDomain%>ControllerTest/testAdd<%extendDetailDomain%>.md}}
+
+## <%extraParams.title%> [/<%masterNamePlural%>/{<%masterName%>Uuid}/<%detailNamePlural%>/{<%detailName%>Uuid}/<%extendDetailNamePlural%>/{uuid}]
+
++ Parameters
+
+    + <%masterName%>Uuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The <%masterName%> UUID
+    + <%detailName%>Uuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The <%detailName%> UUID
+    + uuid: `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (required, UUID) - The <%extendDetailName%> UUID
+
+
+### 取得<%extraParams.title%> [GET]
+
+``` bash
+{{<%extendDetailDomain%>ControllerTest/testGet<%extendDetailDomain%>-curl.md}}
+```
+
+{{<%extendDetailDomain%>ControllerTest/testGet<%extendDetailDomain%>.md}}
+
+### 更新<%extraParams.title%> [PATCH]
+
+Arguments:
+
+{{<%extendDetailDomain%>ControllerTest/<%extendDetailDomain%>UpdateInput.md}}
+
+``` bash
+{{<%extendDetailDomain%>ControllerTest/testUpdate<%extendDetailDomain%>-curl.md}}
+```
+
+{{<%extendDetailDomain%>ControllerTest/testUpdate<%extendDetailDomain%>.md}}
+
+### 刪除<%extraParams.title%> [DELETE]
+
+``` bash
+{{<%extendDetailDomain%>ControllerTest/testDelete<%extendDetailDomain%>-curl.md}}
+```
+
+{{<%extendDetailDomain%>ControllerTest/testDelete<%extendDetailDomain%>.md}}

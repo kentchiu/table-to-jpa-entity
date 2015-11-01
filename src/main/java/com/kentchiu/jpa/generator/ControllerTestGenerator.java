@@ -1,14 +1,11 @@
 package com.kentchiu.jpa.generator;
 
 import com.kentchiu.jpa.domain.Table;
-import org.atteo.evo.inflector.English;
 
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-public class ControllerTestGenerator extends AbstractControllerGenerator {
+public class ControllerTestGenerator extends AbstractMasterGenerator {
 
     public ControllerTestGenerator(Transformer transformer) {
         super(transformer);
@@ -23,12 +20,9 @@ public class ControllerTestGenerator extends AbstractControllerGenerator {
         return exportToFile(table, applyTemplate(table));
     }
 
-    protected List<String> applyTemplate(Table table) {
-        Map<String, Object> context = getBaseContext(table);
-        String domain = getDomain(table);
-        context.put("domain", domain);
-        context.put("domainPlural", English.plural(domain));
-        return applyTemplate("controller_test.mustache", context);
+    @Override
+    protected String getTemplate() {
+        return "controller_test.mustache";
     }
 
 

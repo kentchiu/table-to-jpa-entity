@@ -8,12 +8,17 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
-public class ResourceDetailGenerator extends AbstractDetailGenerator {
+public class ResourceExtendDetailGenerator extends AbstractExtendDetailGenerator {
 
-    private Logger logger = LoggerFactory.getLogger(ResourceDetailGenerator.class);
+    private Logger logger = LoggerFactory.getLogger(ResourceExtendDetailGenerator.class);
 
-    public ResourceDetailGenerator(Transformer transformer) {
+    public ResourceExtendDetailGenerator(Transformer transformer) {
         super(transformer);
+    }
+
+    @Override
+    protected String getTemplate() {
+        return "resource_detail.mustache";
     }
 
     @Override
@@ -26,10 +31,6 @@ public class ResourceDetailGenerator extends AbstractDetailGenerator {
         return transformer.getDomainName(table.getName());
     }
 
-
-    protected String getTemplate() {
-        return "resource_detail.mustache";
-    }
 
     protected Optional<Path> exportToFile(Table table, List<String> lines) {
         return exportApiDocument(table, lines);

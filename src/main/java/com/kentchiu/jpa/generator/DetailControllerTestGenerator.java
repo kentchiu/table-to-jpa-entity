@@ -1,13 +1,8 @@
 package com.kentchiu.jpa.generator;
 
-import com.google.common.base.Preconditions;
 import com.kentchiu.jpa.domain.Table;
-import org.atteo.evo.inflector.English;
 
-import java.util.List;
-import java.util.Map;
-
-public class DetailControllerTestGenerator extends AbstractControllerGenerator {
+public class DetailControllerTestGenerator extends AbstractDetailGenerator {
 
     public DetailControllerTestGenerator(Transformer transformer) {
         super(transformer);
@@ -24,28 +19,9 @@ public class DetailControllerTestGenerator extends AbstractControllerGenerator {
     }
 
 
-    protected List<String> applyTemplate(Table table) {
-        Map<String, Object> context = getBaseContext(table);
-
-        DetailConfig config = transformer.getMasterDetailMapper().get(table.getName());
-        context.put("masterName", config.getMasterName());
-        context.put("detailName", config.getDetailName());
-        context.put("masterDomain", transformer.getDomainName(config.getMasterTable()));
-        context.put("detailDomain", transformer.getDomainName(config.getMasterTable()));
-
-        Preconditions.checkNotNull(context.get("masterName"), "masterName is mandatory");
-        Preconditions.checkNotNull(context.get("detailName"), "detailName is mandatory");
-        Preconditions.checkNotNull(context.get("masterDomain"), "masterDomain is mandatory");
-        Preconditions.checkNotNull(context.get("detailDomain"), "detailDomain is mandatory");
-
-        context.put("masterNamePlural", English.plural(config.getMasterName()));
-        context.put("detailNamePlural", English.plural(config.getDetailName()));
-        context.put("masterDomainPlural", English.plural(config.getMasterDomain(transformer)));
-        context.put("detailDomainPlural", English.plural(config.getDetailDomain(transformer)));
-
-        String domain = getDomain(table);
-        context.put("domain", domain);
-        return applyTemplate("detail_controller_test.mustache", context);
+    @Override
+    protected String getTemplate() {
+        return "detail_controller_test.mustache";
     }
 
 
