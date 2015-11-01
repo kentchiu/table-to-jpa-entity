@@ -21,10 +21,11 @@ import static org.hamcrest.Matchers.is;
 public class ExtendDetailControllerTestGeneratorTest {
 
     private ExtendDetailControllerTestGenerator generator;
+    private Table table;
 
     @Before
     public void setUp() throws Exception {
-        Table table = Tables.extendDetail();
+        table = Tables.extendDetail();
         Transformer transformer = new Transformer();
 
         Map<String, String> mapper = new HashMap<>();
@@ -40,7 +41,6 @@ public class ExtendDetailControllerTestGeneratorTest {
 
     @Test
     public void testExport() throws Exception {
-        Table table = Tables.extendDetail();
         Optional<Path> export = generator.exportToFile(table, ImmutableList.of());
         assertThat(export.isPresent(), Is.is(true));
         assertThat(export.get().toString(), containsString("/src/test/java/com/kentchiu/module/web/ExtendDetailControllerTest.java"));
@@ -49,7 +49,6 @@ public class ExtendDetailControllerTestGeneratorTest {
 
     @Test
     public void testApplyTemplate() throws Exception {
-        Table table = Tables.extendDetail();
         List<String> list = generator.applyTemplate(table);
 
         list.stream().forEach(System.out::println);

@@ -21,12 +21,12 @@ import static org.hamcrest.Matchers.is;
 public class ExtendDetailControllerGeneratorTest {
 
     private ExtendDetailControllerGenerator generator;
+    private Table table;
 
     @Before
     public void setUp() throws Exception {
-        Table table = Tables.extendDetail();
+        table = Tables.extendDetail();
         Transformer transformer = new Transformer();
-
         Map<String, String> mapper = new HashMap<>();
         mapper.put("TBL_MASTER", "com.kentchiu.module.domain.Master");
         mapper.put("TBL_DETAIL", "com.kentchiu.module.domain.Detail");
@@ -40,7 +40,6 @@ public class ExtendDetailControllerGeneratorTest {
 
     @Test
     public void testExport() throws Exception {
-        Table table = Tables.extendDetail();
         Optional<Path> export = generator.exportToFile(table, ImmutableList.of());
         assertThat(export.isPresent(), Is.is(true));
         assertThat(export.get().toString(), containsString("/src/main/java/com/kentchiu/module/web/ExtendDetailController.java"));
@@ -49,10 +48,8 @@ public class ExtendDetailControllerGeneratorTest {
 
     @Test
     public void testApplyTemplate() throws Exception {
-        Table table = Tables.extendDetail();
         List<String> list = generator.applyTemplate(table);
 
-        list.stream().forEach(System.out::println);
         int i = 0;
 
         assertThat(list.get(i++), is("package com.kentchiu.module.web;"));
@@ -194,11 +191,8 @@ public class ExtendDetailControllerGeneratorTest {
 
     @Test
     public void testApplyTemplate_enableFilter() throws Exception {
-        Table table = Tables.extendDetail();
         generator.getExtraParams().put("enableFilter", true);
         List<String> list = generator.applyTemplate(table);
-
-        AbstractGenerator.dump(list);
 
         int i = 50;
 
@@ -210,8 +204,6 @@ public class ExtendDetailControllerGeneratorTest {
         assertThat(list.get(i++), is("        setFilter(query);"));
         assertThat(list.get(i++), is("        return service.findAll(query);"));
         assertThat(list.get(i++), is("    }"));
-
-
     }
 
 }

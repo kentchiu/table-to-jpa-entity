@@ -21,6 +21,7 @@ import static org.hamcrest.Matchers.is;
 public class ResourceExtendDetailGeneratorTest {
 
     private ResourceExtendDetailGenerator generator;
+    private Table table;
 
     @Before
     public void setUp() throws Exception {

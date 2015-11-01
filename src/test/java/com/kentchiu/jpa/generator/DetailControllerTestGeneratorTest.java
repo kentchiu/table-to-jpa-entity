@@ -9,7 +9,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -19,46 +21,47 @@ import static org.hamcrest.Matchers.is;
 public class DetailControllerTestGeneratorTest {
 
     private DetailControllerTestGenerator generator;
+    private Table table;
 
     @Before
     public void setUp() throws Exception {
-        Table table = Tables.table1();
+        table = Tables.detail();
         Transformer transformer = new Transformer();
-        transformer.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar", "dvc_device_kind", "com.kentchiu.module.domain.DeviceKind", "dvc_device_detection", "com.kentchiu.module.domain.DeviceDetection"));
-        DetailConfig config = new DetailConfig("deviceKind", "detection", "dvc_device_kind", "dvc_device_detection");
+        Map<String, String> mapper = new HashMap<>();
+        mapper.put("TBL_MASTER", "com.kentchiu.module.domain.Master");
+        mapper.put("TBL_DETAIL", "com.kentchiu.module.domain.Detail");
+        transformer.setTableNameMapper(mapper);
+        DetailConfig config = new DetailConfig("master", "detail", "TBL_MASTER", "TBL_DETAIL");
         transformer.setMasterDetailMapper(ImmutableMap.of(table.getName(), config));
         generator = new DetailControllerTestGenerator(transformer);
     }
 
     @Test
     public void testExport() throws Exception {
-        Table table = Tables.table1();
         Optional<Path> export = generator.exportToFile(table, ImmutableList.of());
         assertThat(export.isPresent(), Is.is(true));
-        assertThat(export.get().toString(), containsString("/src/test/java/com/kentchiu/module/web/FooBarControllerTest.java"));
+        assertThat(export.get().toString(), containsString("/src/test/java/com/kentchiu/module/web/DetailControllerTest.java"));
     }
 
 
     @Test
     public void testApplyTemplate() throws Exception {
-        Table table = Tables.table1();
         List<String> list = generator.applyTemplate(table);
 
-        list.stream().forEach(System.out::println);
         int i = 0;
 
         assertThat(list.get(i++), is("package com.kentchiu.module.web;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("import com.kentchiu.base.web.AbstractControllerTest;"));
-        assertThat(list.get(i++), is("import com.kentchiu.module.domain.DeviceKind;"));
-        assertThat(list.get(i++), is("import com.kentchiu.module.domain.FooBar;"));
-        assertThat(list.get(i++), is("import com.kentchiu.module.domain.DeviceKinds;"));
-        assertThat(list.get(i++), is("import com.kentchiu.module.domain.FooBars;"));
-        assertThat(list.get(i++), is("import com.kentchiu.module.service.DeviceKindService;"));
-        assertThat(list.get(i++), is("import com.kentchiu.module.service.FooBarService;"));
-        assertThat(list.get(i++), is("import com.kentchiu.module.service.query.FooBarQuery;"));
-        assertThat(list.get(i++), is("import com.kentchiu.module.web.dto.FooBarInput;"));
-        assertThat(list.get(i++), is("import com.kentchiu.module.web.dto.FooBarUpdateInput;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.domain.Master;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.domain.Detail;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.domain.Masters;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.domain.Details;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.service.MasterService;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.service.DetailService;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.service.query.DetailQuery;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.web.dto.DetailInput;"));
+        assertThat(list.get(i++), is("import com.kentchiu.module.web.dto.DetailUpdateInput;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("import com.google.common.collect.Maps;"));
         assertThat(list.get(i++), is("import com.kentchiu.spring.base.domain.DomainUtil;"));
@@ -85,13 +88,13 @@ public class DetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("@ContextConfiguration(classes = {TestConfig.class})"));
-        assertThat(list.get(i++), is("public class FooBarControllerTest extends AbstractControllerTest {"));
+        assertThat(list.get(i++), is("public class DetailControllerTest extends AbstractControllerTest {"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Autowired"));
-        assertThat(list.get(i++), is("    private FooBarService mockService;"));
+        assertThat(list.get(i++), is("    private DetailService mockService;"));
         assertThat(list.get(i++), is("    @Autowired"));
-        assertThat(list.get(i++), is("    private DeviceKindService mockDeviceKindService;"));
-        assertThat(list.get(i++), is("    private String deviceKindUuid;"));
+        assertThat(list.get(i++), is("    private MasterService mockMasterService;"));
+        assertThat(list.get(i++), is("    private String masterUuid;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Override"));
@@ -99,17 +102,17 @@ public class DetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is("    public void setUp() throws Exception {"));
         assertThat(list.get(i++), is("        super.setUp();"));
         assertThat(list.get(i++), is("        reset(mockService);"));
-        assertThat(list.get(i++), is("        reset(mockDeviceKindService);"));
-        assertThat(list.get(i++), is("        DeviceKind deviceKind = DeviceKinds.all().get(0);"));
-        assertThat(list.get(i++), is("        deviceKindUuid = deviceKind.getUuid();"));
-        assertThat(list.get(i++), is("        when(mockDeviceKindService.findOne(deviceKindUuid)).thenReturn(Optional.of(deviceKind));"));
+        assertThat(list.get(i++), is("        reset(mockMasterService);"));
+        assertThat(list.get(i++), is("        Master master = Masters.all().get(0);"));
+        assertThat(list.get(i++), is("        masterUuid = master.getUuid();"));
+        assertThat(list.get(i++), is("        when(mockMasterService.findOne(masterUuid)).thenReturn(Optional.of(master));"));
         assertThat(list.get(i++), is("    }"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Test"));
-        assertThat(list.get(i++), is("    public void testListFooBars() throws Exception {"));
-        assertThat(list.get(i++), is("        when(mockService.findAll(any(FooBarQuery.class))).thenReturn(FooBars.page(3));"));
+        assertThat(list.get(i++), is("    public void testListDetails() throws Exception {"));
+        assertThat(list.get(i++), is("        when(mockService.findAll(any(DetailQuery.class))).thenReturn(Details.page(3));"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("        MockHttpServletRequestBuilder requestBuilder = get(\"/deviceKinds/\" + deviceKindUuid + \"/detections\")"));
+        assertThat(list.get(i++), is("        MockHttpServletRequestBuilder requestBuilder = get(\"/masters/\" + masterUuid + \"/details\")"));
         assertThat(list.get(i++), is("                .contentType(MediaType.APPLICATION_JSON);"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("        mockMvc.perform(requestBuilder)"));
@@ -119,13 +122,13 @@ public class DetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Test"));
-        assertThat(list.get(i++), is("    public void testAddFooBar() throws Exception {"));
+        assertThat(list.get(i++), is("    public void testAddDetail() throws Exception {"));
         assertThat(list.get(i++), is("        Map<String, String> input = Maps.newLinkedHashMap();"));
         assertThat(list.get(i++), is("        input.put(\"name\", \"name_001\");"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("        String json = DomainUtil.toJson(input);"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("        MockHttpServletRequestBuilder requestBuilder = post(\"/deviceKinds/\" + deviceKindUuid + \"/detections\")"));
+        assertThat(list.get(i++), is("        MockHttpServletRequestBuilder requestBuilder = post(\"/masters/\" + masterUuid + \"/details\")"));
         assertThat(list.get(i++), is("                .contentType(MediaType.APPLICATION_JSON)"));
         assertThat(list.get(i++), is("                .content(json);"));
         assertThat(list.get(i++), is(""));
@@ -133,16 +136,16 @@ public class DetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is("                .andExpect(status().is(HttpStatus.CREATED.value()))"));
         assertThat(list.get(i++), is("                .andExpect(jsonPath(\"$.name\").value(\"name_001\"));"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("        verify(mockService).add(Mockito.any(FooBar.class));"));
+        assertThat(list.get(i++), is("        verify(mockService).add(Mockito.any(Detail.class));"));
         assertThat(list.get(i++), is("    }"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Test"));
-        assertThat(list.get(i++), is("    public void testGetFooBar() throws Exception {"));
-        assertThat(list.get(i++), is("        FooBar detection = FooBars.all().get(0);"));
-        assertThat(list.get(i++), is("        String uuid = detection.getUuid();"));
-        assertThat(list.get(i++), is("        when(mockService.findOne(uuid)).thenReturn(Optional.of(detection));"));
+        assertThat(list.get(i++), is("    public void testGetDetail() throws Exception {"));
+        assertThat(list.get(i++), is("        Detail detail = Details.all().get(0);"));
+        assertThat(list.get(i++), is("        String uuid = detail.getUuid();"));
+        assertThat(list.get(i++), is("        when(mockService.findOne(uuid)).thenReturn(Optional.of(detail));"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("        MockHttpServletRequestBuilder requestBuilder = get(\"/deviceKinds/\" + deviceKindUuid + \"/detections/\" + uuid)"));
+        assertThat(list.get(i++), is("        MockHttpServletRequestBuilder requestBuilder = get(\"/masters/\" + masterUuid + \"/details/\" + uuid)"));
         assertThat(list.get(i++), is("                .contentType(MediaType.APPLICATION_JSON);"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("        mockMvc.perform(requestBuilder)"));
@@ -152,18 +155,18 @@ public class DetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Test"));
-        assertThat(list.get(i++), is("    public void testUpdateFooBar() throws Exception {"));
-        assertThat(list.get(i++), is("        FooBar detection = FooBars.all().get(0);"));
-        assertThat(list.get(i++), is("        String uuid = detection.getUuid();"));
+        assertThat(list.get(i++), is("    public void testUpdateDetail() throws Exception {"));
+        assertThat(list.get(i++), is("        Detail detail = Details.all().get(0);"));
+        assertThat(list.get(i++), is("        String uuid = detail.getUuid();"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("        Map<String, String> input = Maps.newLinkedHashMap();"));
         assertThat(list.get(i++), is("        input.put(\"name\", \"name_new\");"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("        String json = DomainUtil.toJson(input);"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("        when(mockService.findOne(uuid)).thenReturn(Optional.of(detection));"));
+        assertThat(list.get(i++), is("        when(mockService.findOne(uuid)).thenReturn(Optional.of(detail));"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("        MockHttpServletRequestBuilder requestBuilder = patch(\"/deviceKinds/\" + deviceKindUuid + \"/detections/\" + uuid)"));
+        assertThat(list.get(i++), is("        MockHttpServletRequestBuilder requestBuilder = patch(\"/masters/\" + masterUuid + \"/details/\" + uuid)"));
         assertThat(list.get(i++), is("                .contentType(MediaType.APPLICATION_JSON)"));
         assertThat(list.get(i++), is("                .content(json);"));
         assertThat(list.get(i++), is(""));
@@ -171,16 +174,16 @@ public class DetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is("                .andExpect(status().is(HttpStatus.OK.value()))"));
         assertThat(list.get(i++), is("                .andExpect(jsonPath(\"$.name\").value(\"name_new\"));"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("        verify(mockService).update(any(FooBar.class));"));
+        assertThat(list.get(i++), is("        verify(mockService).update(any(Detail.class));"));
         assertThat(list.get(i++), is("    }"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Test"));
-        assertThat(list.get(i++), is("    public void testDeleteFooBar() throws Exception {"));
-        assertThat(list.get(i++), is("        FooBar detection = FooBars.all().get(0);"));
-        assertThat(list.get(i++), is("        String uuid = detection.getUuid();"));
+        assertThat(list.get(i++), is("    public void testDeleteDetail() throws Exception {"));
+        assertThat(list.get(i++), is("        Detail detail = Details.all().get(0);"));
+        assertThat(list.get(i++), is("        String uuid = detail.getUuid();"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("        MockHttpServletRequestBuilder requestBuilder = delete(\"/deviceKinds/\" + deviceKindUuid + \"/detections/\" + uuid)"));
+        assertThat(list.get(i++), is("        MockHttpServletRequestBuilder requestBuilder = delete(\"/masters/\" + masterUuid + \"/details/\" + uuid)"));
         assertThat(list.get(i++), is("                .contentType(MediaType.APPLICATION_JSON);"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("        mockMvc.perform(requestBuilder)"));

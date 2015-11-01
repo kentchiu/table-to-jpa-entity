@@ -20,10 +20,11 @@ import static org.hamcrest.Matchers.is;
 public class ControllerGeneratorTest {
 
     private ControllerGenerator generator;
+    private Table table;
 
     @Before
     public void setUp() throws Exception {
-        Table table = Tables.table1();
+        table = Tables.table1();
         Transformer transformer = new Transformer();
         transformer.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
         generator = new ControllerGenerator(transformer);
@@ -31,7 +32,6 @@ public class ControllerGeneratorTest {
 
     @Test
     public void testExport() throws Exception {
-        Table table = Tables.table1();
         Optional<Path> export = generator.exportToFile(table, ImmutableList.of());
         assertThat(export.isPresent(), Is.is(true));
         assertThat(export.get().toString(), containsString("/src/main/java/com/kentchiu/module/web/FooBarController.java"));
@@ -46,7 +46,6 @@ public class ControllerGeneratorTest {
 
     @Test
     public void testApplyTemplate() throws Exception {
-        Table table = Tables.table1();
         List<String> list = generator.applyTemplate(table);
 
         list.stream().forEach(System.out::println);
@@ -155,7 +154,6 @@ public class ControllerGeneratorTest {
 
     @Test
     public void testApplyTemplate_enableFilter() throws Exception {
-        Table table = Tables.table1();
         generator.getExtraParams().put("enableFilter", true);
         List<String> list = generator.applyTemplate(table);
 
