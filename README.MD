@@ -6,6 +6,7 @@
 - Master-Detail-Extend Controller
 - Master-Detail-Extend 
 - splitStrategies @SplitStrategyDetailController was splitStrategys 
+- POST FK should be UUID type.
 
 ## DONE
 - DomainObject 只產生特定屬性

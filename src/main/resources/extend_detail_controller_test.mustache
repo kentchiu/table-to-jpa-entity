@@ -18,6 +18,7 @@ import com.google.common.collect.Maps;
 import com.kentchiu.spring.base.domain.DomainUtil;
 import org.hamcrest.Matchers;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
     }
 
 
+    @Ignore("Don't ignore this, make it GREEN BAR instead")
     @Test
     public void testAdd{{extendDetailDomain}}() throws Exception {
         Map<String, String> input = Maps.newLinkedHashMap();
@@ -113,6 +115,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
     }
 
 
+    @Ignore("Don't ignore this, make it GREEN BAR instead")
     @Test
     public void testUpdate{{extendDetailDomain}}() throws Exception {
         {{extendDetailDomain}} {{extendDetailName}} = {{extendDetailDomainPlural}}.all().get(0);
