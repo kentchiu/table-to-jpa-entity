@@ -153,7 +153,7 @@ public class ControllerGeneratorTest {
     }
 
     @Test
-    public void testApplyTemplate_enableFilter() throws Exception {
+    public void testApplyTemplate_enableFilter_true() throws Exception {
         generator.getExtraParams().put("enableFilter", true);
         List<String> list = generator.applyTemplate(table);
 
@@ -164,6 +164,18 @@ public class ControllerGeneratorTest {
         assertThat(list.get(i++), is("        setFilter(query);"));
         assertThat(list.get(i++), is("        return service.findAll(query);"));
         assertThat(list.get(i++), is("    }"));
+    }
 
+    @Test
+    public void testApplyTemplate_enableFilter_false() throws Exception {
+        generator.getExtraParams().put("enableFilter", false);
+        List<String> list = generator.applyTemplate(table);
+
+        AbstractGenerator.dump(list);
+        int i = 32;
+        assertThat(list.get(i++), is("    @RequestMapping(method = RequestMethod.GET)"));
+        assertThat(list.get(i++), is("    public Page<FooBar> listFooBars(@Valid FooBarQuery query) {"));
+        assertThat(list.get(i++), is("        return service.findAll(query);"));
+        assertThat(list.get(i++), is("    }"));
     }
 }

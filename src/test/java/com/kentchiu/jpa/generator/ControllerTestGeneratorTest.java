@@ -56,6 +56,7 @@ public class ControllerTestGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("import org.hamcrest.Matchers;"));
         assertThat(list.get(i++), is("import org.junit.Before;"));
+        assertThat(list.get(i++), is("import org.junit.Ignore;"));
         assertThat(list.get(i++), is("import org.junit.Test;"));
         assertThat(list.get(i++), is("import org.mockito.Mockito;"));
         assertThat(list.get(i++), is("import org.springframework.beans.factory.annotation.Autowired;"));
@@ -88,6 +89,7 @@ public class ControllerTestGeneratorTest {
         assertThat(list.get(i++), is("        reset(mockService);"));
         assertThat(list.get(i++), is("    }"));
         assertThat(list.get(i++), is(""));
+        assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Test"));
         assertThat(list.get(i++), is("    public void testListFooBars() throws Exception {"));
         assertThat(list.get(i++), is("        when(mockService.findAll(any(FooBarQuery.class))).thenReturn(FooBars.page(3));"));
@@ -101,6 +103,7 @@ public class ControllerTestGeneratorTest {
         assertThat(list.get(i++), is("    }"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
+        assertThat(list.get(i++), is("    @Ignore(\"Don't ignore this, make it GREEN BAR instead\")"));
         assertThat(list.get(i++), is("    @Test"));
         assertThat(list.get(i++), is("    public void testAddFooBar() throws Exception {"));
         assertThat(list.get(i++), is("        Map<String, String> input = Maps.newLinkedHashMap();"));
@@ -119,6 +122,7 @@ public class ControllerTestGeneratorTest {
         assertThat(list.get(i++), is("        verify(mockService).add(Mockito.any(FooBar.class));"));
         assertThat(list.get(i++), is("    }"));
         assertThat(list.get(i++), is(""));
+        assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Test"));
         assertThat(list.get(i++), is("    public void testGetFooBar() throws Exception {"));
         assertThat(list.get(i++), is("        FooBar fooBar = FooBars.all().get(0);"));
@@ -134,6 +138,7 @@ public class ControllerTestGeneratorTest {
         assertThat(list.get(i++), is("    }"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
+        assertThat(list.get(i++), is("    @Ignore(\"Don't ignore this, make it GREEN BAR instead\")"));
         assertThat(list.get(i++), is("    @Test"));
         assertThat(list.get(i++), is("    public void testUpdateFooBar() throws Exception {"));
         assertThat(list.get(i++), is("        FooBar fooBar = FooBars.all().get(0);"));

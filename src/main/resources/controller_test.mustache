@@ -45,6 +45,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
         reset(mockService);
     }
 
+
     @Test
     public void testList{{DomainPlural}}() throws Exception {
         when(mockService.findAll(any({{Domain}}Query.class))).thenReturn({{DomainPlural}}.page(3));
@@ -57,7 +58,8 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.totalElements").value(Matchers.greaterThan(1)));
     }
 
-    @Ignore("Don't ignore this, make it GREEN BAR instead ")
+
+    @Ignore("Don't ignore this, make it GREEN BAR instead")
     @Test
     public void testAdd{{Domain}}() throws Exception {
         Map<String, String> input = Maps.newLinkedHashMap();
@@ -76,6 +78,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
         verify(mockService).add(Mockito.any({{Domain}}.class));
     }
 
+
     @Test
     public void testGet{{Domain}}() throws Exception {
         {{Domain}} {{domain}} = {{DomainPlural}}.all().get(0);
@@ -91,7 +94,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
     }
 
 
-    @Ignore("Don't ignore this, make it GREEN BAR instead ")
+    @Ignore("Don't ignore this, make it GREEN BAR instead")
     @Test
     public void testUpdate{{Domain}}() throws Exception {
         {{Domain}} {{domain}} = {{DomainPlural}}.all().get(0);

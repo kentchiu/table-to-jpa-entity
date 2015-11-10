@@ -3,12 +3,13 @@
 ## TODO
 - Query Master uuid 不應該被註解
 - DetailQuery buildQuery裡要加上master uuid 的condition
-- Master-Detail-Extend Controller
-- Master-Detail-Extend 
-- splitStrategies @SplitStrategyDetailController was splitStrategys 
+- splitStrategies @SplitStrategyDetailController was splitStrategys
 - POST FK should be UUID type.
+- Query Object compile error
 
 ## DONE
+- Master-Detail-Extend Controller
+- Master-Detail-Extend
 - DomainObject 只產生特定屬性
 - Domain export using BaseDomain
 - api doc template
@@ -28,7 +29,7 @@
 - ~~remove reference table, using table mapping instead~~ rejected
 - Master-Detail Controller
 - Master-Detail ControllerTest 
-- configable topPackage
+- configurable topPackage
 - ~~fetch ignore columns from base class~~ rejected, no need 
 - gen constants form option
 - Repository
@@ -52,7 +53,7 @@
 - add unique key to Column.java
 - ~~name conflict , ex: item1, item2~~
 - ~~Input object should not extends from any class~~ reject , depends by config
-- default value = BigDecimal.ZERO = 0.0 , BigDeciaml.value(1.1) = 1.1
+- default value = BigDecimal.ZERO = 0.0 , BigDecimal.value(1.1) = 1.1
 - update input
 - add @NotNull to reference field (rejected : @NotNull跟@ManyToOne混用 會引起validate 時奇怪的問題)
 - 日期改成用 Date, @DateTimeFormat(pattern = "yyyy-MM-dd")

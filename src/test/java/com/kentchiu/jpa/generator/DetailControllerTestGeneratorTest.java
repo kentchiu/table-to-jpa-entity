@@ -67,6 +67,7 @@ public class DetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is("import com.kentchiu.spring.base.domain.DomainUtil;"));
         assertThat(list.get(i++), is("import org.hamcrest.Matchers;"));
         assertThat(list.get(i++), is("import org.junit.Before;"));
+        assertThat(list.get(i++), is("import org.junit.Ignore;"));
         assertThat(list.get(i++), is("import org.junit.Test;"));
         assertThat(list.get(i++), is("import org.mockito.Mockito;"));
         assertThat(list.get(i++), is("import org.springframework.beans.factory.annotation.Autowired;"));
@@ -121,6 +122,7 @@ public class DetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is("    }"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
+        assertThat(list.get(i++), is("    @Ignore(\"Don't ignore this, make it GREEN BAR instead\")"));
         assertThat(list.get(i++), is("    @Test"));
         assertThat(list.get(i++), is("    public void testAddDetail() throws Exception {"));
         assertThat(list.get(i++), is("        Map<String, String> input = Maps.newLinkedHashMap();"));
@@ -154,6 +156,7 @@ public class DetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is("    }"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
+        assertThat(list.get(i++), is("    @Ignore(\"Don't ignore this, make it GREEN BAR instead\")"));
         assertThat(list.get(i++), is("    @Test"));
         assertThat(list.get(i++), is("    public void testUpdateDetail() throws Exception {"));
         assertThat(list.get(i++), is("        Detail detail = Details.all().get(0);"));
