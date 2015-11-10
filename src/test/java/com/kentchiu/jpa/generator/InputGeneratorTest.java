@@ -37,7 +37,7 @@ public class InputGeneratorTest extends DomainObjectGeneratorTest {
         generator.getTransformer().setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.kentchiu.jpa.domain.FooBar"));
         List<String> lines = generator.exportTable(Tables.table1());
         assertThat(lines, hasItem("package com.kentchiu.jpa.web.dto;"));
-        assertThat(lines, hasItem("/*"));
+        assertThat(lines, hasItem("/**"));
         assertThat(lines, hasItem(" * a table comment"));
         assertThat(lines, hasItem(" */"));
         assertThat(lines, hasItem("public class FooBarInput {"));
@@ -265,7 +265,7 @@ public class InputGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines, hasItem("import com.fasterxml.jackson.annotation.JsonFormat;"));
 
         int i = 11;
-        assertThat(lines.get(i++), is("/*"));
+        assertThat(lines.get(i++), is("/**"));
         assertThat(lines.get(i++), is(" * a table comment"));
         assertThat(lines.get(i++), is(" */"));
         assertThat(lines.get(i++), is("public class MyTable1Input {"));

@@ -38,7 +38,7 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         List<String> lines = generator.exportTable(Tables.table1());
         AbstractGenerator.dump(lines);
         assertThat(lines, hasItem("package com.kentchiu.jpa.service.query;"));
-        assertThat(lines, hasItem("/*"));
+        assertThat(lines, hasItem("/**"));
         assertThat(lines, hasItem(" * a table comment"));
         assertThat(lines, hasItem(" */"));
         assertThat(lines, hasItem("public class FooBarQuery extends PageableQuery<FooBar> {"));
@@ -294,7 +294,7 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
 
 
         int i = 21;
-        assertThat(lines.get(i++), is("/*"));
+        assertThat(lines.get(i++), is("/**"));
         assertThat(lines.get(i++), is(" * a table comment"));
         assertThat(lines.get(i++), is(" */"));
         assertThat(lines.get(i++), is("public class MyTable1Query extends PageableQuery<MyTable1> {"));

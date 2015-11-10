@@ -41,7 +41,7 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
         List<String> lines = generator.exportTable(Tables.table1());
         AbstractGenerator.dump(lines);
         assertThat(lines, hasItem("package com.kentchiu.jpa.domain;"));
-        assertThat(lines, hasItem("/*"));
+        assertThat(lines, hasItem("/**"));
         assertThat(lines, hasItem(" * a table comment"));
         assertThat(lines, hasItem(" */"));
         assertThat(lines, hasItem("public class FooBar {"));
@@ -381,7 +381,7 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines, hasItem("import java.math.BigDecimal;"));
 
         int i = 15;
-        assertThat(lines.get(i++), is("/*"));
+        assertThat(lines.get(i++), is("/**"));
         assertThat(lines.get(i++), is(" * a table comment"));
         assertThat(lines.get(i++), is(" */"));
         assertThat(lines.get(i++), is("@Entity"));

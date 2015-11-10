@@ -38,7 +38,7 @@ public class UpdateInputGeneratorTest extends DomainObjectGeneratorTest {
         List<String> lines = generator.exportTable(Tables.table1());
         AbstractGenerator.dump(lines);
         assertThat(lines, hasItem("package com.kentchiu.jpa.web.dto;"));
-        assertThat(lines, hasItem("/*"));
+        assertThat(lines, hasItem("/**"));
         assertThat(lines, hasItem(" * a table comment"));
         assertThat(lines, hasItem(" */"));
         assertThat(lines, hasItem("public class FooBarUpdateInput {"));
@@ -284,7 +284,7 @@ public class UpdateInputGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines, hasItem("import com.fasterxml.jackson.annotation.JsonFormat;"));
 
         int i = 11;
-        assertThat(lines.get(i++), is("/*"));
+        assertThat(lines.get(i++), is("/**"));
         assertThat(lines.get(i++), is(" * a table comment"));
         assertThat(lines.get(i++), is(" */"));
         assertThat(lines.get(i++), is("public class MyTable1UpdateInput {"));
