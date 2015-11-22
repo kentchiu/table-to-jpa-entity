@@ -31,10 +31,6 @@ public abstract class AbstractControllerGenerator extends AbstractGenerator {
     }
 
 
-    protected String getDomain(Table table) {
-        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, transformer.getDomainName(table.getName()));
-    }
-
     protected Optional<Path> exportApiDocument(Table table, List<String> lines) {
         Path baseFolder = projectHome.resolve("api");
 

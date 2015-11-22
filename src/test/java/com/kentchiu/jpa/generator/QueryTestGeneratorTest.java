@@ -42,7 +42,6 @@ public class QueryTestGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines.get(i++), is("import java.util.UUID;"));
         assertThat(lines.get(i++), is("import static org.hamcrest.Matchers.is;"));
         assertThat(lines.get(i++), is("import static org.junit.Assert.assertThat;"));
-        assertThat(lines.get(i++), is(""));
         assertThat(lines.get(i++), is("import com.foobar.module.domain.FooBar;"));
         assertThat(lines.get(i++), is(""));
         assertThat(lines.get(i++), is(""));
@@ -52,7 +51,7 @@ public class QueryTestGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines.get(i++), is("    public void testBuildQuery() throws Exception {"));
         assertThat(lines.get(i++), is("        FooBarQuery query = new FooBarQuery();"));
         assertThat(lines.get(i++), is("        Query<FooBar> q = query.buildQuery();"));
-        assertThat(lines.get(i++), is("        assertThat(q.getQuery(), is(\"select _0 from FooBar _0\"));"));
+        assertThat(lines.get(i++), is("        assertThat(q.getQuery(), is(\"select fooBar_0 from FooBar fooBar_0\"));"));
         assertThat(lines.get(i++), is("        assertThat(q.getParameters().size(), is(0));"));
         assertThat(lines.get(i++), is("    }"));
         assertThat(lines.get(i++), is(""));

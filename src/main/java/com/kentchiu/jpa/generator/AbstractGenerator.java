@@ -3,6 +3,7 @@ package com.kentchiu.jpa.generator;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import com.google.common.base.CaseFormat;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
@@ -108,6 +109,9 @@ public abstract class AbstractGenerator {
         }
     }
 
+    protected String getDomain(Table table) {
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, transformer.getDomainName(table.getName()));
+    }
 
     protected boolean isTest() {
         return false;
@@ -116,9 +120,11 @@ public abstract class AbstractGenerator {
     protected Map<String, Object> getBaseContext(Table table) {
         Map<String, Object> context = Maps.newHashMap();
         context.put("table", table);
-        String domainName = transformer.getDomainName(table.getName());
-        context.put("Domain", domainName);
-        context.put("DomainPlural", English.plural(domainName));
+        context.put("Domain", transformer.getDomainName(table.getName()));
+        context.put("DomainPlural", English.plural(transformer.getDomainName(table.getName())));
+        context.put("domain", getDomain(table));
+        context.put("domainPlural", English.plural(getDomain(table)));
+
         context.put("topPackage", transformer.getTopPackage(table.getName()));
         context.put("moduleName", transformer.getModuleName(table.getName()));
         context.put("extraParams", extraParams);
