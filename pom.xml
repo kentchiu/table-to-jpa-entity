@@ -6,7 +6,7 @@
 
     <groupId>com.kentchiu</groupId>
     <artifactId>table2jpa</artifactId>
-    <version>0.4.3-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <dependencies>
         <dependency>
@@ -28,7 +28,8 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-            <version>4.1.6.RELEASE</version>
+            <version>4.2.0.RELEASE</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>

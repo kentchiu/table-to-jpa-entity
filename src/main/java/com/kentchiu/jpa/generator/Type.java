@@ -1,7 +1,7 @@
 package com.kentchiu.jpa.generator;
 
 public enum Type {
-    JPA, INPUT, UPDATE, QUERY;
+    JPA, INPUT, UPDATE, QUERY, QUERY_TEST;
 
     public String getTemplateName() {
         switch (this) {
@@ -13,6 +13,8 @@ public enum Type {
                 return "updateInput";
             case QUERY:
                 return "query";
+            case QUERY_TEST:
+                return "query_test";
             default:
                 throw new IllegalStateException("Unknown type :" + this);
         }
@@ -28,6 +30,8 @@ public enum Type {
                 return "UpdateInput";
             case QUERY:
                 return "Query";
+            case QUERY_TEST:
+                return "QueryTest";
             default:
                 throw new IllegalStateException("Unknown type :" + this);
         }
@@ -42,6 +46,7 @@ public enum Type {
             case UPDATE:
                 return "web.dto";
             case QUERY:
+            case QUERY_TEST:
                 return "service.query";
             default:
                 throw new IllegalStateException("Unknown type :" + this);

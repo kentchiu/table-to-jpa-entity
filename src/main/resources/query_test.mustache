@@ -1,0 +1,26 @@
+{{#packageName}}
+package {{packageName}};
+{{/packageName}}
+
+import org.junit.Test;
+import org.torpedoquery.jpa.Query;
+import java.util.UUID;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
+{{#imports}}
+import {{import}};
+{{/imports}}
+
+
+public class {{Domain}}QueryTest {
+
+    @Test
+    public void testBuildQuery() throws Exception {
+        {{Domain}}Query query = new {{Domain}}Query();
+        Query<{{Domain}}> q = query.buildQuery();
+        assertThat(q.getQuery(), is("select {{domain}}_0 from {{Domain}} {{domain}}_0"));
+        assertThat(q.getParameters().size(), is(0));
+    }
+
+}

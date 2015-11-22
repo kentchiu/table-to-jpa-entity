@@ -6,6 +6,8 @@
 - splitStrategies @SplitStrategyDetailController was splitStrategys
 - POST FK should be UUID type.
 - Query Object compile error
+- partial export merge in one file
+- Query Object TestCase
 
 ## DONE
 - Master-Detail-Extend Controller

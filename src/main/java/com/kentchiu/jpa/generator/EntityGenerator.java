@@ -203,11 +203,14 @@ public class EntityGenerator extends AbstractGenerator {
             }
         }
 
-        // fieldEnums
-        baseContext.put("fieldEnums", buildFieldEnums(table));
+        if (Type.QUERY_TEST != config.getType()) {
+            // fieldEnums
+            baseContext.put("fieldEnums", buildFieldEnums(table));
 
-        // properties
-        baseContext.put("properties", buildProperties(table));
+            // properties
+            baseContext.put("properties", buildProperties(table));
+        }
+
 
         return baseContext;
     }
