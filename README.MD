@@ -6,10 +6,10 @@
 - splitStrategies @SplitStrategyDetailController was splitStrategys
 - POST FK should be UUID type.
 - Query Object compile error
-- partial export merge in one file
-- Query Object TestCase
 
 ## DONE
+- partial export merge in one file
+- Query Object TestCase
 - Master-Detail-Extend Controller
 - Master-Detail-Extend
 - DomainObject 只產生特定屬性
