@@ -32,7 +32,7 @@ public class EntityGenerator extends AbstractGenerator {
     }
 
 
-    private String buildProperties(Table table) {
+    protected String buildProperties(Table table) {
         List<String> ignoreColumns = getIgnoreColumns(table);
         List<String> lines = new ArrayList<>();
         table.getColumns().stream().filter(column -> !ignoreColumns.contains(column.getName())).forEach(column -> {
@@ -227,14 +227,15 @@ public class EntityGenerator extends AbstractGenerator {
         return masterFkName;
     }
 
-    private List<FieldEnum> buildFieldEnums(Table table) {
+    protected String buildFieldEnums(Table table) {
         List<String> ignoreColumns = getIgnoreColumns(table);
         List<FieldEnum> results = new ArrayList();
         table.getColumns().stream().filter(column -> !ignoreColumns.contains(column.getName())).forEach(c -> {
             List<FieldEnum> fieldEnums = buildEnum(c);
             results.addAll(fieldEnums);
         });
-        return results;
+        List<String> lines = applyTemplate("enum.mustache", ImmutableMap.of("fieldEnums", results));
+        return Joiner.on('\n').join(lines);
     }
 
     private List<String> getIgnoreColumns(Table table) {

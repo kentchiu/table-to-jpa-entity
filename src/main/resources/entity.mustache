@@ -24,12 +24,7 @@ import {{import}};
 @Table(name = "{{table.name}}")
 public class {{Domain}} {{extend}}{
 
-{{#fieldEnums}}
-    /**
-     * {{description}}
-     */
-    public static final String {{name}} = {{{value}}};
-{{/fieldEnums}}
+{{{fieldEnums}}}
 
 {{{properties}}}
 }
