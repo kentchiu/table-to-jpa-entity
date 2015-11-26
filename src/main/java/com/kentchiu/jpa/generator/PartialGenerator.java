@@ -49,12 +49,12 @@ public class PartialGenerator extends AbstractGenerator {
 
     private String section(Table table, Type type) {
         EntityGenerator generator = new EntityGenerator(transformer, new Config(type));
-        String properties = generator.buildProperties(table);
-        String enums = generator.buildFieldEnums(table);
 
         List<String> lines = new ArrayList<>();
-        lines.add(enums);
-        lines.add(properties);
+        if (Type.JPA == type) {
+            lines.add(generator.buildFieldEnums(table));
+        }
+        lines.add(generator.buildProperties(table));
         return Joiner.on('\n').join(lines);
     }
 
