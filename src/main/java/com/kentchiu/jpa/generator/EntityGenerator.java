@@ -38,12 +38,21 @@ public class EntityGenerator extends AbstractGenerator {
 
     protected String buildProperties(Table table) {
         List<String> ignoreColumns = getIgnoreColumns(table);
-        List<String> lines = new ArrayList<>();
+        List<String> results = new ArrayList<>();
+        String masterColumn = getMasterColumn(table).orElse("");
         table.getColumns().stream().filter(column -> !ignoreColumns.contains(column.getName())).forEach(column -> {
-            lines.addAll(buildProperty(column));
+            if (Type.QUERY == config.getType() && StringUtils.equals(column.getName(), masterColumn)) {
+                List<String> lines = buildProperty(column);
+
+                lines.forEach(line -> {
+                    results.add(line.replaceFirst("//", "  "));
+                });
+            } else {
+                results.addAll(buildProperty(column));
+            }
         });
 
-        return Joiner.on('\n').join(lines);
+        return Joiner.on('\n').join(results);
     }
 
     List<String> buildImports() {
@@ -182,7 +191,9 @@ public class EntityGenerator extends AbstractGenerator {
 
     public List<String> exportTable(Table table) {
         String templateName = config.getType().getTemplateName();
-        return applyTemplate(templateName + ".mustache", getContext(table));
+        Map<String, Object> context = getContext(table);
+        logger.info("content: {}", context);
+        return applyTemplate(templateName + ".mustache", context);
     }
 
     private Map<String, Object> getContext(Table table) {
@@ -219,13 +230,14 @@ public class EntityGenerator extends AbstractGenerator {
             // properties
             baseContext.put("properties", buildProperties(table));
         }
-
-
         return baseContext;
     }
 
-    private String getMasterColumn(Table table) {
+    private Optional<String> getMasterColumn(Table table) {
         DetailConfig config = transformer.getMasterDetailMapper().get(table.getName());
+        if (config == null) {
+            return Optional.empty();
+        }
         String masterTable = config.getMasterTable();
         String masterFkName;
         if (CharUtils.isAsciiAlphaUpper(masterTable.charAt(0))) {
@@ -233,7 +245,7 @@ public class EntityGenerator extends AbstractGenerator {
         } else {
             masterFkName = masterTable + "_uuid";
         }
-        return masterFkName;
+        return Optional.ofNullable(masterFkName);
     }
 
     protected String buildFieldEnums(Table table) {
@@ -251,9 +263,10 @@ public class EntityGenerator extends AbstractGenerator {
         List<String> ignoreColumns = new ArrayList<>();
         if (Type.INPUT == config.getType() || Type.UPDATE == config.getType()) {
             if (transformer.getMasterDetailMapper().containsKey(table.getName())) {
-                String masterColumn = getMasterColumn(table);
-                logger.debug("ignore master foreign key : {}", masterColumn);
-                ignoreColumns.add(masterColumn);
+                getMasterColumn(table).ifPresent(masterColumn -> {
+                    logger.debug("ignore master foreign key : {}", masterColumn);
+                    ignoreColumns.add(masterColumn);
+                });
             }
         }
         return ignoreColumns;

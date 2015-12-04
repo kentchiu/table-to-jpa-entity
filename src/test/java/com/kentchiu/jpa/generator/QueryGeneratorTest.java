@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.kentchiu.jpa.domain.Column;
 import com.kentchiu.jpa.domain.Columns;
+import com.kentchiu.jpa.domain.Table;
 import com.kentchiu.jpa.domain.Tables;
 import org.junit.Before;
 import org.junit.Test;
@@ -341,4 +342,95 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
 
         assertThat(generator.buildAttributeInfo(column), is("@AttributeInfo(description = \"是否允许定制颜色\", format = \"Y=允许/N=不允许\")"));
     }
+
+    @Test
+    public void testProperty_master_uuid_should_not_be_comment() throws Exception {
+        Table table = Tables.detail();
+        Transformer transformer = new Transformer();
+        Map<String, String> mapper = new HashMap<>();
+        mapper.put("TBL_MASTER", "com.kentchiu.module.domain.Master");
+        mapper.put("TBL_DETAIL", "com.kentchiu.module.domain.Detail");
+        transformer.setTableNameMapper(mapper);
+        DetailConfig config = new DetailConfig("master", "detail", "TBL_MASTER", "TBL_DETAIL");
+        transformer.setMasterDetailMapper(ImmutableMap.of(table.getName(), config));
+
+        generator = new EntityGenerator(transformer, new Config(Type.QUERY));
+        generator.setProjectHome(Files.createTempDirectory("java"));
+
+        List<String> lines = generator.exportTable(table);
+        AbstractGenerator.dump(lines);
+
+        int i = 30;
+        // FIXME tblMasterUuid should be masterUuid
+        assertThat(lines.get(i++), is("      private String tblMasterUuid;"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is("      @AttributeInfo(description = \"master uuid\")"));
+        assertThat(lines.get(i++), is("      public String getTblMasterUuid() {"));
+        assertThat(lines.get(i++), is("          return tblMasterUuid;"));
+        assertThat(lines.get(i++), is("      }"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is("      public void setTblMasterUuid(String tblMasterUuid) {"));
+        assertThat(lines.get(i++), is("          this.tblMasterUuid = tblMasterUuid;"));
+        assertThat(lines.get(i++), is("      }"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is("//    private String myColumn11;"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"my column 1-1 comment\")"));
+        assertThat(lines.get(i++), is("//    public String getMyColumn11() {"));
+        assertThat(lines.get(i++), is("//        return myColumn11;"));
+        assertThat(lines.get(i++), is("//    }"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is("//    public void setMyColumn11(String myColumn11) {"));
+        assertThat(lines.get(i++), is("//        this.myColumn11 = myColumn11;"));
+        assertThat(lines.get(i++), is("//    }"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is("//    private String myColumn12;"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"my column 1-2 comment\")"));
+        assertThat(lines.get(i++), is("//    public String getMyColumn12() {"));
+        assertThat(lines.get(i++), is("//        return myColumn12;"));
+        assertThat(lines.get(i++), is("//    }"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is("//    public void setMyColumn12(String myColumn12) {"));
+        assertThat(lines.get(i++), is("//        this.myColumn12 = myColumn12;"));
+        assertThat(lines.get(i++), is("//    }"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is("//    private Date myColumn12;"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"my column 1-3 comment\")"));
+        assertThat(lines.get(i++), is("//    public Date getMyColumn12() {"));
+        assertThat(lines.get(i++), is("//        return myColumn12;"));
+        assertThat(lines.get(i++), is("//    }"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is("//    public void setMyColumn12(Date myColumn12) {"));
+        assertThat(lines.get(i++), is("//        this.myColumn12 = myColumn12;"));
+        assertThat(lines.get(i++), is("//    }"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is("    public Query<Detail> buildQuery() {"));
+        assertThat(lines.get(i++), is("        Detail from = from(Detail.class);"));
+        assertThat(lines.get(i++), is("        List<OnGoingLogicalCondition> conditions = new ArrayList<>();"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is("        if (StringUtils.isNotBlank(masterUuid)) {"));
+        assertThat(lines.get(i++), is("            conditions.add(condition(from.getMaster().getUuid()).eq(masterUuid));"));
+        assertThat(lines.get(i++), is("        }"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is("//        if (StringUtils.isNotBlank(__ref__Uuid)) {"));
+        assertThat(lines.get(i++), is("//            conditions.add(condition(from.get__Ref__().getUuid()).eq(__ref__Uuid));"));
+        assertThat(lines.get(i++), is("//        }"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is("        if (!conditions.isEmpty()) {"));
+        assertThat(lines.get(i++), is("            where(and(conditions));"));
+        assertThat(lines.get(i++), is("        }"));
+        assertThat(lines.get(i++), is("        return select(from);"));
+        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is("}"));
+    }
+
+
 }

@@ -128,6 +128,25 @@ public abstract class AbstractGenerator {
         context.put("topPackage", transformer.getTopPackage(table.getName()));
         context.put("moduleName", transformer.getModuleName(table.getName()));
         context.put("extraParams", extraParams);
+
+        DetailConfig config = transformer.getMasterDetailMapper().get(table.getName());
+        if (config != null) {
+            context.put("masterName", config.getMasterName());
+            context.put("detailName", config.getDetailName());
+            context.put("masterDomain", transformer.getDomainName(config.getMasterTable()));
+            context.put("detailDomain", transformer.getDomainName(config.getDetailTable()));
+
+            Preconditions.checkNotNull(context.get("masterName"), "masterName is mandatory");
+            Preconditions.checkNotNull(context.get("detailName"), "detailName is mandatory");
+            Preconditions.checkNotNull(context.get("masterDomain"), "masterDomain is mandatory");
+            Preconditions.checkNotNull(context.get("detailDomain"), "detailDomain is mandatory");
+
+            context.put("masterNamePlural", English.plural(config.getMasterName()));
+            context.put("detailNamePlural", English.plural(config.getDetailName()));
+            context.put("masterDomainPlural", English.plural(config.getMasterDomain(transformer)));
+            context.put("detailDomainPlural", English.plural(config.getDetailDomain(transformer)));
+        }
+        logger.info("base context: {}", context);
         return context;
     }
 

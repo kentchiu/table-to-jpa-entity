@@ -44,6 +44,7 @@ public class Tables {
 
     public static Table detail() {
         Table table = createTable("TBL_DETAIL", "detail table");
+        table.getColumns().add(createColumn("TBL_MASTER_UUID", "master uuid", String.class.getName(), false));
         table.getColumns().add(createColumn("MY_COLUMN_1_1", "my column 1-1 comment", String.class.getName()));
         table.getColumns().add(createColumn("MY_COLUMN_1_2", "my column 1-2 comment", String.class.getName(), false));
         table.getColumns().add(createColumn("MY_COLUMN_1_2", "my column 1-3 comment", TIMESTAMP.class.getName(), false));

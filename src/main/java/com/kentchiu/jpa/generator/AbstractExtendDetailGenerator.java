@@ -24,26 +24,14 @@ public abstract class AbstractExtendDetailGenerator extends AbstractControllerGe
 
         Preconditions.checkNotNull(config, "master detail should be config and put in MasterDetailMapper by key : [" + table.getName() + "]");
 
-        context.put("masterName", config.getMasterName());
-        context.put("detailName", config.getDetailName());
         context.put("extendDetailName", config.getExtendDetailName());
-        context.put("masterDomain", config.getMasterDomain(transformer));
-        context.put("detailDomain", config.getDetailDomain(transformer));
         context.put("extendDetailDomain", config.getExtendDetailDomain(transformer));
 
 
-        Preconditions.checkNotNull(context.get("masterName"), "masterName is mandatory");
-        Preconditions.checkNotNull(context.get("detailName"), "detailName is mandatory");
         Preconditions.checkNotNull(context.get("extendDetailName"), "extendDetailName is mandatory");
-        Preconditions.checkNotNull(context.get("masterDomain"), "masterDomain is mandatory");
-        Preconditions.checkNotNull(context.get("detailDomain"), "detailDomain is mandatory");
         Preconditions.checkNotNull(context.get("extendDetailDomain"), "extendDetailDomain is mandatory");
 
-        context.put("masterNamePlural", English.plural(config.getMasterName()));
-        context.put("detailNamePlural", English.plural(config.getDetailName()));
         context.put("extendDetailNamePlural", English.plural(config.getExtendDetailName()));
-        context.put("masterDomainPlural", English.plural(config.getMasterDomain(transformer)));
-        context.put("detailDomainPlural", English.plural(config.getDetailDomain(transformer)));
         context.put("extendDetailDomainPlural", English.plural(config.getExtendDetailDomain(transformer)));
         return applyTemplate(getTemplate(), context);
     }
