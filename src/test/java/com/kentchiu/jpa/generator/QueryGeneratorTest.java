@@ -322,9 +322,10 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         generator.getExtraParams().put("enableFilter", true);
         List<String> lines = generator.exportTable(Tables.table1());
         AbstractGenerator.dump(lines);
-        assertThat(lines.get(24), is("public class MyTable1Query extends FilterQuery<MyTable1> {"));
 
         String content = Joiner.on('\n').join(lines);
+        assertThat(content, containsString("import com.bq.i1.base.service.query.FilterQuery"));
+        assertThat(content, containsString("public class MyTable1Query extends FilterQuery<MyTable1> {"));
         assertThat(content, containsString("        conditions.addAll(super.buildQuery(from));"));
     }
 

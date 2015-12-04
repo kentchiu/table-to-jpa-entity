@@ -52,6 +52,11 @@ public class EntityGenerator extends AbstractGenerator {
         if (!Objects.equals(Object.class, baseClass)) {
             results.add(baseClass.getName());
         }
+
+        if (Boolean.TRUE.equals(getExtraParams().getOrDefault("enableFilter", Boolean.FALSE))) {
+            results.add("import com.bq.i1.base.service.query.FilterQuery");
+        }
+
         transformer.getTableNameMapper().values().forEach(p -> results.add(p));
         return results;
     }
