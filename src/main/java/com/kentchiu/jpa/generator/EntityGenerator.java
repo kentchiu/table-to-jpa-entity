@@ -31,6 +31,10 @@ public class EntityGenerator extends AbstractGenerator {
         return exportToFile(table, applyTemplate(templateName + ".mustache", getContext(table)));
     }
 
+    @Override
+    protected boolean isTest() {
+        return Type.QUERY_TEST == config.getType();
+    }
 
     protected String buildProperties(Table table) {
         List<String> ignoreColumns = getIgnoreColumns(table);

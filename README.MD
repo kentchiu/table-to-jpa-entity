@@ -8,10 +8,10 @@
 
 - Query Master uuid 不應該被註解
 - Query Object compile error
-- Query Test should move to test folder
 - import `import xxx.base.service.query.FilterQuery;` where query filter enable
 
 ## DONE
+- Query Test should move to test folder
 - partial export merge in one file
 - Query Object TestCase
 - Master-Detail-Extend Controller

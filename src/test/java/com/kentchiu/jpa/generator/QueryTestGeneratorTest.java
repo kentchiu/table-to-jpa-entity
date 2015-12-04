@@ -25,7 +25,7 @@ public class QueryTestGeneratorTest extends DomainObjectGeneratorTest {
     @Test
     public void testGenerate() throws Exception {
         generator.export(Tables.table1());
-        assertThat(Files.exists(generator.getJavaSourceHome().resolve("com/foobar/module/service/query/FooBarQueryTest.java")), is(true));
+        assertThat(Files.exists(generator.getJavaTestSourceHome().resolve("com/foobar/module/service/query/FooBarQueryTest.java")), is(true));
     }
 
 
