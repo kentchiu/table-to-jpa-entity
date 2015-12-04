@@ -40,11 +40,11 @@ public class {{Domain}}Query {{{extend}}}{
         conditions.addAll(super.buildQuery(from));
 {{/extraParams.enableFilter}}
 
-{{#masterDomain}}
-        if (StringUtils.isNotBlank(masterUuid)) {
-            conditions.add(condition(from.getMaster().getUuid()).eq(masterUuid));
+{{#masterName}}
+        if (StringUtils.isNotBlank({{masterName}}Uuid)) {
+            conditions.add(condition(from.get{{MasterName}}().getUuid()).eq({{masterName}}Uuid));
         }
-{{/masterDomain}}
+{{/masterName}}
 
 //        if (StringUtils.isNotBlank(__ref__Uuid)) {
 //            conditions.add(condition(from.get__Ref__().getUuid()).eq(__ref__Uuid));

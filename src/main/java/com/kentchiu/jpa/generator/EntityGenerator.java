@@ -192,7 +192,7 @@ public class EntityGenerator extends AbstractGenerator {
     public List<String> exportTable(Table table) {
         String templateName = config.getType().getTemplateName();
         Map<String, Object> context = getContext(table);
-        logger.info("content: {}", context);
+        logger.debug("content: {}", context);
         return applyTemplate(templateName + ".mustache", context);
     }
 

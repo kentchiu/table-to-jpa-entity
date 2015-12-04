@@ -131,23 +131,42 @@ public abstract class AbstractGenerator {
 
         DetailConfig config = transformer.getMasterDetailMapper().get(table.getName());
         if (config != null) {
-            context.put("masterName", config.getMasterName());
-            context.put("detailName", config.getDetailName());
-            context.put("masterDomain", transformer.getDomainName(config.getMasterTable()));
-            context.put("detailDomain", transformer.getDomainName(config.getDetailTable()));
+            String masterName = config.getMasterName();
+            String detailName = config.getDetailName();
+            String domainName = transformer.getDomainName(config.getMasterTable());
+            String detailDomain = transformer.getDomainName(config.getDetailTable());
+
+            context.put("masterName", masterName);
+            context.put("detailName", detailName);
+            context.put("masterDomain", domainName);
+            context.put("detailDomain", detailDomain);
+
+            context.put("MasterName", upperCamel(masterName));
+            context.put("DetailName", upperCamel(detailName));
+            context.put("MasterDomain", upperCamel(domainName));
+            context.put("DetailDomain", upperCamel(detailDomain));
 
             Preconditions.checkNotNull(context.get("masterName"), "masterName is mandatory");
             Preconditions.checkNotNull(context.get("detailName"), "detailName is mandatory");
             Preconditions.checkNotNull(context.get("masterDomain"), "masterDomain is mandatory");
             Preconditions.checkNotNull(context.get("detailDomain"), "detailDomain is mandatory");
 
-            context.put("masterNamePlural", English.plural(config.getMasterName()));
-            context.put("detailNamePlural", English.plural(config.getDetailName()));
+            context.put("masterNamePlural", English.plural(masterName));
+            context.put("detailNamePlural", English.plural(detailName));
             context.put("masterDomainPlural", English.plural(config.getMasterDomain(transformer)));
             context.put("detailDomainPlural", English.plural(config.getDetailDomain(transformer)));
+            context.put("MasterNamePlural", English.plural(upperCamel(masterName)));
+            context.put("DetailNamePlural", English.plural(upperCamel(detailName)));
+            context.put("MasterDomainPlural", English.plural(upperCamel(domainName)));
+            context.put("DetailDomainPlural", English.plural(upperCamel(detailDomain)));
+
         }
-        logger.info("base context: {}", context);
+        logger.debug("base context: {}", context);
         return context;
+    }
+
+    private String upperCamel(String masterName) {
+        return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, masterName);
     }
 
     protected abstract String getClassName(Table table);
