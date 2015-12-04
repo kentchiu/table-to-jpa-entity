@@ -68,7 +68,10 @@ public class ControllerTestGeneratorTest {
         assertThat(list.get(i++), is("import java.util.Map;"));
         assertThat(list.get(i++), is("import java.util.Optional;"));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is("import static org.mockito.Mockito.*;"));
+        assertThat(list.get(i++), is("import static org.mockito.Matchers.any;"));
+        assertThat(list.get(i++), is("import static org.mockito.Mockito.reset;"));
+        assertThat(list.get(i++), is("import static org.mockito.Mockito.verify;"));
+        assertThat(list.get(i++), is("import static org.mockito.Mockito.when;"));
         assertThat(list.get(i++), is("import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;"));
         assertThat(list.get(i++), is("import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;"));
         assertThat(list.get(i++), is("import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;"));

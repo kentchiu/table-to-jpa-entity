@@ -1,12 +1,15 @@
 
 
 ## TODO
-- Query Master uuid 不應該被註解
 - DetailQuery buildQuery裡要加上master uuid 的condition
 - splitStrategies @SplitStrategyDetailController was splitStrategys
 - POST FK should be UUID type.
-- Query Object compile error
 - ControllerTest mockService
+
+- Query Master uuid 不應該被註解
+- Query Object compile error
+- Query Test should move to test folder
+- import `import xxx.base.service.query.FilterQuery;` where query filter enable
 
 ## DONE
 - partial export merge in one file
