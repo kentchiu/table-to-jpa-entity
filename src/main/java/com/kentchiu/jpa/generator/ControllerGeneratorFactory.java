@@ -38,7 +38,14 @@ public class ControllerGeneratorFactory {
     public static AbstractControllerGenerator makeResource(Transformer transformer, String tableName) {
         boolean isDetail = transformer.getMasterDetailMapper().containsKey(tableName);
         if (isDetail) {
-            return new DetailResourceGenerator(transformer);
+
+            DetailConfig detailConfig = transformer.getMasterDetailMapper().get(tableName);
+            if (detailConfig instanceof ExtendDetailConfig) {
+                return new ExtendDetailResourceGenerator(transformer);
+            } else {
+                return new DetailResourceGenerator(transformer);
+            }
+
         } else {
             return new ResourceGenerator(transformer);
         }
