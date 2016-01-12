@@ -1,9 +1,9 @@
 package {{topPackage}}.{{moduleName}}.web;
 
 import {{topPackage}}.base.web.AbstractController;
-import {{topPackage}}.{{moduleName}}.domain.{{masterDomain}};
+import {{topPackage}}.{{moduleName}}.domain.{{MasterDomain}};
 import {{topPackage}}.{{moduleName}}.domain.{{Domain}};
-import {{topPackage}}.{{moduleName}}.service.{{masterDomain}}Service;
+import {{topPackage}}.{{moduleName}}.service.{{MasterDomain}}Service;
 import {{topPackage}}.{{moduleName}}.service.{{Domain}}Service;
 import {{topPackage}}.{{moduleName}}.service.query.{{Domain}}Query;
 import {{topPackage}}.{{moduleName}}.web.dto.{{Domain}}Input;
@@ -25,25 +25,25 @@ import javax.validation.Valid;
 {{=<% %>=}}
 @RestController
 @RequestMapping("/<%masterNamePlural%>/{<%masterName%>Uuid}/<%detailNamePlural%>")
-public class <%detailDomain%>Controller extends AbstractController {
+public class <%DetailDomain%>Controller extends AbstractController {
 <%={{ }}=%>
-    private {{masterDomain}}Service {{masterName}}Service;
-    private {{detailDomain}}Service service;
+    private {{MasterDomain}}Service {{masterName}}Service;
+    private {{DetailDomain}}Service service;
 
     @Autowired
-    public void set{{masterDomain}}Service({{masterDomain}}Service {{masterName}}Service) {
+    public void set{{MasterDomain}}Service({{MasterDomain}}Service {{masterName}}Service) {
         this.{{masterName}}Service = {{masterName}}Service;
     }
 
     @Autowired
-    public void setService({{detailDomain}}Service service) {
+    public void setService({{DetailDomain}}Service service) {
         this.service = service;
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public Page<{{detailDomain}}> list{{detailDomainPlural}}(@PathVariable String {{masterName}}Uuid, @Valid {{detailDomain}}Query query) {
+    public Page<{{DetailDomain}}> list{{DetailDomainPlural}}(@PathVariable String {{masterName}}Uuid, @Valid {{DetailDomain}}Query query) {
         checkMasterExistOrThrow({{masterName}}Uuid);
-        query.set{{masterDomain}}Uuid({{masterName}}Uuid);
+        query.set{{MasterDomain}}Uuid({{masterName}}Uuid);
 {{#extraParams.enableFilter}}
         setFilter(query);
 {{/extraParams.enableFilter}}
@@ -53,14 +53,14 @@ public class <%detailDomain%>Controller extends AbstractController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(method = RequestMethod.POST)
-    public {{detailDomain}} add{{detailDomain}}(@PathVariable String {{masterName}}Uuid, @Valid @RequestBody {{detailDomain}}Input input) throws BindException {
+    public {{DetailDomain}} add{{DetailDomain}}(@PathVariable String {{masterName}}Uuid, @Valid @RequestBody {{DetailDomain}}Input input) throws BindException {
         checkMasterExistOrThrow({{masterName}}Uuid);
-        {{detailDomain}} {{detailName}} = new {{detailDomain}}();
+        {{DetailDomain}} {{detailName}} = new {{DetailDomain}}();
         DomainUtil.copyNotNullProperties(input, {{detailName}});
 
         // master
-        {{masterDomain}} {{masterName}} = {{masterName}}Service.findOne({{masterName}}Uuid).orElseThrow(() -> new ResourceNotFoundException({{masterDomain}}.class, {{masterName}}Uuid));
-        {{detailName}}.set{{masterDomain}}({{masterName}});
+        {{MasterDomain}} {{masterName}} = {{masterName}}Service.findOne({{masterName}}Uuid).orElseThrow(() -> new ResourceNotFoundException({{MasterDomain}}.class, {{masterName}}Uuid));
+        {{detailName}}.set{{MasterDomain}}({{masterName}});
 
         // FIXME  add references
         // if (StringUtils.isNotBlank(input.getXxxUuid())) {
@@ -81,15 +81,15 @@ public class <%detailDomain%>Controller extends AbstractController {
 
 
     @RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
-    public {{detailDomain}} get{{detailDomain}}(@PathVariable String {{masterName}}Uuid, @PathVariable String uuid) {
+    public {{DetailDomain}} get{{DetailDomain}}(@PathVariable String {{masterName}}Uuid, @PathVariable String uuid) {
         checkMasterExistOrThrow({{masterName}}Uuid);
-        return service.findOne(uuid).orElseThrow(() -> new ResourceNotFoundException({{detailDomain}}.class, uuid));
+        return service.findOne(uuid).orElseThrow(() -> new ResourceNotFoundException({{DetailDomain}}.class, uuid));
     }
 
     @RequestMapping(value = "/{uuid}", method = RequestMethod.PATCH)
-    public {{detailDomain}} update{{detailDomain}}(@PathVariable String {{masterName}}Uuid, @PathVariable String uuid, @Valid @RequestBody {{detailDomain}}UpdateInput input) throws BindException {
+    public {{DetailDomain}} update{{DetailDomain}}(@PathVariable String {{masterName}}Uuid, @PathVariable String uuid, @Valid @RequestBody {{DetailDomain}}UpdateInput input) throws BindException {
         checkMasterExistOrThrow({{masterName}}Uuid);
-        {{detailDomain}} {{detailName}} = service.findOne(uuid).orElseThrow(() -> new ResourceNotFoundException({{detailDomain}}.class, uuid));
+        {{DetailDomain}} {{detailName}} = service.findOne(uuid).orElseThrow(() -> new ResourceNotFoundException({{DetailDomain}}.class, uuid));
 
         DomainUtil.copyNotNullProperties(input, {{detailName}});
 
@@ -112,12 +112,12 @@ public class <%detailDomain%>Controller extends AbstractController {
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @RequestMapping(value = "/{uuid}", method = RequestMethod.DELETE)
-    public void delete{{detailDomain}}(@PathVariable String {{masterName}}Uuid, @PathVariable String uuid) {
+    public void delete{{DetailDomain}}(@PathVariable String {{masterName}}Uuid, @PathVariable String uuid) {
         checkMasterExistOrThrow({{masterName}}Uuid);
         service.delete(uuid);
     }
 
     private void checkMasterExistOrThrow(@PathVariable String {{masterName}}Uuid) {
-        {{masterName}}Service.findOne({{masterName}}Uuid).orElseThrow(() -> new ResourceNotFoundException({{detailDomain}}.class, {{masterName}}Uuid));
+        {{masterName}}Service.findOne({{masterName}}Uuid).orElseThrow(() -> new ResourceNotFoundException({{DetailDomain}}.class, {{masterName}}Uuid));
     }
 }

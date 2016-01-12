@@ -1,7 +1,7 @@
     private {{property.typeName}} {{property.propertyName}}{{{defaultValue}}};
 
 {{#manyToOne}}
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "{{column.name}}")
 {{/manyToOne}}

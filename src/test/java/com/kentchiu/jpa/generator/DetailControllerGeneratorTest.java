@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.is;
 public class DetailControllerGeneratorTest {
 
     private DetailControllerGenerator generator;
-    private Table table;
+    private Table table = Tables.detail();
 
     @Before
     public void setUp() throws Exception {
@@ -114,7 +114,7 @@ public class DetailControllerGeneratorTest {
         assertThat(list.get(i++), is("        // FIXME  add references"));
         assertThat(list.get(i++), is("        // if (StringUtils.isNotBlank(input.getXxxUuid())) {"));
         assertThat(list.get(i++), is("        //    Xxx xxx = xxxService.findOne(input.getXxxUuid()).orElseThrow(() -> new ResourceNotFoundException(Xxx.class, input.getXxxUuid()));"));
-        assertThat(list.get(i++), is("        //    Detail.setXxx(xxx);"));
+        assertThat(list.get(i++), is("        //    detail.setXxx(xxx);"));
         assertThat(list.get(i++), is("        // }"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("        BindException exception = new BindException(detail, detail.getClass().getSimpleName());"));
@@ -145,7 +145,7 @@ public class DetailControllerGeneratorTest {
         assertThat(list.get(i++), is("        // FIXME  add references"));
         assertThat(list.get(i++), is("        // if (StringUtils.isNotBlank(input.getXxxUuid())) {"));
         assertThat(list.get(i++), is("        //    Xxx xxx = xxxService.findOne(input.getXxxUuid()).orElseThrow(() -> new ResourceNotFoundException(Xxx.class, input.getXxxUuid()));"));
-        assertThat(list.get(i++), is("        //    Detail.setXxx(xxx);"));
+        assertThat(list.get(i++), is("        //    detail.setXxx(xxx);"));
         assertThat(list.get(i++), is("        // }"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("        BindException exception = new BindException(detail, detail.getClass().getSimpleName());"));

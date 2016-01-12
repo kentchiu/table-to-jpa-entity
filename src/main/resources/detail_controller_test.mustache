@@ -1,11 +1,11 @@
 package {{topPackage}}.{{moduleName}}.web;
 
 import {{topPackage}}.base.web.AbstractControllerTest;
-import {{topPackage}}.{{moduleName}}.domain.{{masterDomain}};
+import {{topPackage}}.{{moduleName}}.domain.{{MasterDomain}};
 import {{topPackage}}.{{moduleName}}.domain.{{Domain}};
-import {{topPackage}}.{{moduleName}}.domain.{{masterDomainPlural}};
+import {{topPackage}}.{{moduleName}}.domain.{{MasterDomainPlural}};
 import {{topPackage}}.{{moduleName}}.domain.{{DomainPlural}};
-import {{topPackage}}.{{moduleName}}.service.{{masterDomain}}Service;
+import {{topPackage}}.{{moduleName}}.service.{{MasterDomain}}Service;
 import {{topPackage}}.{{moduleName}}.service.{{Domain}}Service;
 import {{topPackage}}.{{moduleName}}.service.query.{{Domain}}Query;
 import {{topPackage}}.{{moduleName}}.web.dto.{{Domain}}Input;
@@ -42,7 +42,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
     @Autowired
     private {{Domain}}Service mockService;
     @Autowired
-    private {{masterDomain}}Service mock{{masterDomain}}Service;
+    private {{MasterDomain}}Service mock{{MasterDomain}}Service;
     private String {{masterName}}Uuid;
 
 
@@ -51,10 +51,10 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
     public void setUp() throws Exception {
         super.setUp();
         reset(mockService);
-        reset(mock{{masterDomain}}Service);
-        {{masterDomain}} {{masterName}} = {{masterDomainPlural}}.all().get(0);
+        reset(mock{{MasterDomain}}Service);
+        {{MasterDomain}} {{masterName}} = {{masterDomainPlural}}.all().get(0);
         {{masterName}}Uuid = {{masterName}}.getUuid();
-        when(mock{{masterDomain}}Service.findOne({{masterName}}Uuid)).thenReturn(Optional.of({{masterName}}));
+        when(mock{{MasterDomain}}Service.findOne({{masterName}}Uuid)).thenReturn(Optional.of({{masterName}}));
     }
 
     @Test

@@ -133,18 +133,18 @@ public abstract class AbstractGenerator {
         if (config != null) {
             String masterName = config.getMasterName();
             String detailName = config.getDetailName();
-            String domainName = transformer.getDomainName(config.getMasterTable());
+            String masterDomain = transformer.getDomainName(config.getMasterTable());
             String detailDomain = transformer.getDomainName(config.getDetailTable());
 
             context.put("masterName", masterName);
             context.put("detailName", detailName);
-            context.put("masterDomain", domainName);
-            context.put("detailDomain", detailDomain);
+            context.put("masterDomain", lowerCamel(masterDomain));
+            context.put("detailDomain", lowerCamel(detailDomain));
 
             context.put("MasterName", upperCamel(masterName));
             context.put("DetailName", upperCamel(detailName));
-            context.put("MasterDomain", upperCamel(domainName));
-            context.put("DetailDomain", upperCamel(detailDomain));
+            context.put("MasterDomain", masterDomain);
+            context.put("DetailDomain", detailDomain);
 
             Preconditions.checkNotNull(context.get("masterName"), "masterName is mandatory");
             Preconditions.checkNotNull(context.get("detailName"), "detailName is mandatory");
@@ -157,7 +157,7 @@ public abstract class AbstractGenerator {
             context.put("detailDomainPlural", English.plural(config.getDetailDomain(transformer)));
             context.put("MasterNamePlural", English.plural(upperCamel(masterName)));
             context.put("DetailNamePlural", English.plural(upperCamel(detailName)));
-            context.put("MasterDomainPlural", English.plural(upperCamel(domainName)));
+            context.put("MasterDomainPlural", English.plural(upperCamel(masterDomain)));
             context.put("DetailDomainPlural", English.plural(upperCamel(detailDomain)));
 
         }
@@ -167,6 +167,10 @@ public abstract class AbstractGenerator {
 
     private String upperCamel(String masterName) {
         return CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, masterName);
+    }
+
+    private String lowerCamel(String masterName) {
+        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, masterName);
     }
 
     protected abstract String getClassName(Table table);

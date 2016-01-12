@@ -4,6 +4,8 @@
 - splitStrategies @SplitStrategyDetailController was splitStrategys
 - POST FK should be UUID type.
 - ControllerTest mockService
+- if uuid column not match FK should be alter
+- UpdateObject不需要default的資訊
 
 ## DONE
 - Query Object compile error

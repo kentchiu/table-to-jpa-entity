@@ -15,4 +15,5 @@ public abstract class AbstractDetailGenerator extends AbstractControllerGenerato
         return applyTemplate(getTemplate(), context);
     }
 
+
 }

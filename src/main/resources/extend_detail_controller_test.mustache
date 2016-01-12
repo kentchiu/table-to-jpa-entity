@@ -1,18 +1,18 @@
 package {{topPackage}}.{{moduleName}}.web;
 
 import {{topPackage}}.base.web.AbstractControllerTest;
-import {{topPackage}}.{{moduleName}}.domain.{{masterDomain}};
-import {{topPackage}}.{{moduleName}}.domain.{{detailDomain}};
+import {{topPackage}}.{{moduleName}}.domain.{{MasterDomain}};
+import {{topPackage}}.{{moduleName}}.domain.{{DetailDomain}};
 import {{topPackage}}.{{moduleName}}.domain.{{extendDetailDomain}};
 import {{topPackage}}.{{moduleName}}.domain.{{masterDomainPlural}};
-import {{topPackage}}.{{moduleName}}.domain.{{detailDomainPlural}};
+import {{topPackage}}.{{moduleName}}.domain.{{DetailDomainPlural}};
 import {{topPackage}}.{{moduleName}}.domain.{{extendDetailDomainPlural}};
-import {{topPackage}}.{{moduleName}}.service.{{masterDomain}}Service;
-import {{topPackage}}.{{moduleName}}.service.{{detailDomain}}Service;
+import {{topPackage}}.{{moduleName}}.service.{{MasterDomain}}Service;
+import {{topPackage}}.{{moduleName}}.service.{{DetailDomain}}Service;
 import {{topPackage}}.{{moduleName}}.service.{{extendDetailDomain}}Service;
-import {{topPackage}}.{{moduleName}}.service.query.{{detailDomain}}Query;
-import {{topPackage}}.{{moduleName}}.web.dto.{{detailDomain}}Input;
-import {{topPackage}}.{{moduleName}}.web.dto.{{detailDomain}}UpdateInput;
+import {{topPackage}}.{{moduleName}}.service.query.{{DetailDomain}}Query;
+import {{topPackage}}.{{moduleName}}.web.dto.{{DetailDomain}}Input;
+import {{topPackage}}.{{moduleName}}.web.dto.{{DetailDomain}}UpdateInput;
 
 import com.google.common.collect.Maps;
 import com.kentchiu.spring.base.domain.DomainUtil;
@@ -48,9 +48,9 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
     @Autowired
     private {{Domain}}Service mockService;
     @Autowired
-    private {{masterDomain}}Service mock{{masterDomain}}Service;
+    private {{MasterDomain}}Service mock{{MasterDomain}}Service;
     @Autowired
-    private {{detailDomain}}Service mock{{detailDomain}}Service;
+    private {{DetailDomain}}Service mock{{DetailDomain}}Service;
 
 
     @Override
@@ -58,14 +58,14 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
     public void setUp() throws Exception {
         super.setUp();
         reset(mockService);
-        reset(mock{{masterDomain}}Service);
-        reset(mock{{detailDomain}}Service);
-        {{masterDomain}} {{masterName}} = {{masterDomainPlural}}.all().get(0);
-        {{detailDomain}} {{detailName}} = {{detailDomainPlural}}.all().get(0);
+        reset(mock{{MasterDomain}}Service);
+        reset(mock{{DetailDomain}}Service);
+        {{MasterDomain}} {{masterName}} = {{masterDomainPlural}}.all().get(0);
+        {{DetailDomain}} {{detailName}} = {{DetailDomainPlural}}.all().get(0);
         {{masterName}}Uuid = {{masterName}}.getUuid();
         {{detailName}}Uuid = {{detailName}}.getUuid();
-        when(mock{{masterDomain}}Service.findOne({{masterName}}Uuid)).thenReturn(Optional.of({{masterName}}));
-        when(mock{{detailDomain}}Service.findOne({{detailName}}Uuid)).thenReturn(Optional.of({{detailName}}));
+        when(mock{{MasterDomain}}Service.findOne({{masterName}}Uuid)).thenReturn(Optional.of({{masterName}}));
+        when(mock{{DetailDomain}}Service.findOne({{detailName}}Uuid)).thenReturn(Optional.of({{detailName}}));
     }
 
     @Test

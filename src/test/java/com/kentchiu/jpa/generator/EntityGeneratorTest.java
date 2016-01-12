@@ -291,7 +291,7 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
 
         i = 2;
         // getter
-        assertThat(lines.get(i++), is("    @ManyToOne"));
+        assertThat(lines.get(i++), is("    @ManyToOne(fetch = FetchType.LAZY)"));
         assertThat(lines.get(i++), is("    @NotFound(action = NotFoundAction.IGNORE)"));
         assertThat(lines.get(i++), is("    @JoinColumn(name = \"column1\")"));
         assertThat(lines.get(i++), is("    @AttributeInfo(description = \"column comment\")"));
@@ -339,7 +339,7 @@ public class EntityGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines.get(i++), is("    private FooBar fooBar;"));
 
         i = 2;
-        assertThat(lines.get(i++), is("    @ManyToOne"));
+        assertThat(lines.get(i++), is("    @ManyToOne(fetch = FetchType.LAZY)"));
         assertThat(lines.get(i++), is("    @NotFound(action = NotFoundAction.IGNORE)"));
         assertThat(lines.get(i++), is("    @JoinColumn(name = \"prop\")"));
         assertThat(lines.get(i++), is("    @AttributeInfo(description = \"comment\")"));

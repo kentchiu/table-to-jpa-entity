@@ -1,11 +1,11 @@
 package {{topPackage}}.{{moduleName}}.web;
 
 import {{topPackage}}.base.web.AbstractController;
-import {{topPackage}}.{{moduleName}}.domain.{{masterDomain}};
-import {{topPackage}}.{{moduleName}}.domain.{{detailDomain}};
+import {{topPackage}}.{{moduleName}}.domain.{{MasterDomain}};
+import {{topPackage}}.{{moduleName}}.domain.{{DetailDomain}};
 import {{topPackage}}.{{moduleName}}.domain.{{extendDetailDomain}};
-import {{topPackage}}.{{moduleName}}.service.{{masterDomain}}Service;
-import {{topPackage}}.{{moduleName}}.service.{{detailDomain}}Service;
+import {{topPackage}}.{{moduleName}}.service.{{MasterDomain}}Service;
+import {{topPackage}}.{{moduleName}}.service.{{DetailDomain}}Service;
 import {{topPackage}}.{{moduleName}}.service.{{extendDetailDomain}}Service;
 import {{topPackage}}.{{moduleName}}.service.query.{{extendDetailDomain}}Query;
 import {{topPackage}}.{{moduleName}}.web.dto.{{extendDetailDomain}}Input;
@@ -29,17 +29,17 @@ import javax.validation.Valid;
 @RequestMapping("/<%masterNamePlural%>/{<%masterName%>Uuid}/<%detailNamePlural%>/{<%detailName%>Uuid}/<%extendDetailNamePlural%>")
 public class <%extendDetailDomain%>Controller extends AbstractController {
 <%={{ }}=%>
-    private {{masterDomain}}Service {{masterName}}Service;
-    private {{detailDomain}}Service {{detailName}}Service;
+    private {{MasterDomain}}Service {{masterName}}Service;
+    private {{DetailDomain}}Service {{detailName}}Service;
     private {{extendDetailDomain}}Service service;
 
     @Autowired
-    public void set{{masterDomain}}Service({{masterDomain}}Service {{masterName}}Service) {
+    public void set{{MasterDomain}}Service({{MasterDomain}}Service {{masterName}}Service) {
         this.{{masterName}}Service = {{masterName}}Service;
     }
 
     @Autowired
-    public void set{{detailDomain}}Service({{detailDomain}}Service {{detailName}}Service) {
+    public void set{{DetailDomain}}Service({{DetailDomain}}Service {{detailName}}Service) {
         this.{{detailName}}Service = {{detailName}}Service;
     }
 
@@ -52,7 +52,7 @@ public class <%extendDetailDomain%>Controller extends AbstractController {
     public Page<{{extendDetailDomain}}> list{{extendDetailDomainPlural}}(@PathVariable String {{masterName}}Uuid, @PathVariable String {{detailName}}Uuid, @Valid {{extendDetailDomain}}Query query) {
         checkParentExist({{masterName}}Uuid, {{detailName}}Uuid);
 
-        query.set{{detailDomain}}Uuid({{detailName}}Uuid);
+        query.set{{DetailDomain}}Uuid({{detailName}}Uuid);
 {{#extraParams.enableFilter}}
         setFilter(query);
 {{/extraParams.enableFilter}}
@@ -69,8 +69,8 @@ public class <%extendDetailDomain%>Controller extends AbstractController {
         DomainUtil.copyNotNullProperties(input, {{extendDetailName}});
 
         // detail
-        {{detailDomain}} {{detailName}} = {{detailName}}Service.findOne({{detailName}}Uuid).orElseThrow(() -> new ResourceNotFoundException({{detailDomain}}.class, {{detailName}}Uuid));
-        {{extendDetailName}}.set{{detailDomain}}({{detailName}});
+        {{DetailDomain}} {{detailName}} = {{detailName}}Service.findOne({{detailName}}Uuid).orElseThrow(() -> new ResourceNotFoundException({{DetailDomain}}.class, {{detailName}}Uuid));
+        {{extendDetailName}}.set{{DetailDomain}}({{detailName}});
 
         // FIXME  add references
         // if (StringUtils.isNotBlank(input.getXxxUuid())) {
@@ -129,8 +129,8 @@ public class <%extendDetailDomain%>Controller extends AbstractController {
 
 
     private void checkParentExist(String {{masterName}}Uuid, String detailUuid) {
-        {{masterName}}Service.findOne({{masterName}}Uuid).orElseThrow(() -> new ResourceNotFoundException({{masterDomain}}.class, {{masterName}}Uuid));
-        {{detailName}}Service.findOne({{detailName}}Uuid).orElseThrow(() -> new ResourceNotFoundException({{detailDomain}}.class, {{detailName}}Uuid));
+        {{masterName}}Service.findOne({{masterName}}Uuid).orElseThrow(() -> new ResourceNotFoundException({{MasterDomain}}.class, {{masterName}}Uuid));
+        {{detailName}}Service.findOne(detailUuid).orElseThrow(() -> new ResourceNotFoundException({{DetailDomain}}.class, detailUuid));
     }
 
 }
