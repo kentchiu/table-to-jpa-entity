@@ -1,13 +1,14 @@
 
 
 ## TODO
-- splitStrategies @SplitStrategyDetailController was splitStrategys
 - POST FK should be UUID type.
 - ControllerTest mockService
 - if uuid column not match FK should be alter
 - UpdateObject不需要default的資訊
+- move H2Export from ipac
 
 ## DONE
+- splitStrategies @SplitStrategyDetailController was splitStrategys
 - Query Object compile error
 - DetailQuery buildQuery裡要加上master uuid 的condition
 - Query Master uuid 不應該被註解

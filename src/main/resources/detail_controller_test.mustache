@@ -74,7 +74,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
     @Test
     public void testAdd{{Domain}}() throws Exception {
         Map<String, String> input = Maps.newLinkedHashMap();
-        input.put("name", "name_001");
+        input.put("status", "2");
 
         String json = DomainUtil.toJson(input);
 
@@ -84,7 +84,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().is(HttpStatus.CREATED.value()))
-                .andExpect(jsonPath("$.name").value("name_001"));
+                .andExpect(jsonPath("$.status").value("2"));
 
         verify(mockService).add(Mockito.any({{Domain}}.class));
     }

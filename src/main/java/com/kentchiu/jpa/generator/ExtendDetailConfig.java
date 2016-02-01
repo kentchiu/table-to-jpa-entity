@@ -1,5 +1,9 @@
 package com.kentchiu.jpa.generator;
 
+/**
+ * Using flat layout instead
+ */
+@Deprecated
 public class ExtendDetailConfig extends DetailConfig {
 
     private String extendDetailName;
