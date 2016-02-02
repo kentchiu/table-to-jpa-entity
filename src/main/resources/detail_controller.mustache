@@ -118,6 +118,8 @@ public class <%DetailDomain%>Controller extends AbstractController {
     }
 
     private void checkMasterExistOrThrow(@PathVariable String {{masterName}}Uuid) {
-        {{masterName}}Service.findOne({{masterName}}Uuid).orElseThrow(() -> new ResourceNotFoundException({{DetailDomain}}.class, {{masterName}}Uuid));
+        if (!{{masterName}}Service.exists({{masterName}}Uuid)) {
+            throw new ResourceNotFoundException({{DetailDomain}}.class, {{masterName}}Uuid);
+        }
     }
 }

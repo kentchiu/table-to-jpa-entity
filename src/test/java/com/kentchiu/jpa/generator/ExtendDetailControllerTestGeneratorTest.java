@@ -141,7 +141,7 @@ public class ExtendDetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is("    @Test"));
         assertThat(list.get(i++), is("    public void testAddExtendDetail() throws Exception {"));
         assertThat(list.get(i++), is("        Map<String, String> input = Maps.newLinkedHashMap();"));
-        assertThat(list.get(i++), is("        input.put(\"name\", \"name_001\");"));
+        assertThat(list.get(i++), is("        input.put(\"status\", \"2\");"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("        String json = DomainUtil.toJson(input);"));
         assertThat(list.get(i++), is(""));
@@ -151,7 +151,7 @@ public class ExtendDetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("        mockMvc.perform(requestBuilder)"));
         assertThat(list.get(i++), is("                .andExpect(status().is(HttpStatus.CREATED.value()))"));
-        assertThat(list.get(i++), is("                .andExpect(jsonPath(\"$.name\").value(\"name_001\"));"));
+        assertThat(list.get(i++), is("                .andExpect(jsonPath(\"$.status\").value(\"2\"));"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("        verify(mockService).add(Mockito.any(ExtendDetail.class));"));
         assertThat(list.get(i++), is("    }"));

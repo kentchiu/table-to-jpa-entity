@@ -129,8 +129,12 @@ public class <%extendDetailDomain%>Controller extends AbstractController {
 
 
     private void checkParentExist(String {{masterName}}Uuid, String detailUuid) {
-        {{masterName}}Service.findOne({{masterName}}Uuid).orElseThrow(() -> new ResourceNotFoundException({{MasterDomain}}.class, {{masterName}}Uuid));
-        {{detailName}}Service.findOne(detailUuid).orElseThrow(() -> new ResourceNotFoundException({{DetailDomain}}.class, detailUuid));
+        if (!{{masterName}}Service.exists({{masterName}}Uuid)) {
+            throw new ResourceNotFoundException({{DetailDomain}}.class, {{masterName}}Uuid);
+        }
+        if (!{{detailName}}Service.exists(detailUuid)) {
+            throw new ResourceNotFoundException({{DetailDomain}}.class, detailUuid);
+        }
     }
 
 }

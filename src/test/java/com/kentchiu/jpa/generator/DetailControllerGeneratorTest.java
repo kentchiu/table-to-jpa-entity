@@ -167,7 +167,9 @@ public class DetailControllerGeneratorTest {
         assertThat(list.get(i++), is("    }"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    private void checkMasterExistOrThrow(@PathVariable String masterUuid) {"));
-        assertThat(list.get(i++), is("        masterService.findOne(masterUuid).orElseThrow(() -> new ResourceNotFoundException(Detail.class, masterUuid));"));
+        assertThat(list.get(i++), is("        if (!masterService.exists(masterUuid)) {"));
+        assertThat(list.get(i++), is("            throw new ResourceNotFoundException(Detail.class, masterUuid);"));
+        assertThat(list.get(i++), is("        }"));
         assertThat(list.get(i++), is("    }"));
         assertThat(list.get(i++), is("}"));
     }

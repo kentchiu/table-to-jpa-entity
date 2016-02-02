@@ -180,8 +180,12 @@ public class ExtendDetailControllerGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    private void checkParentExist(String masterUuid, String detailUuid) {"));
-        assertThat(list.get(i++), is("        masterService.findOne(masterUuid).orElseThrow(() -> new ResourceNotFoundException(Master.class, masterUuid));"));
-        assertThat(list.get(i++), is("        detailService.findOne(detailUuid).orElseThrow(() -> new ResourceNotFoundException(Detail.class, detailUuid));"));
+        assertThat(list.get(i++), is("        if (!masterService.exists(masterUuid)) {"));
+        assertThat(list.get(i++), is("            throw new ResourceNotFoundException(Detail.class, masterUuid);"));
+        assertThat(list.get(i++), is("        }"));
+        assertThat(list.get(i++), is("        if (!detailService.exists(detailUuid)) {"));
+        assertThat(list.get(i++), is("            throw new ResourceNotFoundException(Detail.class, detailUuid);"));
+        assertThat(list.get(i++), is("        }"));
         assertThat(list.get(i++), is("    }"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("}"));
