@@ -43,7 +43,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
     private {{Domain}}Service mockService;
     @Autowired
     private {{MasterDomain}}Service mock{{MasterDomain}}Service;
-    private String {{masterName}}Uuid;
+    private {{MasterDomain}} {{masterName}};
 
 
     @Override
@@ -53,9 +53,9 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
         reset(mockService);
         reset(mock{{MasterDomain}}Service);
         {{MasterDomain}} {{masterName}} = {{masterDomainPlural}}.all().get(0);
-        {{masterName}}Uuid = {{masterName}}.getUuid();
-        when(mock{{MasterDomain}}Service.findOne({{masterName}}Uuid)).thenReturn(Optional.of({{masterName}}));
+        when(mock{{MasterDomain}}Service.exits({{masterName}}.getUuid())).thenReturn(true);
     }
+
 
     @Test
     public void testList{{DomainPlural}}() throws Exception {
@@ -88,6 +88,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
 
         verify(mockService).add(Mockito.any({{Domain}}.class));
     }
+
 
     @Test
     public void testGet{{Domain}}() throws Exception {
