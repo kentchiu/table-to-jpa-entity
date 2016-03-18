@@ -215,6 +215,8 @@ public class EntityGenerator extends AbstractGenerator {
             } else {
                 baseContext.put("extend", "extends PageableQuery<" + transformer.getDomainName(table.getName()) + "> ");
             }
+            List<Transformer.Property> properties = table.getColumns().stream().map(c -> transformer.getProperty(c, config.getType())).collect(Collectors.toList());
+            baseContext.put("properties2", properties);
         } else {
             if (!Objects.equals(Object.class, config.getBaseClass())) {
                 baseContext.put("extend", "extends " + config.getBaseClass().getSimpleName());

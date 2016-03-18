@@ -277,7 +277,6 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
     @Test
     public void testExportTable() throws Exception {
         List<String> lines = generator.exportTable(Tables.table1());
-        AbstractGenerator.dump(lines);
 
         assertThat(lines, hasItem("import com.kentchiu.spring.attribute.AttributeInfo;"));
         assertThat(lines, hasItem("import com.kentchiu.spring.base.domain.Option;"));
@@ -526,5 +525,38 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines.get(i++), is("}"));
     }
 
+    @Test
+    public void testBuildOrder() throws Exception {
+        List<String> lines = generator.exportTable(Tables.table1());
+        AbstractGenerator.dump(lines);
+
+        int buildQueryStartLine = 65;
+        int i = buildQueryStartLine + 13;
+        assertThat(lines.get(i++), is("        // sorting"));
+        assertThat(lines.get(i++), is("        setDefaultSort(\"uuid\");"));
+        assertThat(lines.get(i++), is("        sorting(from);"));
+
+
+        int buildOrderStartLine = 85;
+         i = buildOrderStartLine;
+
+        assertThat(lines.get(i++), is("    @Override"));
+        assertThat(lines.get(i++), is("    protected Function<Object> buildOrder(Object from, String property, Sort.Direction direction) {"));
+        assertThat(lines.get(i++), is("        Customer domain = (Customer) from;"));
+        assertThat(lines.get(i++), is("        switch (property) {"));
+        assertThat(lines.get(i++), is("            case \"modifiedDate\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getModifiedDate(), direction);"));
+        assertThat(lines.get(i++), is("            case \"no\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getNo(), direction);"));
+        assertThat(lines.get(i++), is("            default:"));
+        assertThat(lines.get(i++), is("                return null;"));
+        assertThat(lines.get(i++), is("        }"));
+        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is(""));
+
+
+
+    }
 
 }

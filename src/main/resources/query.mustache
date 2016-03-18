@@ -53,7 +53,31 @@ public class {{Domain}}Query {{{extend}}}{
         if (!conditions.isEmpty()) {
             where(and(conditions));
         }
+
+        // sorting
+        setDefaultSort("uuid");
+        sorting(from);
+
         return select(from);
+    }
+
+    @Override
+    protected Function<Object> buildOrder(Object from, String property, Sort.Direction direction) {
+        Customer domain = (Customer) from;
+        switch (property) {
+            case "modifiedDate":
+                return order(domain.getModifiedDate(), direction);
+            case "no":
+                return order(domain.getNo(), direction);
+            case "cardNo":
+                return order(domain.getCardNo(), direction);
+            case "name":
+                return order(domain.getName(), direction);
+            case "qq":
+                return order(domain.getQq(), direction);
+            default:
+                return null;
+        }
     }
 
 }

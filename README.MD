@@ -6,6 +6,7 @@
 - if uuid column not match FK should be alter
 - UpdateObject不需要default的資訊
 - move H2Export from ipac
+- sort 
 
 ## DONE
 - splitStrategies @SplitStrategyDetailController was splitStrategys
