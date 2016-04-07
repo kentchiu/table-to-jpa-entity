@@ -426,7 +426,31 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines.get(i++), is("        if (!conditions.isEmpty()) {"));
         assertThat(lines.get(i++), is("            where(and(conditions));"));
         assertThat(lines.get(i++), is("        }"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is("        // sorting"));
+        assertThat(lines.get(i++), is("        setDefaultSort(\"uuid\");"));
+        assertThat(lines.get(i++), is("        sorting(from);"));
+        assertThat(lines.get(i++), is(""));
         assertThat(lines.get(i++), is("        return select(from);"));
+        assertThat(lines.get(i++), is("    }"));
+        assertThat(lines.get(i++), is(""));
+        assertThat(lines.get(i++), is("    @Override"));
+        assertThat(lines.get(i++), is("    protected Function<Object> buildOrder(Object from, String property, Sort.Direction direction) {"));
+        assertThat(lines.get(i++), is("        Customer domain = (Customer) from;"));
+        assertThat(lines.get(i++), is("        switch (property) {"));
+        assertThat(lines.get(i++), is("            case \"modifiedDate\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getModifiedDate(), direction);"));
+        assertThat(lines.get(i++), is("            case \"no\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getNo(), direction);"));
+        assertThat(lines.get(i++), is("            case \"cardNo\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getCardNo(), direction);"));
+        assertThat(lines.get(i++), is("            case \"name\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getName(), direction);"));
+        assertThat(lines.get(i++), is("            case \"qq\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getQq(), direction);"));
+        assertThat(lines.get(i++), is("            default:"));
+        assertThat(lines.get(i++), is("                return null;"));
+        assertThat(lines.get(i++), is("        }"));
         assertThat(lines.get(i++), is("    }"));
         assertThat(lines.get(i++), is(""));
         assertThat(lines.get(i++), is("}"));
@@ -444,8 +468,6 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         mapper.put("TBL_EXTEND_DETAIL", "com.kentchiu.module.domain.ExtendDetail");
         transformer.setTableNameMapper(mapper);
         DetailConfig detailConfig = new DetailConfig("master", "detail", "TBL_MASTER", "TBL_DETAIL");
-        ExtendDetailConfig config = new ExtendDetailConfig(detailConfig, "extendDetail", "TBL_EXTEND_DETAIL");
-        transformer.setMasterDetailMapper(ImmutableMap.of(table.getName(), config));
 
         generator = new EntityGenerator(transformer, new Config(Type.QUERY));
         generator.setProjectHome(Files.createTempDirectory("java"));
@@ -538,7 +560,7 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
 
 
         int buildOrderStartLine = 85;
-         i = buildOrderStartLine;
+        i = buildOrderStartLine;
 
         assertThat(lines.get(i++), is("    @Override"));
         assertThat(lines.get(i++), is("    protected Function<Object> buildOrder(Object from, String property, Sort.Direction direction) {"));
@@ -548,13 +570,17 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines.get(i++), is("                return order(domain.getModifiedDate(), direction);"));
         assertThat(lines.get(i++), is("            case \"no\":"));
         assertThat(lines.get(i++), is("                return order(domain.getNo(), direction);"));
+        assertThat(lines.get(i++), is("            case \"cardNo\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getCardNo(), direction);"));
+        assertThat(lines.get(i++), is("            case \"name\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getName(), direction);"));
+        assertThat(lines.get(i++), is("            case \"qq\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getQq(), direction);"));
         assertThat(lines.get(i++), is("            default:"));
         assertThat(lines.get(i++), is("                return null;"));
         assertThat(lines.get(i++), is("        }"));
         assertThat(lines.get(i++), is("    }"));
         assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is(""));
-
 
 
     }
