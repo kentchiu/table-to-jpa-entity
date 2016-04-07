@@ -27,6 +27,7 @@ public class ControllerTestGeneratorTest {
         Transformer transformer = new Transformer();
         transformer.setTableNameMapper(ImmutableMap.of(table.getName(), "com.kentchiu.module.domain.FooBar"));
         generator = new ControllerTestGenerator(transformer);
+        generator.getExtraParams().put("resourceName", "資源");
     }
 
     @Test
@@ -77,7 +78,7 @@ public class ControllerTestGeneratorTest {
         assertThat(list.get(i++), is("import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
-        assertThat(list.get(i++), is(""));
+        assertThat(list.get(i++), is("@ResourceDoc(title = \"資源\", type = FooBar.class)"));
         assertThat(list.get(i++), is("@ContextConfiguration(classes = {TestConfig.class})"));
         assertThat(list.get(i++), is("public class FooBarControllerTest extends AbstractControllerTest {"));
         assertThat(list.get(i++), is(""));
@@ -94,6 +95,7 @@ public class ControllerTestGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Test"));
+        assertThat(list.get(i++), is("    @ApiDoc(title = \"資源清单\")"));
         assertThat(list.get(i++), is("    public void testListFooBars() throws Exception {"));
         assertThat(list.get(i++), is("        when(mockService.findAll(any(FooBarQuery.class))).thenReturn(FooBars.page(3));"));
         assertThat(list.get(i++), is(""));
@@ -108,6 +110,7 @@ public class ControllerTestGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Ignore(\"Don't ignore this, make it GREEN BAR instead\")"));
         assertThat(list.get(i++), is("    @Test"));
+        assertThat(list.get(i++), is("    @ApiDoc(title = \"新增資源\")"));
         assertThat(list.get(i++), is("    public void testAddFooBar() throws Exception {"));
         assertThat(list.get(i++), is("        Map<String, String> input = Maps.newLinkedHashMap();"));
         assertThat(list.get(i++), is("        input.put(\"status\", \"2\");"));
@@ -127,6 +130,7 @@ public class ControllerTestGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Test"));
+        assertThat(list.get(i++), is("    @ApiDoc(title = \"取得資源\")"));
         assertThat(list.get(i++), is("    public void testGetFooBar() throws Exception {"));
         assertThat(list.get(i++), is("        FooBar fooBar = FooBars.all().get(0);"));
         assertThat(list.get(i++), is("        String uuid = fooBar.getUuid();"));
@@ -143,6 +147,7 @@ public class ControllerTestGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Ignore(\"Don't ignore this, make it GREEN BAR instead\")"));
         assertThat(list.get(i++), is("    @Test"));
+        assertThat(list.get(i++), is("    @ApiDoc(title = \"更新資源\")"));
         assertThat(list.get(i++), is("    public void testUpdateFooBar() throws Exception {"));
         assertThat(list.get(i++), is("        FooBar fooBar = FooBars.all().get(0);"));
         assertThat(list.get(i++), is("        String uuid = fooBar.getUuid();"));
@@ -167,6 +172,7 @@ public class ControllerTestGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Test"));
+        assertThat(list.get(i++), is("    @ApiDoc(title = \"删除資源\")"));
         assertThat(list.get(i++), is("    public void testDeleteFooBar() throws Exception {"));
         assertThat(list.get(i++), is("        FooBar fooBar = FooBars.all().get(0);"));
         assertThat(list.get(i++), is("        String uuid = fooBar.getUuid();"));

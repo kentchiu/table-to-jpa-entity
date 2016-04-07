@@ -36,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
+@ResourceDoc(title = "{{extraParams.resourceName}}", type = {{Domain}}.class)
 @ContextConfiguration(classes = {TestConfig.class})
 public class {{Domain}}ControllerTest extends AbstractControllerTest {
 
@@ -58,6 +59,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
 
 
     @Test
+    @ApiDoc(title = "{{extraParams.resourceName}}清单")
     public void testList{{DomainPlural}}() throws Exception {
         when(mockService.findAll(any({{Domain}}Query.class))).thenReturn({{DomainPlural}}.page(3));
 
@@ -72,6 +74,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
 
     @Ignore("Don't ignore this, make it GREEN BAR instead")
     @Test
+    @ApiDoc(title = "新增{{extraParams.resourceName}}")
     public void testAdd{{Domain}}() throws Exception {
         Map<String, String> input = Maps.newLinkedHashMap();
         input.put("status", "2");
@@ -91,6 +94,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
 
 
     @Test
+    @ApiDoc(title = "取得{{extraParams.resourceName}}")
     public void testGet{{Domain}}() throws Exception {
         {{Domain}} {{detailName}} = {{DomainPlural}}.all().get(0);
         String uuid = {{detailName}}.getUuid();
@@ -107,6 +111,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
 
     @Ignore("Don't ignore this, make it GREEN BAR instead")
     @Test
+    @ApiDoc(title = "更新{{extraParams.resourceName}}")
     public void testUpdate{{Domain}}() throws Exception {
         {{Domain}} {{detailName}} = {{DomainPlural}}.all().get(0);
         String uuid = {{detailName}}.getUuid();
@@ -131,6 +136,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
 
 
     @Test
+    @ApiDoc(title = "删除{{extraParams.resourceName}}")
     public void testDelete{{Domain}}() throws Exception {
         {{Domain}} {{detailName}} = {{DomainPlural}}.all().get(0);
         String uuid = {{detailName}}.getUuid();

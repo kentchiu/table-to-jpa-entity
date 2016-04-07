@@ -34,6 +34,7 @@ public class DetailControllerTestGeneratorTest {
         DetailConfig config = new DetailConfig("master", "detail", "TBL_MASTER", "TBL_DETAIL");
         transformer.setMasterDetailMapper(ImmutableMap.of(table.getName(), config));
         generator = new DetailControllerTestGenerator(transformer);
+        generator.getExtraParams().put("resourceName", "資源");
     }
 
     @Test
@@ -88,6 +89,7 @@ public class DetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is("import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
+        assertThat(list.get(i++), is("@ResourceDoc(title = \"資源\", type = Detail.class)"));
         assertThat(list.get(i++), is("@ContextConfiguration(classes = {TestConfig.class})"));
         assertThat(list.get(i++), is("public class DetailControllerTest extends AbstractControllerTest {"));
         assertThat(list.get(i++), is(""));
@@ -110,6 +112,7 @@ public class DetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Test"));
+        assertThat(list.get(i++), is("    @ApiDoc(title = \"資源清单\")"));
         assertThat(list.get(i++), is("    public void testListDetails() throws Exception {"));
         assertThat(list.get(i++), is("        when(mockService.findAll(any(DetailQuery.class))).thenReturn(Details.page(3));"));
         assertThat(list.get(i++), is(""));
@@ -124,6 +127,7 @@ public class DetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Ignore(\"Don't ignore this, make it GREEN BAR instead\")"));
         assertThat(list.get(i++), is("    @Test"));
+        assertThat(list.get(i++), is("    @ApiDoc(title = \"新增資源\")"));
         assertThat(list.get(i++), is("    public void testAddDetail() throws Exception {"));
         assertThat(list.get(i++), is("        Map<String, String> input = Maps.newLinkedHashMap();"));
         assertThat(list.get(i++), is("        input.put(\"status\", \"2\");"));
@@ -143,6 +147,7 @@ public class DetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Test"));
+        assertThat(list.get(i++), is("    @ApiDoc(title = \"取得資源\")"));
         assertThat(list.get(i++), is("    public void testGetDetail() throws Exception {"));
         assertThat(list.get(i++), is("        Detail detail = Details.all().get(0);"));
         assertThat(list.get(i++), is("        String uuid = detail.getUuid();"));
@@ -159,6 +164,7 @@ public class DetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Ignore(\"Don't ignore this, make it GREEN BAR instead\")"));
         assertThat(list.get(i++), is("    @Test"));
+        assertThat(list.get(i++), is("    @ApiDoc(title = \"更新資源\")"));
         assertThat(list.get(i++), is("    public void testUpdateDetail() throws Exception {"));
         assertThat(list.get(i++), is("        Detail detail = Details.all().get(0);"));
         assertThat(list.get(i++), is("        String uuid = detail.getUuid();"));
@@ -183,6 +189,7 @@ public class DetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Test"));
+        assertThat(list.get(i++), is("    @ApiDoc(title = \"删除資源\")"));
         assertThat(list.get(i++), is("    public void testDeleteDetail() throws Exception {"));
         assertThat(list.get(i++), is("        Detail detail = Details.all().get(0);"));
         assertThat(list.get(i++), is("        String uuid = detail.getUuid();"));
