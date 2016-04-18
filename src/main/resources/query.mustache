@@ -64,18 +64,12 @@ public class {{Domain}}Query {{{extend}}}{
 
     @Override
     protected Function<Object> buildOrder(Object from, String property, Sort.Direction direction) {
-        Customer domain = (Customer) from;
+        {{Domain}} domain = ({{Domain}}) from;
         switch (property) {
-            case "modifiedDate":
-                return order(domain.getModifiedDate(), direction);
-            case "no":
-                return order(domain.getNo(), direction);
-            case "cardNo":
-                return order(domain.getCardNo(), direction);
-            case "name":
-                return order(domain.getName(), direction);
-            case "qq":
-                return order(domain.getQq(), direction);
+{{#properties2}}
+            case "{{propertyName}}":
+                return order(domain.get{{methodName}}(), direction);
+{{/properties2}}
             default:
                 return null;
         }
