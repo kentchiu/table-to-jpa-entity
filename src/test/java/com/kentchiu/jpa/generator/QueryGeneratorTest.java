@@ -294,7 +294,7 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines, hasItem("import com.kentchiu.spring.base.service.query.PageableQuery;"));
 
 
-        int i = 21;
+        int i = 22;
         assertThat(lines.get(i++), is("/**"));
         assertThat(lines.get(i++), is(" * a table comment"));
         assertThat(lines.get(i++), is(" */"));
@@ -360,7 +360,7 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         List<String> lines = generator.exportTable(table);
         AbstractGenerator.dump(lines);
 
-        int i = 30;
+        int i = 31;
         // FIXME tblMasterUuid should be masterUuid
         assertThat(lines.get(i++), is("      private String tblMasterUuid;"));
         assertThat(lines.get(i++), is(""));
@@ -553,13 +553,13 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         AbstractGenerator.dump(lines);
 
         int buildQueryStartLine = 65;
-        int i = buildQueryStartLine + 13;
+        int i = buildQueryStartLine + 14;
         assertThat(lines.get(i++), is("        // sorting"));
         assertThat(lines.get(i++), is("        setDefaultSort(\"uuid\");"));
         assertThat(lines.get(i++), is("        sorting(from);"));
 
 
-        int buildOrderStartLine = 85;
+        int buildOrderStartLine = 86;
         i = buildOrderStartLine;
 
         assertThat(lines.get(i++), is("    @Override"));

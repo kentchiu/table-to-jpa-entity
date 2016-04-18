@@ -44,7 +44,7 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
     private {{Domain}}Service mockService;
     @Autowired
     private {{MasterDomain}}Service mock{{MasterDomain}}Service;
-    private {{MasterDomain}} {{masterName}};
+    private String {{masterName}}Uuid;
 
 
     @Override
@@ -54,7 +54,8 @@ public class {{Domain}}ControllerTest extends AbstractControllerTest {
         reset(mockService);
         reset(mock{{MasterDomain}}Service);
         {{MasterDomain}} {{masterName}} = {{masterDomainPlural}}.all().get(0);
-        when(mock{{MasterDomain}}Service.exits({{masterName}}.getUuid())).thenReturn(true);
+        when(mock{{MasterDomain}}Service.exists({{masterName}}.getUuid())).thenReturn(true);
+        {{masterName}}Uuid = {{masterName}}.getUuid();
     }
 
 

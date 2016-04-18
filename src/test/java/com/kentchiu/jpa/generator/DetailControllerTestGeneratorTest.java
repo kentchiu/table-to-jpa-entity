@@ -97,7 +97,7 @@ public class DetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is("    private DetailService mockService;"));
         assertThat(list.get(i++), is("    @Autowired"));
         assertThat(list.get(i++), is("    private MasterService mockMasterService;"));
-        assertThat(list.get(i++), is("    private Master master;"));
+        assertThat(list.get(i++), is("    private String masterUuid;"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is("    @Override"));
@@ -107,7 +107,8 @@ public class DetailControllerTestGeneratorTest {
         assertThat(list.get(i++), is("        reset(mockService);"));
         assertThat(list.get(i++), is("        reset(mockMasterService);"));
         assertThat(list.get(i++), is("        Master master = Masters.all().get(0);"));
-        assertThat(list.get(i++), is("        when(mockMasterService.exits(master.getUuid())).thenReturn(true);"));
+        assertThat(list.get(i++), is("        when(mockMasterService.exists(master.getUuid())).thenReturn(true);"));
+        assertThat(list.get(i++), is("        masterUuid = master.getUuid();"));
         assertThat(list.get(i++), is("    }"));
         assertThat(list.get(i++), is(""));
         assertThat(list.get(i++), is(""));
