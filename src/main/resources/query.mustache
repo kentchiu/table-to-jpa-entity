@@ -56,7 +56,7 @@ public class {{Domain}}Query {{{extend}}}{
         }
 
         // sorting
-        setDefaultSort("uuid");
+        setDefaultSort("-createDate");
         sorting(from);
 
         return select(from);
@@ -66,6 +66,16 @@ public class {{Domain}}Query {{{extend}}}{
     protected Function<Object> buildOrder(Object from, String property, Sort.Direction direction) {
         {{Domain}} domain = ({{Domain}}) from;
         switch (property) {
+            case "uuid":
+                return order(domain.getUuid(), direction);
+            case "createUserUuid":
+                return order(domain.getCreateUserUuid(), direction);
+            case "createDate":
+                return order(domain.getCreateDate(), direction);
+            case "modifierUuid":
+                return order(domain.getModifierUuid(), direction);
+            case "modifiedDate":
+                return order(domain.getModifiedDate(), direction);
 {{#properties2}}
             case "{{propertyName}}":
                 return order(domain.get{{methodName}}(), direction);

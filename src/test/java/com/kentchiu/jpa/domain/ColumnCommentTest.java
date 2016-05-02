@@ -29,6 +29,7 @@ public class ColumnCommentTest {
         assertThat(c.getOptions().isEmpty(), is(true));
     }
 
+
     @Test
     public void testSimpleComment() throws Exception {
         Column c = new Column();
@@ -37,6 +38,7 @@ public class ColumnCommentTest {
         assertThat(c.getDefaultValue(), is(""));
         assertThat(c.getOptions().isEmpty(), is(true));
     }
+
 
     @Test
     public void testDefaultValue() throws Exception {
@@ -47,6 +49,7 @@ public class ColumnCommentTest {
         assertThat(c.getOptions().size(), is(0));
     }
 
+
     @Test
     public void testDefaultValue2() throws Exception {
         Column c = new Column();
@@ -55,6 +58,7 @@ public class ColumnCommentTest {
         assertThat(c.getDefaultValue(), is("op2"));
         assertThat(c.getOptions().size(), is(0));
     }
+
 
     @Test
     public void testOptions() throws Exception {
@@ -91,6 +95,13 @@ public class ColumnCommentTest {
         assertThat(c.getOptions(), hasEntry("op3", "foobar"));
     }
 
+    @Test
+    public void testDefaultValue_2() throws Exception {
+        Column c = new Column();
+        c.parser("this is a comment(op1=foo/op2=bar/op3=foobar)(default=\"op2\")");
+        assertThat(c.getDefaultValue(), is("op2"));
+    }
+
 
     @Test
     public void testOptionsAndDefaultValue_with_space() throws Exception {
@@ -103,4 +114,5 @@ public class ColumnCommentTest {
         assertThat(c.getOptions(), hasEntry("op2", "bar"));
         assertThat(c.getOptions(), hasEntry("op3", "foobar"));
     }
+
 }

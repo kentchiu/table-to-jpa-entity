@@ -49,6 +49,9 @@ public class Column {
         } else {
             logger.debug("comment : {}", name);
         }
+        if (StringUtils.contains(comment, ";")) {
+            logger.warn("comment");
+        }
         Pattern p = Pattern.compile("([^(]*)(\\((.*/.*?)\\))?(\\((.*)\\))?");
         Matcher m = p.matcher(comment);
         if (m.matches()) {
@@ -61,6 +64,8 @@ public class Column {
                     String defaultValue = StringUtils.substringAfter(token, "=").trim();
                     if (defaultValue.startsWith("'")) {
                         setDefaultValue(StringUtils.substringBetween(defaultValue, "'", "'"));
+                    } else if (defaultValue.startsWith("\"")) {
+                        setDefaultValue(StringUtils.substringBetween(defaultValue, "\"", "\""));
                     } else {
                         setDefaultValue(defaultValue);
                     }

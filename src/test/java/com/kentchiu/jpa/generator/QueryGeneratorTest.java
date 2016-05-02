@@ -428,7 +428,7 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines.get(i++), is("        }"));
         assertThat(lines.get(i++), is(""));
         assertThat(lines.get(i++), is("        // sorting"));
-        assertThat(lines.get(i++), is("        setDefaultSort(\"uuid\");"));
+        assertThat(lines.get(i++), is("        setDefaultSort(\"-createDate\");"));
         assertThat(lines.get(i++), is("        sorting(from);"));
         assertThat(lines.get(i++), is(""));
         assertThat(lines.get(i++), is("        return select(from);"));
@@ -438,6 +438,16 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines.get(i++), is("    protected Function<Object> buildOrder(Object from, String property, Sort.Direction direction) {"));
         assertThat(lines.get(i++), is("        Detail domain = (Detail) from;"));
         assertThat(lines.get(i++), is("        switch (property) {"));
+        assertThat(lines.get(i++), is("            case \"uuid\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getUuid(), direction);"));
+        assertThat(lines.get(i++), is("            case \"createUserUuid\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getCreateUserUuid(), direction);"));
+        assertThat(lines.get(i++), is("            case \"createDate\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getCreateDate(), direction);"));
+        assertThat(lines.get(i++), is("            case \"modifierUuid\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getModifierUuid(), direction);"));
+        assertThat(lines.get(i++), is("            case \"modifiedDate\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getModifiedDate(), direction);"));
         assertThat(lines.get(i++), is("            case \"tblMasterUuid\":"));
         assertThat(lines.get(i++), is("                return order(domain.getTblMasterUuid(), direction);"));
         assertThat(lines.get(i++), is("            case \"myColumn11\":"));
@@ -553,7 +563,7 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         int buildQueryStartLine = 65;
         int i = buildQueryStartLine + 14;
         assertThat(lines.get(i++), is("        // sorting"));
-        assertThat(lines.get(i++), is("        setDefaultSort(\"uuid\");"));
+        assertThat(lines.get(i++), is("        setDefaultSort(\"-createDate\");"));
         assertThat(lines.get(i++), is("        sorting(from);"));
 
 
@@ -564,6 +574,16 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines.get(i++), is("    protected Function<Object> buildOrder(Object from, String property, Sort.Direction direction) {"));
         assertThat(lines.get(i++), is("        MyTable1 domain = (MyTable1) from;"));
         assertThat(lines.get(i++), is("        switch (property) {"));
+        assertThat(lines.get(i++), is("            case \"uuid\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getUuid(), direction);"));
+        assertThat(lines.get(i++), is("            case \"createUserUuid\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getCreateUserUuid(), direction);"));
+        assertThat(lines.get(i++), is("            case \"createDate\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getCreateDate(), direction);"));
+        assertThat(lines.get(i++), is("            case \"modifierUuid\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getModifierUuid(), direction);"));
+        assertThat(lines.get(i++), is("            case \"modifiedDate\":"));
+        assertThat(lines.get(i++), is("                return order(domain.getModifiedDate(), direction);"));
         assertThat(lines.get(i++), is("            case \"myColumn11\":"));
         assertThat(lines.get(i++), is("                return order(domain.getMyColumn11(), direction);"));
         assertThat(lines.get(i++), is("            case \"myColumn12\":"));
