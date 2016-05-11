@@ -52,17 +52,6 @@ public class Tables {
         return table;
     }
 
-    public static Table extendDetail() {
-        Table table = createTable("TBL_EXTEND_DETAIL", "extend_detail table");
-        table.getColumns().add(createColumn("TBL_DETAIL_UUID", "detail uuid", String.class.getName(), false));
-        table.getColumns().add(createColumn("MY_COLUMN_1_1_1", "my column 1_1-1 comment", String.class.getName()));
-        table.getColumns().add(createColumn("MY_COLUMN_1_1_2", "my column 1_1-2 comment", String.class.getName(), false));
-        table.getColumns().add(createColumn("MY_COLUMN_1_1_3", "my column 1_1-3 comment", TIMESTAMP.class.getName(), false));
-        table.setPrimaryKey("MY_COLUMN_1_1_1");
-        return table;
-    }
-
-
     private static Table createTable(String name, String comment) {
         Table table = new Table();
         table.setName(name);

@@ -36,7 +36,6 @@ public class UpdateInputGeneratorTest extends DomainObjectGeneratorTest {
     public void testTableMapping() throws Exception {
         generator.transformer.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.kentchiu.jpa.domain.FooBar"));
         List<String> lines = generator.exportTable(Tables.table1());
-        AbstractGenerator.dump(lines);
         assertThat(lines, hasItem("package com.kentchiu.jpa.web.dto;"));
         assertThat(lines, hasItem("/**"));
         assertThat(lines, hasItem(" * a table comment"));
@@ -54,7 +53,6 @@ public class UpdateInputGeneratorTest extends DomainObjectGeneratorTest {
         column.setReferenceTable("MY_TABLE");
         List<String> lines = generator.buildProperty(column);
 
-        AbstractGenerator.dump(lines);
 
         int i = 0;
         assertThat(lines.get(i++), is("//    private String fooBarUuid;"));
@@ -75,7 +73,6 @@ public class UpdateInputGeneratorTest extends DomainObjectGeneratorTest {
     @Test
     public void testProperty_BigDecimal() throws Exception {
         List<String> lines = generator.buildProperty(Columns.bigDecimalColumn());
-        AbstractGenerator.dump(lines);
 
         int i = 0;
         // field
@@ -99,7 +96,6 @@ public class UpdateInputGeneratorTest extends DomainObjectGeneratorTest {
     @Test
     public void testProperty_date() throws Exception {
         List<String> lines = generator.buildProperty(Columns.dateColumn());
-        AbstractGenerator.dump(lines);
 
         int i = 0;
         // field
@@ -123,7 +119,6 @@ public class UpdateInputGeneratorTest extends DomainObjectGeneratorTest {
     @Test
     public void testProperty_string() throws Exception {
         List<String> lines = generator.buildProperty(Columns.stringColumn());
-        AbstractGenerator.dump(lines);
 
         int i = 0;
         // field
@@ -150,7 +145,6 @@ public class UpdateInputGeneratorTest extends DomainObjectGeneratorTest {
         column.getOptions().put("N", "bar");
 
         List<String> lines = generator.buildProperty(column);
-        AbstractGenerator.dump(lines);
 
         int i = 0;
         // field
@@ -177,7 +171,6 @@ public class UpdateInputGeneratorTest extends DomainObjectGeneratorTest {
         Column column = Columns.stringColumn();
         column.setComment("column comment(default=foo)");
         List<String> lines = generator.buildProperty(column);
-        AbstractGenerator.dump(lines);
 
         int i = 0;
         // field
@@ -204,7 +197,6 @@ public class UpdateInputGeneratorTest extends DomainObjectGeneratorTest {
         column.setReferenceTable("OTHER_TABLE");
         List<String> lines = generator.buildProperty(column);
 
-        AbstractGenerator.dump(lines);
         int i = 0;
         // field
         assertThat(lines.get(i++), is("//    private String otherTableUuid;"));
@@ -227,7 +219,6 @@ public class UpdateInputGeneratorTest extends DomainObjectGeneratorTest {
     @Test
     public void testProperty_boolean() throws Exception {
         List<String> lines = generator.buildProperty(Columns.booleanColumn());
-        AbstractGenerator.dump(lines);
 
         int i = 0;
         // field
@@ -251,7 +242,6 @@ public class UpdateInputGeneratorTest extends DomainObjectGeneratorTest {
     @Test
     public void testProperty_string_not_null() throws Exception {
         List<String> lines = generator.buildProperty(Columns.createStringColumn("FOO_BAR", "The foo bar comment", false));
-        AbstractGenerator.dump(lines);
 
         // field
         assertThat(lines.get(0), is("//    private String fooBar;"));
@@ -273,7 +263,6 @@ public class UpdateInputGeneratorTest extends DomainObjectGeneratorTest {
     @Test
     public void testExportTable() throws Exception {
         List<String> lines = generator.exportTable(Tables.table1());
-        AbstractGenerator.dump(lines);
 
         assertThat(lines, hasItem("import com.kentchiu.spring.attribute.AttributeInfo;"));
         assertThat(lines, hasItem("import com.kentchiu.spring.base.domain.Option;"));

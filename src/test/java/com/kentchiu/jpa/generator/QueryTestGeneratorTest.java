@@ -32,7 +32,6 @@ public class QueryTestGeneratorTest extends DomainObjectGeneratorTest {
     @Test
     public void testExportTable() throws Exception {
         List<String> lines = generator.exportTable(Tables.table1());
-        AbstractGenerator.dump(lines);
 
         int i = 0;
         assertThat(lines.get(i++), is("package com.foobar.module.service.query;"));

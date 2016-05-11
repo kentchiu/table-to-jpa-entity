@@ -48,7 +48,6 @@ public class ControllerGeneratorTest {
     public void testApplyTemplate() throws Exception {
         List<String> list = generator.applyTemplate(table);
 
-        list.stream().forEach(System.out::println);
         int i = 0;
 
         assertThat(list.get(i++), is("package com.kentchiu.module.web;"));
@@ -157,7 +156,6 @@ public class ControllerGeneratorTest {
         generator.getExtraParams().put("enableFilter", true);
         List<String> list = generator.applyTemplate(table);
 
-        AbstractGenerator.dump(list);
         int i = 32;
         assertThat(list.get(i++), is("    @RequestMapping(method = RequestMethod.GET)"));
         assertThat(list.get(i++), is("    public Page<FooBar> listFooBars(@Valid FooBarQuery query) {"));
@@ -171,7 +169,6 @@ public class ControllerGeneratorTest {
         generator.getExtraParams().put("enableFilter", false);
         List<String> list = generator.applyTemplate(table);
 
-        AbstractGenerator.dump(list);
         int i = 32;
         assertThat(list.get(i++), is("    @RequestMapping(method = RequestMethod.GET)"));
         assertThat(list.get(i++), is("    public Page<FooBar> listFooBars(@Valid FooBarQuery query) {"));

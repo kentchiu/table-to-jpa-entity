@@ -7,7 +7,6 @@ import com.kentchiu.jpa.domain.Columns;
 import com.kentchiu.jpa.domain.Table;
 import com.kentchiu.jpa.domain.Tables;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.file.Files;
@@ -38,7 +37,6 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
     public void testTableMapping() throws Exception {
         generator.transformer.setTableNameMapper(ImmutableMap.of("MY_TABLE_1", "com.kentchiu.jpa.domain.FooBar"));
         List<String> lines = generator.exportTable(Tables.table1());
-        AbstractGenerator.dump(lines);
         assertThat(lines, hasItem("package com.kentchiu.jpa.service.query;"));
         assertThat(lines, hasItem("/**"));
         assertThat(lines, hasItem(" * a table comment"));
@@ -56,7 +54,6 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         column.setReferenceTable("MY_TABLE");
         List<String> lines = generator.buildProperty(column);
 
-        AbstractGenerator.dump(lines);
 
         int i = 0;
         assertThat(lines.get(i++), is("//    private String fooBarUuid;"));
@@ -77,7 +74,6 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
     @Test
     public void testProperty_BigDecimal() throws Exception {
         List<String> lines = generator.buildProperty(Columns.bigDecimalColumn());
-        AbstractGenerator.dump(lines);
 
         int i = 0;
         // field
@@ -101,7 +97,6 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
     @Test
     public void testProperty_date() throws Exception {
         List<String> lines = generator.buildProperty(Columns.dateColumn());
-        AbstractGenerator.dump(lines);
 
         int i = 0;
         // field
@@ -126,7 +121,6 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
     @Test
     public void testProperty_string() throws Exception {
         List<String> lines = generator.buildProperty(Columns.stringColumn());
-        AbstractGenerator.dump(lines);
 
         int i = 0;
         // field
@@ -153,7 +147,6 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         column.getOptions().put("N", "bar");
 
         List<String> lines = generator.buildProperty(column);
-        AbstractGenerator.dump(lines);
 
         int i = 0;
         // field
@@ -180,7 +173,6 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         Column column = Columns.stringColumn();
         column.setComment("column comment(default=foo)");
         List<String> lines = generator.buildProperty(column);
-        AbstractGenerator.dump(lines);
 
         int i = 0;
         // field
@@ -207,7 +199,6 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         column.setReferenceTable("OTHER_TABLE");
         List<String> lines = generator.buildProperty(column);
 
-        AbstractGenerator.dump(lines);
         int i = 0;
         // field
         assertThat(lines.get(i++), is("//    private String otherTableUuid;"));
@@ -230,7 +221,6 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
     @Test
     public void testProperty_boolean() throws Exception {
         List<String> lines = generator.buildProperty(Columns.booleanColumn());
-        AbstractGenerator.dump(lines);
 
         int i = 0;
         // field
@@ -254,7 +244,6 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
     @Test
     public void testProperty_string_not_null() throws Exception {
         List<String> lines = generator.buildProperty(Columns.createStringColumn("FOO_BAR", "The foo bar comment", false));
-        AbstractGenerator.dump(lines);
 
         // field
         assertThat(lines.get(0), is("//    private String fooBar;"));
@@ -322,7 +311,6 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
     public void testExportTable_enableFilter() throws Exception {
         generator.getExtraParams().put("enableFilter", true);
         List<String> lines = generator.exportTable(Tables.table1());
-        AbstractGenerator.dump(lines);
 
         String content = Joiner.on('\n').join(lines);
         assertThat(content, containsString("import com.bq.i1.base.service.query.FilterQuery"));
@@ -358,7 +346,6 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         generator.setProjectHome(Files.createTempDirectory("java"));
 
         List<String> lines = generator.exportTable(table);
-        AbstractGenerator.dump(lines);
 
         int i = 31;
         // FIXME tblMasterUuid should be masterUuid
@@ -465,100 +452,10 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
     }
 
 
-    @Ignore("NOT IMPLEMENT YET")
-    @Test
-    public void testProperty_detail_uuid_should_not_be_comment() throws Exception {
-        Table table = Tables.extendDetail();
-        Transformer transformer = new Transformer();
-        Map<String, String> mapper = new HashMap<>();
-        mapper.put("TBL_MASTER", "com.kentchiu.module.domain.Master");
-        mapper.put("TBL_DETAIL", "com.kentchiu.module.domain.Detail");
-        mapper.put("TBL_EXTEND_DETAIL", "com.kentchiu.module.domain.ExtendDetail");
-        transformer.setTableNameMapper(mapper);
-        DetailConfig detailConfig = new DetailConfig("master", "detail", "TBL_MASTER", "TBL_DETAIL");
-
-        generator = new EntityGenerator(transformer, new Config(Type.QUERY));
-        generator.setProjectHome(Files.createTempDirectory("java"));
-
-        List<String> lines = generator.exportTable(table);
-        AbstractGenerator.dump(lines);
-
-        int i = 31;
-        // FIXME tlbDetailUuid should be detailUuid
-        assertThat(lines.get(i++), is("      private String tblDetailUuid;"));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("      @AttributeInfo(description = \"detail uuid\")"));
-        assertThat(lines.get(i++), is("      public String getTblDetailUuid() {"));
-        assertThat(lines.get(i++), is("          return tblMasterUuid;"));
-        assertThat(lines.get(i++), is("      }"));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("      public void setTblDetailUuid(String tblDetailUuid) {"));
-        assertThat(lines.get(i++), is("          this.tblDetailUuid = tblDetailUuid;"));
-        assertThat(lines.get(i++), is("      }"));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("//    private String myColumn11;"));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"my column 1-1 comment\")"));
-        assertThat(lines.get(i++), is("//    public String getMyColumn11() {"));
-        assertThat(lines.get(i++), is("//        return myColumn11;"));
-        assertThat(lines.get(i++), is("//    }"));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("//    public void setMyColumn11(String myColumn11) {"));
-        assertThat(lines.get(i++), is("//        this.myColumn11 = myColumn11;"));
-        assertThat(lines.get(i++), is("//    }"));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("//    private String myColumn12;"));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"my column 1-2 comment\")"));
-        assertThat(lines.get(i++), is("//    public String getMyColumn12() {"));
-        assertThat(lines.get(i++), is("//        return myColumn12;"));
-        assertThat(lines.get(i++), is("//    }"));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("//    public void setMyColumn12(String myColumn12) {"));
-        assertThat(lines.get(i++), is("//        this.myColumn12 = myColumn12;"));
-        assertThat(lines.get(i++), is("//    }"));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("//    private Date myColumn12;"));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("//    @AttributeInfo(description = \"my column 1-3 comment\")"));
-        assertThat(lines.get(i++), is("//    public Date getMyColumn12() {"));
-        assertThat(lines.get(i++), is("//        return myColumn12;"));
-        assertThat(lines.get(i++), is("//    }"));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("//    public void setMyColumn12(Date myColumn12) {"));
-        assertThat(lines.get(i++), is("//        this.myColumn12 = myColumn12;"));
-        assertThat(lines.get(i++), is("//    }"));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("    public Query<Detail> buildQuery() {"));
-        assertThat(lines.get(i++), is("        Detail from = from(Detail.class);"));
-        assertThat(lines.get(i++), is("        List<OnGoingLogicalCondition> conditions = new ArrayList<>();"));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("        if (StringUtils.isNotBlank(masterUuid)) {"));
-        assertThat(lines.get(i++), is("            conditions.add(condition(from.getMaster().getUuid()).eq(masterUuid));"));
-        assertThat(lines.get(i++), is("        }"));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("//        if (StringUtils.isNotBlank(__ref__Uuid)) {"));
-        assertThat(lines.get(i++), is("//            conditions.add(condition(from.get__Ref__().getUuid()).eq(__ref__Uuid));"));
-        assertThat(lines.get(i++), is("//        }"));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("        if (!conditions.isEmpty()) {"));
-        assertThat(lines.get(i++), is("            where(and(conditions));"));
-        assertThat(lines.get(i++), is("        }"));
-        assertThat(lines.get(i++), is("        return select(from);"));
-        assertThat(lines.get(i++), is("    }"));
-        assertThat(lines.get(i++), is(""));
-        assertThat(lines.get(i++), is("}"));
-    }
 
     @Test
     public void testBuildOrder() throws Exception {
         List<String> lines = generator.exportTable(Tables.table1());
-        AbstractGenerator.dump(lines);
 
         int buildQueryStartLine = 65;
         int i = buildQueryStartLine + 14;
@@ -595,8 +492,14 @@ public class QueryGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines.get(i++), is("        }"));
         assertThat(lines.get(i++), is("    }"));
         assertThat(lines.get(i++), is(""));
+    }
 
+    @Test
+    public void testBuildOrder_uuid() throws Exception {
+        List<String> lines = generator.exportTable(Tables.detail());
 
+        assertThat(lines.get(112), is("            case \"tblMasterUuid\":"));
+        assertThat(lines.get(113), is("                return order(domain.getTblMasterUuid(), direction);"));
     }
 
 }
