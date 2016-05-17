@@ -50,7 +50,7 @@ public class QueryTestGeneratorTest extends DomainObjectGeneratorTest {
         assertThat(lines.get(i++), is("    public void testBuildQuery() throws Exception {"));
         assertThat(lines.get(i++), is("        FooBarQuery query = new FooBarQuery();"));
         assertThat(lines.get(i++), is("        Query<FooBar> q = query.buildQuery();"));
-        assertThat(lines.get(i++), is("        assertThat(q.getQuery(), is(\"select fooBar_0 from FooBar fooBar_0\"));"));
+        assertThat(lines.get(i++), is("        assertThat(q.getQuery(), is(\"select fooBar_0 from FooBar fooBar_0 order by fooBar_0.createDate desc\"));"));
         assertThat(lines.get(i++), is("        assertThat(q.getParameters().size(), is(0));"));
         assertThat(lines.get(i++), is("    }"));
         assertThat(lines.get(i++), is(""));

@@ -16,7 +16,7 @@ public class {{Domain}}QueryTest {
     public void testBuildQuery() throws Exception {
         {{Domain}}Query query = new {{Domain}}Query();
         Query<{{Domain}}> q = query.buildQuery();
-        assertThat(q.getQuery(), is("select {{domain}}_0 from {{Domain}} {{domain}}_0"));
+        assertThat(q.getQuery(), is("select {{domain}}_0 from {{Domain}} {{domain}}_0 order by {{domain}}_0.createDate desc"));
         assertThat(q.getParameters().size(), is(0));
     }
 
